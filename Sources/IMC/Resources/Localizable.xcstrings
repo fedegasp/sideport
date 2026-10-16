@@ -1704,7 +1704,7 @@
       }
     },
     "Info": {
-      "comment": "Tab showing the device details.",
+      "comment": "Header button that opens the device details sheet.",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1949,23 +1949,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Installali con Homebrew:"
-          }
-        }
-      }
-    },
-    "Installed apps": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Installed apps"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App installate"
           }
         }
       }
@@ -3122,24 +3105,6 @@
         }
       }
     },
-    "Section": {
-      "comment": "Hidden picker label switching between installed apps and device info.",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Section"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sezione"
-          }
-        }
-      }
-    },
     "Select all": {
       "extractionState": "manual",
       "localizations": {
@@ -3221,6 +3186,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mostra libreria"
+          }
+        }
+      }
+    },
+    "Show device info": {
+      "comment": "Tooltip of the header button that opens the device details sheet.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show device info"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra le informazioni del dispositivo"
           }
         }
       }

@@ -2,14 +2,16 @@ import SwiftUI
 
 struct DeviceHeader: View {
     let device: Device
-
+    /// Apre il foglio con i dettagli del dispositivo.
+    let onShowInfo: () -> Void
+    
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
             Image(systemName: device.symbolName)
                 .font(.system(size: 40, weight: .light))
                 .frame(width: 56)
                 .foregroundStyle(.tint)
-
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(device.displayName).font(.title2.weight(.semibold))
                 Text(.ui("\(device.marketingName) · \(device.systemVersionLabel)"))
@@ -25,9 +27,17 @@ struct DeviceHeader: View {
                     .padding(.top, 2)
                 }
             }
-
+            
             Spacer()
-
+        }
+        .overlay(alignment: .trailing) {
+            trailingColumn
+        }
+        .padding(16)
+    }
+    
+    var trailingColumn: some View {
+        VStack(alignment: .trailing, spacing: 2) {
             if let level = device.batteryLevel {
                 VStack(spacing: 2) {
                     Image(systemName: device.isCharging == true ? "battery.100.bolt" : batterySymbol(level))
@@ -39,10 +49,15 @@ struct DeviceHeader: View {
                 }
                 .foregroundStyle(level <= 20 && device.isCharging != true ? .red : .secondary)
             }
+            
+            Spacer()
+            
+            Button(.ui("Info"), systemImage: "info.circle", action: onShowInfo)
+                .help(Text(.ui("Show device info")))
+                .disabled(!device.isReady)
         }
-        .padding(16)
     }
-
+    
     private func batterySymbol(_ level: Int) -> String {
         switch level {
         case ..<13: return "battery.0percent"

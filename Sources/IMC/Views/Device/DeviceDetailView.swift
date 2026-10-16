@@ -10,27 +10,20 @@ struct DeviceDetailView: View {
     @Environment(TransferQueue.self) private var queue
     @Environment(UIState.self) private var ui
 
-    @State private var tab: Tab = .apps
     @State private var appSearch = ""
     @State private var pendingUninstall: InstalledApp?
-
-    private enum Tab: String, CaseIterable, Identifiable {
-        case apps, info
-        var id: String { rawValue }
-        var label: LocalizedStringResource {
-            self == .apps ? .ui("Installed apps") : .ui("Info")
-        }
-    }
+    @State private var showInfo = false
 
     var body: some View {
         VStack(spacing: 0) {
-            DeviceHeader(device: device)
+            DeviceHeader(device: device) { showInfo = true }
             Divider()
             content
         }
         .navigationTitle(device.displayName)
         .navigationSubtitle(device.isReady ? "\(device.marketingName) · \(device.systemVersionLabel)" : "")
         .toolbar { toolbarContent }
+        .sheet(isPresented: $showInfo) { DeviceInfoSheet(device: device) }
         .task(id: device.udid) { await reloadApps() }
         .task(id: ui.appScope) { await reloadApps() }
         // Rilancia anche dopo installazioni e rimozioni, che ricaricano l'elenco.
@@ -73,10 +66,7 @@ struct DeviceDetailView: View {
                 action: (.ui("Try again"), { Task { await devices.refreshNow() } })
             )
         case .ready:
-            switch tab {
-            case .apps: appsList
-            case .info: DeviceInfoList(device: device)
-            }
+            appsList
         }
     }
 
@@ -161,21 +151,12 @@ struct DeviceDetailView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Picker(.ui("Section"), selection: $tab) {
-                ForEach(Tab.allCases) { Text($0.label).tag($0) }
-            }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .frame(width: 260)
-            .disabled(!device.isReady)
-        }
         ToolbarItemGroup {
             Picker(.ui("Type"), selection: Bindable(ui).appScope) {
                 ForEach(InstalledAppsService.Scope.allCases) { Text($0.label).tag($0) }
             }
             .help(Text(.ui("Filter user or system apps")))
-            .disabled(!device.isReady || tab != .apps)
+            .disabled(!device.isReady)
 
             Button(.ui("Refresh"), systemImage: "arrow.clockwise", action: refreshAll)
                 .disabled(installedApps.isLoading(device.udid))

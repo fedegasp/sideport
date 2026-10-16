@@ -194,8 +194,6 @@
 	<string>Installa la versione presente in libreria</string>
 	<key>Install them with Homebrew:</key>
 	<string>Installali con Homebrew:</string>
-	<key>Installed apps</key>
-	<string>App installate</string>
 	<key>Installing</key>
 	<string>Installazione</string>
 	<key>Installing profile</key>
@@ -330,8 +328,6 @@
 	<string>Cerca nell'App Store</string>
 	<key>Searching…</key>
 	<string>Ricerca in corso…</string>
-	<key>Section</key>
-	<string>Sezione</string>
 	<key>Select all</key>
 	<string>Seleziona tutti</string>
 	<key>Serial number</key>
@@ -342,6 +338,8 @@
 	<string>Mostra download</string>
 	<key>Show Library</key>
 	<string>Mostra libreria</string>
+	<key>Show device info</key>
+	<string>Mostra le informazioni del dispositivo</string>
 	<key>Show in Finder</key>
 	<string>Mostra nel Finder</string>
 	<key>Show log</key>

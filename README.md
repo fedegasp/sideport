@@ -81,7 +81,8 @@ Nella scheda di un dispositivo trovi le app installate, con icona, versione e sp
 (app piu' documenti e dati, come in Impostazioni su iOS; il dettaglio e' nel tooltip), con
 rimozione e, quando la libreria contiene una versione piu' recente della stessa app, un
 pulsante *Aggiorna*. Le icone restano in cache in `~/Library/Caches/IMC/Icone`, per bundle
-ID e versione.
+ID e versione. Il pulsante *Informazioni* nell'intestazione apre un foglio con i dati del
+dispositivo (modello, numero di serie, UDID, sistema, spazio) e la rinomina.
 
 ### Download dall'App Store
 

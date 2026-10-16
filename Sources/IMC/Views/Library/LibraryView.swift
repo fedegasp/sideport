@@ -6,10 +6,26 @@ struct LibraryView: View {
     @Environment(DeviceMonitor.self) private var devices
     @Environment(UIState.self) private var ui
 
+    private enum ImportMode {
+        case none, ipa, folder
+
+        var isPresented: Bool {
+            get { self != .none }
+            set { if !newValue { self = .none } }
+        }
+
+        var contentTypes: [UTType] {
+            switch self {
+            case .ipa: [UTType(filenameExtension: "ipa") ?? .data]
+            case .folder: [.folder]
+            case .none: []
+            }
+        }
+    }
+
     @State private var search = ""
     @State private var selection = Set<URL>()
-    @State private var isImporting = false
-    @State private var isChoosingFolder = false
+    @State private var importMode: ImportMode = .none
     @State private var isTargeted = false
 
     private var filtered: [IPAPackage] {
@@ -36,7 +52,7 @@ struct LibraryView: View {
                     symbol: "square.stack.3d.down.right",
                     title: .ui("Empty library"),
                     message: .ui("Add the .ipa files you want to install on your devices. You can also drag them here."),
-                    action: (.ui("Import .ipa…"), { isImporting = true })
+                    action: (.ui("Import .ipa…"), { importMode = .ipa })
                 )
             } else {
                 table
@@ -61,20 +77,20 @@ struct LibraryView: View {
             return true
         } isTargeted: { isTargeted = $0 }
         .fileImporter(
-            isPresented: $isImporting,
-            allowedContentTypes: [UTType(filenameExtension: "ipa") ?? .data],
-            allowsMultipleSelection: true
+            isPresented: $importMode.isPresented,
+            allowedContentTypes: importMode.contentTypes,
+            allowsMultipleSelection: importMode == .ipa
         ) { result in
-            if case .success(let urls) = result {
+            guard case .success(let urls) = result else { return }
+            switch importMode {
+            case .ipa:
                 Task { await library.importPackages(from: urls) }
-            }
-        }
-        .fileImporter(
-            isPresented: $isChoosingFolder,
-            allowedContentTypes: [.folder]
-        ) { result in
-            if case .success(let folder) = result {
-                Task { await library.setLibraryURL(folder) }
+            case .folder:
+                if let folder = urls.first {
+                    Task { await library.setLibraryURL(folder) }
+                }
+            case .none:
+                break
             }
         }
         .sheet(item: $ui.inspectPackage) { package in
@@ -195,7 +211,7 @@ struct LibraryView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup {
-            Button { isImporting = true } label: {
+            Button { importMode = .ipa } label: {
                 Label(.ui("Import"), systemImage: "plus")
             }
             .help(Text(.ui("Import .ipa files into the library")))
@@ -207,7 +223,7 @@ struct LibraryView: View {
 
             Menu {
                 Button(.ui("Open library folder")) { library.openLibraryFolder() }
-                Button(.ui("Change folder…")) { isChoosingFolder = true }
+                Button(.ui("Change folder…")) { importMode = .folder }
                 Button(.ui("Restore default folder")) {
                     Task { await library.setLibraryURL(LibraryStore.defaultLibraryURL) }
                 }
