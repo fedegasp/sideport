@@ -1,0 +1,67 @@
+# Sorgente del progetto Xcode: rigenera con `xcodegen generate` (brew install xcodegen).
+name: IMC
+
+options:
+  bundleIdPrefix: com.local
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Firma ad-hoc: l'app e' uno strumento locale, non distribuito.
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+    # Il runtime irrobustito bloccherebbe le dylib di libimobiledevice firmate ad-hoc.
+    ENABLE_HARDENED_RUNTIME: NO
+    # Le fasi di script devono poter leggere /opt/homebrew e scrivere nel bundle.
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    DEAD_CODE_STRIPPING: YES
+
+targets:
+  IMC:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/IMC
+      - path: Resources/AppIcon.icns
+        buildPhase: resources
+      - path: README.md
+        buildPhase: none
+      - path: project.yml
+        buildPhase: none
+      - path: Scripts
+        buildPhase: none
+    settings:
+      base:
+        PRODUCT_NAME: IMC
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.imc
+        INFOPLIST_FILE: Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        COMBINE_HIDPI_IMAGES: YES
+        LD_RUNPATH_SEARCH_PATHS:
+          - "$(inherited)"
+          - "@executable_path/../Frameworks"
+    preBuildScripts:
+      - name: Genera icona
+        script: "\"$SRCROOT/Scripts/make-icon.sh\""
+        basedOnDependencyAnalysis: false
+    postBuildScripts:
+      - name: Incorpora libimobiledevice
+        script: "\"$SRCROOT/Scripts/bundle-tools.sh\" \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\""
+        basedOnDependencyAnalysis: false
+
+schemes:
+  IMC:
+    build:
+      targets:
+        IMC: all
+    run:
+      config: Debug
+    archive:
+      config: Release
