@@ -148,7 +148,7 @@ final class DeviceMonitor {
         if lowered.contains("passcode") || lowered.contains("locked") {
             return .locked
         }
-        return .error(message.isEmpty ? "Comunicazione con il dispositivo fallita." : message)
+        return .error(message.isEmpty ? String.ui("Communication with the device failed.") : message)
     }
 
     private func update(udid: String, _ transform: (inout Device) -> Void) {

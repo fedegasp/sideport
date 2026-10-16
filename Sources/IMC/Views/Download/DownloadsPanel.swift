@@ -6,9 +6,9 @@ struct DownloadsPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text("Download").font(.headline)
+                Text(.ui("Downloads")).font(.headline)
                 Spacer()
-                Button("Pulisci", action: store.clearFinishedDownloads)
+                Button(.ui("Clear"), action: store.clearFinishedDownloads)
                     .buttonStyle(.link)
                     .disabled(store.downloads.allSatisfy { !$0.status.isFinished })
             }

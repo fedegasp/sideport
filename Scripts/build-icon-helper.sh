@@ -9,25 +9,23 @@ set -euo pipefail
 
 OUTPUT="${1:?Percorso di destinazione richiesto}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SOURCE="$ROOT/Helpers/imc-icon/main.c"
+CRATE="$ROOT/Helpers/imc-icon"
 
-# Xcode esegue le fasi di script con un PATH ridotto: pkg-config va cercato
-# esplicitamente fra le installazioni Homebrew note.
-PKG_CONFIG=""
-for candidate in /opt/homebrew/bin/pkg-config /usr/local/bin/pkg-config "$(command -v pkg-config 2>/dev/null || true)"; do
-    [ -n "$candidate" ] && [ -x "$candidate" ] && { PKG_CONFIG="$candidate"; break; }
+# Xcode esegue le fasi di script con un PATH ridotto: cargo va cercato
+# esplicitamente fra le installazioni note. Lo stesso vale per pkg-config, che
+# pero' se lo cerca da solo build.rs.
+CARGO=""
+for candidate in "$HOME/.cargo/bin/cargo" /opt/homebrew/bin/cargo /usr/local/bin/cargo "$(command -v cargo 2>/dev/null || true)"; do
+    [ -n "$candidate" ] && [ -x "$candidate" ] && { CARGO="$candidate"; break; }
 done
-if [ -z "$PKG_CONFIG" ]; then
-    echo "pkg-config non trovato: installalo con 'brew install pkg-config'." >&2
+if [ -z "$CARGO" ]; then
+    echo "cargo non trovato: installa Rust da https://rustup.rs oppure con 'brew install rust'." >&2
     exit 1
 fi
 
-if ! FLAGS="$("$PKG_CONFIG" --cflags --libs libimobiledevice-1.0)"; then
-    echo "libimobiledevice non trovata: installala con 'brew install libimobiledevice'." >&2
-    exit 1
-fi
+# Il crate non ha dipendenze esterne, quindi --locked compila anche offline.
+"$CARGO" build --release --locked --manifest-path "$CRATE/Cargo.toml"
 
 mkdir -p "$(dirname "$OUTPUT")"
-# shellcheck disable=SC2086
-xcrun clang -O2 -Wall -Wextra \
-    "$SOURCE" $FLAGS -o "$OUTPUT"
+cp "$CRATE/target/release/imc-icon" "$OUTPUT"
+chmod u+w "$OUTPUT"

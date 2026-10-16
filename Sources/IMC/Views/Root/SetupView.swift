@@ -15,10 +15,10 @@ struct SetupView: View {
                 .foregroundStyle(.tint)
                 .accessibilityHidden(true)
 
-            Text("Componenti mancanti")
+            Text(.ui("Missing components"))
                 .font(.title2.weight(.semibold))
 
-            Text("IMC comunica con i dispositivi iOS tramite libimobiledevice. Questi strumenti non sono stati trovati:")
+            Text(.ui("IMC talks to iOS devices through libimobiledevice. These tools were not found:"))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 440)
@@ -28,7 +28,7 @@ struct SetupView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
                         Text(tool.rawValue).font(.system(.body, design: .monospaced))
-                        Text("— \(tool.purpose)").foregroundStyle(.secondary)
+                        (Text(verbatim: "— ") + Text(tool.purpose)).foregroundStyle(.secondary)
                     }
                 }
             }
@@ -36,7 +36,7 @@ struct SetupView: View {
             .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
 
             VStack(spacing: 8) {
-                Text("Installali con Homebrew:").foregroundStyle(.secondary)
+                Text(.ui("Install them with Homebrew:")).foregroundStyle(.secondary)
                 HStack(spacing: 8) {
                     Text(command)
                         .font(.system(.body, design: .monospaced))
@@ -44,13 +44,13 @@ struct SetupView: View {
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
-                    Button("Copia il comando", systemImage: "doc.on.doc", action: copyCommand)
+                    Button(.ui("Copy the command"), systemImage: "doc.on.doc", action: copyCommand)
                         .labelStyle(.iconOnly)
-                        .help("Copia il comando")
+                        .help(Text(.ui("Copy the command")))
                 }
             }
 
-            Button("Ho installato, verifica di nuovo", action: onRecheck)
+            Button(.ui("I installed them, check again"), action: onRecheck)
                 .buttonStyle(.borderedProminent)
         }
         .padding(32)

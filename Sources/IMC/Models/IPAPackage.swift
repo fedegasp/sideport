@@ -2,9 +2,17 @@ import Foundation
 
 struct IPAPackage: Identifiable, Hashable, Codable {
     enum Signing: String, Codable {
-        case appStore = "App Store"
-        case provisioned = "Profilo di provisioning"
-        case unknown = "Sconosciuta"
+        case appStore
+        case provisioned
+        case unknown
+
+        var label: LocalizedStringResource {
+            switch self {
+            case .appStore: .ui("App Store")
+            case .provisioned: .ui("Provisioning profile")
+            case .unknown: .ui("Unknown")
+            }
+        }
     }
 
     let url: URL
@@ -55,12 +63,12 @@ struct IPAPackage: Identifiable, Hashable, Codable {
             // Un'app solo-iPhone gira comunque su iPad in modalita' compatibilita'.
             let runsAnyway = expected == 2 && supportedDeviceFamilies.contains(1)
             if !supportedDeviceFamilies.contains(expected) && !runsAnyway {
-                return .incompatible("Questa app non supporta \(device.marketingName).")
+                return .incompatible(String.ui("This app does not support \(device.marketingName)."))
             }
         }
         if !minimumOSVersion.isEmpty, !device.productVersion.isEmpty,
            VersionCompare.isLower(device.productVersion, than: minimumOSVersion) {
-            return .incompatible("Richiede iOS \(minimumOSVersion), il dispositivo ha \(device.productVersion).")
+            return .incompatible(String.ui("Requires iOS \(minimumOSVersion), the device has \(device.productVersion)."))
         }
         return .compatible
     }

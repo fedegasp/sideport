@@ -46,10 +46,10 @@ struct TransferJob: Identifiable, Equatable {
 
     var title: String { kind.title }
 
-    var subtitle: String {
+    var subtitle: LocalizedStringResource {
         switch kind {
-        case .install: return "Installa su \(deviceName)"
-        case .uninstall: return "Rimuovi da \(deviceName)"
+        case .install: .ui("Install on \(deviceName)")
+        case .uninstall: .ui("Remove from \(deviceName)")
         }
     }
 

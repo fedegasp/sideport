@@ -39,11 +39,11 @@ struct InstalledApp: Identifiable, Hashable {
     var versionLabel: String {
         if shortVersion.isEmpty { return buildVersion }
         if buildVersion.isEmpty || buildVersion == shortVersion { return shortVersion }
-        return "\(shortVersion) (\(buildVersion))"
+        return "\(shortVersion)\n(\(buildVersion))"
     }
 
     init(plist: [String: Any]) {
-        bundleIdentifier = plist.string("CFBundleIdentifier") ?? "sconosciuto"
+        bundleIdentifier = plist.string("CFBundleIdentifier") ?? String.ui("unknown")
         name = plist.string("CFBundleDisplayName")
             ?? plist.string("CFBundleName")
             ?? bundleIdentifier

@@ -8,12 +8,13 @@ gia' presenti sul dispositivo.
 ## Requisiti
 
 - macOS 14 o successivo
-- Xcode 15+ / Swift 6 per compilare
+- Xcode 15+ / Swift 6 per compilare l'app, Rust 1.85+ per l'helper delle icone
 - [libimobiledevice](https://libimobiledevice.org) per parlare con i dispositivi e
   [ipatool](https://github.com/majd/ipatool) per scaricare dall'App Store:
 
 ```bash
 brew install libimobiledevice ideviceinstaller ipatool
+brew install rust       # oppure rustup, per l'helper delle icone
 brew install xcodegen   # solo per rigenerare il progetto Xcode
 ```
 
@@ -21,11 +22,11 @@ Tutti e tre i tool vengono copiati dentro `IMC.app` in fase di build, quindi l'a
 risultante funziona anche su un Mac senza Homebrew (il bundle pesa circa 40 MB,
 di cui 30 sono ipatool).
 
-Nel bundle finisce anche `imc-icon`, un piccolo helper in C ([`Helpers/imc-icon`](Helpers/imc-icon/main.c))
+Nel bundle finisce anche `imc-icon`, un piccolo helper in Rust ([`Helpers/imc-icon`](Helpers/imc-icon/src/main.rs))
 che legge le icone delle app installate dal servizio SpringBoard del dispositivo: nessun
-tool di libimobiledevice lo espone. Viene compilato in fase di build contro la
-libimobiledevice di Homebrew (serve `pkg-config`); se manca, le app installate mostrano
-un segnaposto.
+tool di libimobiledevice lo espone. E' un crate senza dipendenze, compilato in fase di
+build da `cargo` e collegato alla libimobiledevice di Homebrew (serve `pkg-config`); se
+manca, le app installate mostrano un segnaposto.
 
 ## Build
 
@@ -100,6 +101,29 @@ argomento da riga di comando, quindi non e' visibile in `ps`; IMC non la conserv
 di sessione lo gestisce ipatool nel portachiavi di macOS, e al primo accesso macOS puo'
 chiedere l'autorizzazione.
 
+### Lingue
+
+L'interfaccia e' in inglese (lingua sorgente) e in italiano, e segue la lingua di sistema.
+Tutti i testi stanno in [`Sources/IMC/Resources/Localizable.xcstrings`](Sources/IMC/Resources/Localizable.xcstrings),
+piu' [`Resources/InfoPlist.xcstrings`](Resources/InfoPlist.xcstrings) per copyright e nome
+del tipo di documento. Nel codice si leggono con `.ui("…")`, che punta al catalogo nel
+bundle del modulo (`Core/LocalizedText.swift`): con SwiftPM le risorse non finiscono nel
+bundle principale, dove SwiftUI cercherebbe le stringhe per impostazione predefinita.
+
+Xcode compila i `.xcstrings` da solo; `swift build` no, quindi i `.strings` generati sono
+versionati sotto `Sources/IMC/Resources/*.lproj` e **dopo ogni modifica al catalogo** vanno
+rigenerati (`build-app.sh` lo fa da solo):
+
+```bash
+./Scripts/compile-strings.sh
+```
+
+Per provare una lingua senza cambiare quella di sistema:
+
+```bash
+open dist/IMC.app --args -AppleLanguages '(en)'
+```
+
 ### Scorciatoie
 
 | Tasti | Azione |
@@ -138,10 +162,12 @@ Sources/IMC/
   State/        stato condiviso dell'interfaccia (UIState, Route)
   Views/        interfaccia SwiftUI, una cartella per sezione (Root, Library, Device,
                 Download, Transfers) piu' Shared per i componenti comuni
+  Resources/    catalogo di stringhe (.xcstrings) e .strings compilati
 Tests/IMCTests/ test della logica di parsing (Swift Testing): `swift test`
-Resources/      Info.plist e icona dell'app
-Helpers/        helper in C incorporati nel bundle (imc-icon)
-Scripts/        build del bundle, incorporamento dei tool, generazione icona
+Resources/      Info.plist, catalogo dell'Info.plist e icona dell'app
+Helpers/        helper in Rust incorporati nel bundle (imc-icon)
+Scripts/        build del bundle, incorporamento dei tool, generazione icona,
+                compilazione delle stringhe
 project.yml     sorgente del progetto Xcode (XcodeGen)
 Package.swift   build da riga di comando
 ```

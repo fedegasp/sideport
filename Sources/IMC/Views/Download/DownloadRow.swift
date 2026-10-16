@@ -18,7 +18,9 @@ struct DownloadRow: View {
                     } else {
                         ProgressView().progressViewStyle(.linear).frame(maxWidth: 260)
                     }
-                    Text(bytes > 0 ? "Scaricati \(Format.bytes(bytes))" : "Avvio del download…")
+                    Text(bytes > 0
+                         ? .ui("Downloaded \(Format.bytes(bytes))")
+                         : .ui("Starting the download…"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 case .finished(let url):
@@ -32,7 +34,7 @@ struct DownloadRow: View {
                         .foregroundStyle(.red)
                         .fixedSize(horizontal: false, vertical: true)
                 case .cancelled:
-                    Text("Annullato").font(.caption).foregroundStyle(.secondary)
+                    Text(.ui("Cancelled")).font(.caption).foregroundStyle(.secondary)
                 }
             }
 
@@ -40,11 +42,11 @@ struct DownloadRow: View {
 
             switch job.status {
             case .running:
-                Button("Annulla") { store.cancelDownload(job) }
+                Button(.ui("Cancel")) { store.cancelDownload(job) }
                     .buttonStyle(.link)
             case .finished(let url):
                 if let package = library.packages.first(where: { $0.url == url }) {
-                    Button("Installa su…") { ui.installSheet = .init(packages: [package]) }
+                    Button(.ui("Install on…")) { ui.installSheet = .init(packages: [package]) }
                         .buttonStyle(.bordered)
                         .controlSize(.small)
                 } else {

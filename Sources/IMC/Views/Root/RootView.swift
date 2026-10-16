@@ -32,7 +32,7 @@ struct RootView: View {
             isPresented: Binding(get: { ui.alert != nil }, set: { if !$0 { ui.alert = nil } }),
             presenting: ui.alert
         ) { _ in
-            Button("OK") {}
+            Button(.ui("OK")) {}
         } message: { content in
             Text(content.message)
         }
@@ -54,8 +54,8 @@ struct RootView: View {
                 } else {
                     EmptyStateView(
                         symbol: "cable.connector.slash",
-                        title: "Dispositivo scollegato",
-                        message: "Ricollega il dispositivo con il cavo per continuare."
+                        title: .ui("Device disconnected"),
+                        message: .ui("Reconnect the device with the cable to continue.")
                     )
                 }
             }
@@ -68,10 +68,10 @@ struct RootView: View {
             Button {
                 ui.showTransfers.toggle()
             } label: {
-                Label("Attivita'", systemImage: queue.hasActivity ? "arrow.down.circle.fill" : "arrow.down.circle")
+                Label(.ui("Activity"), systemImage: queue.hasActivity ? "arrow.down.circle.fill" : "arrow.down.circle")
                     .symbolRenderingMode(queue.hasActivity ? .multicolor : .monochrome)
             }
-            .help("Mostra la coda dei trasferimenti")
+            .help(Text(.ui("Show the transfer queue")))
             .overlay(alignment: .topTrailing) {
                 if queue.hasActivity {
                     Circle()

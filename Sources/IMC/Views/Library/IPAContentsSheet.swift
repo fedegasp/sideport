@@ -71,11 +71,11 @@ struct IPAContentsSheet: View {
             Task { await extract(target, into: folder) }
         }
         .alert(
-            "Estrazione non riuscita",
+            Text(.ui("Extraction failed")),
             isPresented: Binding(get: { actionError != nil }, set: { if !$0 { actionError = nil } }),
             presenting: actionError
         ) { _ in
-            Button("OK") {}
+            Button(.ui("OK")) {}
         } message: { message in
             Text(message)
         }
@@ -89,7 +89,7 @@ struct IPAContentsSheet: View {
                 AppIconView(data: package.iconData, size: 44)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(package.name).font(.headline).lineLimit(1)
-                    Text("\(package.bundleIdentifier) · \(package.versionLabel)")
+                    Text(.ui("\(package.bundleIdentifier) · \(package.versionLabel)"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -97,7 +97,7 @@ struct IPAContentsSheet: View {
                 Spacer(minLength: 12)
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(Format.bytes(package.fileSize)).monospacedDigit()
-                    Text(summary)
+                    summaryText
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
@@ -108,10 +108,13 @@ struct IPAContentsSheet: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
-                TextField("Filtra per nome o percorso", text: $search)
-                    .textFieldStyle(.plain)
+                TextField(text: $search, prompt: Text(.ui("Filter by name or path"))) {
+                    Text(.ui("Filter by name or path"))
+                }
+                .textFieldStyle(.plain)
+                .labelsHidden()
                 if !search.isEmpty {
-                    Button("Cancella filtro", systemImage: "xmark.circle.fill", action: clearSearch)
+                    Button(.ui("Clear filter"), systemImage: "xmark.circle.fill", action: clearSearch)
                         .labelStyle(.iconOnly)
                         .buttonStyle(.plain)
                         .foregroundStyle(.secondary)
@@ -125,11 +128,15 @@ struct IPAContentsSheet: View {
         .padding(12)
     }
 
-    private var summary: String {
-        guard !isLoading, error == nil else { return "—" }
-        let files = entries.filter { !$0.isDirectory }
-        let uncompressed = files.reduce(Int64(0)) { $0 + $1.size }
-        return "\(files.count) file · \(Format.bytes(uncompressed)) estratti"
+    @ViewBuilder
+    private var summaryText: some View {
+        if isLoading || error != nil {
+            Text(verbatim: "—")
+        } else {
+            let files = entries.filter { !$0.isDirectory }
+            let uncompressed = files.reduce(Int64(0)) { $0 + $1.size }
+            Text(.ui("\(files.count) files · \(Format.bytes(uncompressed)) extracted"))
+        }
     }
 
     // MARK: - Elenco
@@ -139,16 +146,16 @@ struct IPAContentsSheet: View {
         if isLoading {
             VStack(spacing: 8) {
                 ProgressView()
-                Text("Lettura dell'archivio…").foregroundStyle(.secondary).font(.callout)
+                Text(.ui("Reading the archive…")).foregroundStyle(.secondary).font(.callout)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if let error {
-            EmptyStateView(symbol: "exclamationmark.triangle", title: "Archivio non leggibile", message: error)
+            EmptyStateView(symbol: "exclamationmark.triangle", title: .ui("Unreadable archive"), error: error)
         } else if rows.isEmpty {
             EmptyStateView(
                 symbol: "magnifyingglass",
-                title: "Nessuna corrispondenza",
-                message: "Nessun file dell'archivio contiene «\(search)»."
+                title: .ui("No matches"),
+                message: .ui("No file in the archive contains “\(search)”.")
             )
         } else {
             List {
@@ -160,7 +167,7 @@ struct IPAContentsSheet: View {
             .listStyle(.inset(alternatesRowBackgrounds: true))
             .overlay {
                 if isExtracting {
-                    ProgressView("Estrazione…")
+                    ProgressView(.ui("Extracting…"))
                         .padding(20)
                         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
                 }
@@ -181,7 +188,7 @@ struct IPAContentsSheet: View {
                     toggle(row.node.id)
                 } label: {
                     Label(
-                        isExpanded ? "Comprimi" : "Espandi",
+                        isExpanded ? .ui("Collapse") : .ui("Expand"),
                         systemImage: isExpanded ? "chevron.down" : "chevron.right"
                     )
                     .labelStyle(.iconOnly)
@@ -229,7 +236,7 @@ struct IPAContentsSheet: View {
         .accessibilityAction { click(row) }
         .accessibilityActions {
             if row.node.isDirectory && row.subtitle == nil {
-                Button(expanded.contains(row.node.id) ? "Comprimi" : "Espandi") { toggle(row.node.id) }
+                Button(expanded.contains(row.node.id) ? .ui("Collapse") : .ui("Expand")) { toggle(row.node.id) }
             }
         }
         // Gesti simultanei: `.draggable` installa il suo riconoscitore sulla
@@ -242,11 +249,11 @@ struct IPAContentsSheet: View {
         .onDrag { dragItem(for: row) }
         .contextMenu {
             let targets = extractionTargets(for: row)
-            Button(targets.count == 1 ? "Estrai…" : "Estrai \(targets.count) elementi…") {
+            Button(targets.count == 1 ? .ui("Extract…") : .ui("Extract \(targets.count) items…")) {
                 pending = .entries(targets)
                 isChoosingDestination = true
             }
-            Button("Copia percorso") {
+            Button(.ui("Copy path")) {
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(row.node.id, forType: .string)
             }
@@ -403,23 +410,23 @@ struct IPAContentsSheet: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             HStack(spacing: 10) {
-                Button("Estrai tutto…") {
+                Button(.ui("Extract all…")) {
                     pending = .all
                     isChoosingDestination = true
                 }
                 .disabled(isLoading || error != nil || isExtracting)
 
-                Button("Estrai selezione…") {
+                Button(.ui("Extract selection…")) {
                     pending = .entries(selectedEntries)
                     isChoosingDestination = true
                 }
                 .disabled(selection.isEmpty || isExtracting)
 
-                Button("Mostra nel Finder") { library.reveal(package) }
+                Button(.ui("Show in Finder")) { library.reveal(package) }
 
                 Spacer()
 
-                Button("Chiudi") { dismiss() }
+                Button(.ui("Close")) { dismiss() }
                     .buttonStyle(.borderedProminent)
                     .keyboardShortcut(.defaultAction)
             }
@@ -427,11 +434,9 @@ struct IPAContentsSheet: View {
         .padding(12)
     }
 
-    private var selectionHint: String {
-        switch selection.count {
-        case 0: return "Trascina un elemento nel Finder per estrarlo, oppure selezionane piu' d'uno con ⌘ o ⇧."
-        case 1: return "1 elemento selezionato."
-        default: return "\(selection.count) elementi selezionati."
-        }
+    private var selectionHint: LocalizedStringResource {
+        selection.isEmpty
+            ? .ui("Drag an item to the Finder to extract it, or select more than one with ⌘ or ⇧.")
+            : .ui("\(selection.count) items selected.")
     }
 }

@@ -13,6 +13,6 @@ struct CommandResult {
         if !err.isEmpty { return err }
         let out = stdout.trimmingCharacters(in: .whitespacesAndNewlines)
         if !out.isEmpty { return out }
-        return "Il comando e' terminato con codice \(exitCode)."
+        return String.ui("The command exited with code \(Int(exitCode)).")
     }
 }

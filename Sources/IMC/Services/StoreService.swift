@@ -118,7 +118,7 @@ final class StoreService {
             if authState.account == nil {
                 // ipatool ha chiuso senza errori ma l'account non risulta.
                 authState = .signedOut
-                lastError = "Login non riuscito: ipatool non riporta un account attivo."
+                lastError = String.ui("Sign-in failed: ipatool does not report an active account.")
             }
         } else {
             authState = .signedOut
@@ -175,7 +175,7 @@ final class StoreService {
             }
             searchResults = Self.parseApps(from: result.stdout)
             if searchResults.isEmpty {
-                lastError = "Nessun risultato per \u{201C}\(query)\u{201D}."
+                lastError = String.ui("No results for \u{201C}\(query)\u{201D}.")
             }
         } catch {
             searchResults = []
@@ -393,29 +393,59 @@ final class StoreService {
             .last
         guard let reported else {
             let fallback = stderr.trimmingCharacters(in: .whitespacesAndNewlines)
-            return fallback.isEmpty ? "ipatool e' terminato con un errore." : fallback
+            return fallback.isEmpty ? String.ui("ipatool exited with an error.") : fallback
         }
         return humanize(reported)
     }
 
-    nonisolated static func humanize(_ message: String) -> String {
+    /// Errori ricorrenti di ipatool. Il riconoscimento e' separato dal testo
+    /// mostrato: quello cambia con la lingua, i messaggi del tool no.
+    enum Failure {
+        case noAccount
+        case missingLicense
+        case wrongCredentials
+        case invalidAuthCode
+        case rateLimited
+
+        var message: String {
+            switch self {
+            case .noAccount:
+                String.ui("No authenticated account: sign in with your Apple ID.")
+            case .missingLicense:
+                String.ui("No license for this app. If it is free use \u{201C}Get and download\u{201D}; if it is paid, buy it from the App Store with this Apple ID.")
+            case .wrongCredentials:
+                String.ui("Incorrect Apple ID or password.")
+            case .invalidAuthCode:
+                String.ui("Invalid or expired verification code.")
+            case .rateLimited:
+                String.ui("Too many attempts: Apple has temporarily blocked requests. Try again later.")
+            }
+        }
+    }
+
+    /// Interno per i test.
+    nonisolated static func failure(in message: String) -> Failure? {
         let lowered = message.lowercased()
         if lowered.contains("could not be found in the keyring") || lowered.contains("failed to get account") {
-            return "Nessun account autenticato: accedi con il tuo Apple ID."
+            return .noAccount
         }
         if lowered.contains("license") {
-            return "Licenza mancante per questa app. Se e' gratuita usa \u{201C}Ottieni e scarica\u{201D}; se e' a pagamento va acquistata dall'App Store con questo Apple ID."
+            return .missingLicense
         }
         if lowered.contains("password") && lowered.contains("incorrect") {
-            return "Apple ID o password non corretti."
+            return .wrongCredentials
         }
         if lowered.contains("2fa") || lowered.contains("verification code") {
-            return "Codice di verifica non valido o scaduto."
+            return .invalidAuthCode
         }
         if lowered.contains("too many") || lowered.contains("rate") {
-            return "Troppi tentativi: Apple ha temporaneamente bloccato le richieste. Riprova piu' tardi."
+            return .rateLimited
         }
-        return message
+        return nil
+    }
+
+    nonisolated static func humanize(_ message: String) -> String {
+        failure(in: message)?.message ?? message
     }
 
     /// Percentuali eventualmente stampate dalla barra di avanzamento.

@@ -12,10 +12,14 @@ APP="$ROOT/dist/IMC.app"
 EMBED_TOOLS=1
 [ "${1:-}" = "--no-tools" ] && EMBED_TOOLS=0
 
+echo "==> Stringhe localizzate"
+"$ROOT/Scripts/compile-strings.sh"
+
 echo "==> Compilazione release"
 swift build -c release
 
-BINARY="$(swift build -c release --show-bin-path)/IMC"
+BIN_DIR="$(swift build -c release --show-bin-path)"
+BINARY="$BIN_DIR/IMC"
 [ -f "$BINARY" ] || { echo "Binario non trovato: $BINARY" >&2; exit 1; }
 
 echo "==> Assemblaggio del bundle"
@@ -24,6 +28,14 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BINARY" "$APP/Contents/MacOS/IMC"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
+
+echo "==> Risorse localizzate"
+# Le stringhe dell'interfaccia stanno nel bundle di risorse del modulo, che
+# SwiftPM lascia accanto all'eseguibile; quelle dell'Info.plist (copyright e
+# nome del tipo di documento) vanno nelle .lproj del bundle dell'app.
+cp -R "$BIN_DIR/IMC_IMC.bundle" "$APP/Contents/Resources/"
+xcrun xcstringstool compile "$ROOT/Resources/InfoPlist.xcstrings" \
+    --output-directory "$APP/Contents/Resources"
 
 echo "==> Icona"
 "$ROOT/Scripts/make-icon.sh"

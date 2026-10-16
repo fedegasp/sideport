@@ -32,7 +32,9 @@ struct InstallSheet: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(packages.count == 1 ? "Installa \(packages[0].name)" : "Installa \(packages.count) app")
+            Text(packages.count == 1
+                 ? .ui("Install \(packages[0].name)")
+                 : .ui("Install \(packages.count) apps"))
                 .font(.headline)
 
             if packages.count == 1, let package = packages.first {
@@ -42,7 +44,7 @@ struct InstallSheet: View {
                         Text(package.bundleIdentifier)
                             .font(.callout)
                             .foregroundStyle(.secondary)
-                        Text("Versione \(package.versionLabel) · \(Format.bytes(package.fileSize))")
+                        Text(.ui("Version \(package.versionLabel) · \(Format.bytes(package.fileSize))"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -62,8 +64,8 @@ struct InstallSheet: View {
             if targets.isEmpty {
                 EmptyStateView(
                     symbol: "cable.connector",
-                    title: "Nessun dispositivo pronto",
-                    message: "Collega un iPhone o iPad con il cavo, sbloccalo e tocca Autorizza."
+                    title: .ui("No device ready"),
+                    message: .ui("Connect an iPhone or iPad with the cable, unlock it and tap Trust.")
                 )
             } else {
                 List {
@@ -84,13 +86,13 @@ struct InstallSheet: View {
     private var footer: some View {
         HStack {
             if targets.count > 1 {
-                Button(selectedUDIDs.count == targets.count ? "Deseleziona tutti" : "Seleziona tutti") {
+                Button(selectedUDIDs.count == targets.count ? .ui("Deselect all") : .ui("Select all")) {
                     selectedUDIDs = selectedUDIDs.count == targets.count ? [] : Set(targets.map(\.udid))
                 }
                 .buttonStyle(.link)
             }
             Spacer()
-            Button("Annulla") { dismiss() }
+            Button(.ui("Cancel")) { dismiss() }
                 .keyboardShortcut(.cancelAction)
             Button(installLabel) { startInstall() }
                 .buttonStyle(.borderedProminent)
@@ -100,9 +102,9 @@ struct InstallSheet: View {
         .padding(16)
     }
 
-    private var installLabel: String {
+    private var installLabel: LocalizedStringResource {
         let count = packages.count * max(selectedUDIDs.count, 1)
-        return selectedUDIDs.isEmpty || count == 1 ? "Installa" : "Installa (\(count))"
+        return selectedUDIDs.isEmpty || count == 1 ? .ui("Install") : .ui("Install (\(count))")
     }
 
     private func startInstall() {

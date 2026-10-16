@@ -7,9 +7,9 @@ enum ProcessError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .launchFailed(let message):
-            "Impossibile avviare il processo: \(message)"
+            String.ui("Cannot start the process: \(message)")
         case .commandFailed(let tool, let result):
-            "\(tool): \(result.failureMessage)"
+            String.ui("\(tool): \(result.failureMessage)")
         }
     }
 }

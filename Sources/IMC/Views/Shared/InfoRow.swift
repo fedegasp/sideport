@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct InfoRow: View {
-    let label: String
+    let label: LocalizedStringResource
     let value: String
 
     var body: some View {

@@ -33,7 +33,7 @@ struct Device: Identifiable, Hashable {
         if let known = DeviceNames.marketingName(for: productType) { return known }
         if !productType.isEmpty { return productType }
         // lockdownd puo' non aver ancora risposto: ripiega sulla classe.
-        return deviceClass.isEmpty ? "Dispositivo iOS" : deviceClass
+        return deviceClass.isEmpty ? String.ui("iOS device") : deviceClass
     }
 
     var osName: String {

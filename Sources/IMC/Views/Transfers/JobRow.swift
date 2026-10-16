@@ -37,10 +37,10 @@ struct JobRow: View {
                     .foregroundStyle(.red)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack(spacing: 10) {
-                    Button("Riprova") { queue.retry(job) }
+                    Button(.ui("Retry")) { queue.retry(job) }
                         .buttonStyle(.link)
                     if !job.log.isEmpty {
-                        Button(showLog ? "Nascondi log" : "Mostra log") { showLog.toggle() }
+                        Button(showLog ? .ui("Hide log") : .ui("Show log")) { showLog.toggle() }
                             .buttonStyle(.link)
                     }
                 }
@@ -82,11 +82,11 @@ struct JobRow: View {
     private var trailingControl: some View {
         switch job.status {
         case .queued, .running:
-            Button("Annulla", systemImage: "xmark.circle.fill") { queue.cancel(job) }
+            Button(.ui("Cancel"), systemImage: "xmark.circle.fill") { queue.cancel(job) }
                 .labelStyle(.iconOnly)
                 .foregroundStyle(.secondary)
                 .buttonStyle(.borderless)
-                .help("Annulla")
+                .help(Text(.ui("Cancel")))
         case .succeeded:
             if let duration = Format.duration(from: job.startedAt, to: job.finishedAt) {
                 Text(duration).font(.caption).foregroundStyle(.secondary)

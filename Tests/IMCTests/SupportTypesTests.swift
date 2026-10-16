@@ -35,7 +35,7 @@ struct SupportTypesTests {
             "CFBundleVersion": "45",
             "ApplicationType": "System",
         ])
-        #expect(app.versionLabel == "1.2 (45)")
+        #expect(app.versionLabel == "1.2\n(45)")
         #expect(app.name == "com.example.app")
         #expect(!app.isRemovable)
     }

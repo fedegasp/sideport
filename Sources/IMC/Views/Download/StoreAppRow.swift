@@ -6,6 +6,7 @@ struct StoreAppRow: View {
     let onDownload: (Bool) -> Void
 
     @Environment(StoreService.self) private var store
+    @Environment(\.locale) private var locale
 
     private var isDownloading: Bool {
         store.downloads.contains { $0.app.id == app.id && !$0.status.isFinished }
@@ -17,11 +18,11 @@ struct StoreAppRow: View {
                 Text(app.trackName).lineLimit(1)
                 HStack(spacing: 6) {
                     Text(app.bundleId)
-                    Text("·")
-                    Text("v\(app.version)")
+                    Text(verbatim: "·")
+                    Text(.ui("v\(app.version)"))
                     if let purchased = app.purchaseDateLabel {
-                        Text("·")
-                        Text("acquistata il \(purchased)")
+                        Text(verbatim: "·")
+                        Text(.ui("purchased on \(purchased)"))
                     }
                 }
                 .font(.caption)
@@ -31,26 +32,26 @@ struct StoreAppRow: View {
 
             Spacer(minLength: 12)
 
-            Text(app.priceLabel)
+            Text(app.priceLabel(locale: locale))
                 .font(.callout)
                 .foregroundStyle(.secondary)
 
             if isDownloading {
                 ProgressView().controlSize(.small)
             } else if app.isOwned {
-                Button("Scarica") { onDownload(false) }
+                Button(.ui("Download")) { onDownload(false) }
                     .buttonStyle(.bordered)
             } else if app.isFree {
-                Button("Ottieni e scarica") { onDownload(true) }
+                Button(.ui("Get and download")) { onDownload(true) }
                     .buttonStyle(.bordered)
-                    .help("Acquisisce la licenza gratuita sul tuo account, poi scarica il pacchetto")
+                    .help(Text(.ui("Acquires the free license on your account, then downloads the package")))
             } else {
                 // La ricerca non riporta la data d'acquisto, quindi non si puo'
                 // sapere se l'app e' gia' posseduta: si tenta e, se la licenza
                 // manca, ipatool lo dice.
-                Button("Scarica") { onDownload(false) }
+                Button(.ui("Download")) { onDownload(false) }
                     .buttonStyle(.bordered)
-                    .help("App a pagamento: si scarica solo se gia' acquistata con questo Apple ID, altrimenti va comprata dall'App Store")
+                    .help(Text(.ui("Paid app: it downloads only if already purchased with this Apple ID, otherwise buy it from the App Store")))
             }
         }
         .padding(.vertical, 3)

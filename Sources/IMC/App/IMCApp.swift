@@ -26,15 +26,15 @@ struct IMCApp: App {
         .commands {
             CommandGroup(replacing: .newItem) {}
             CommandGroup(after: .appInfo) {
-                Button("Aggiorna dispositivi", action: refreshDevices)
+                Button(.ui("Refresh Devices"), action: refreshDevices)
                     .keyboardShortcut("r", modifiers: [.command, .shift])
             }
             CommandGroup(after: .toolbar) {
-                Button("Mostra libreria") { ui.route = .library }
+                Button(.ui("Show Library")) { ui.route = .library }
                     .keyboardShortcut("1", modifiers: .command)
-                Button("Mostra download") { ui.route = .download }
+                Button(.ui("Show Downloads")) { ui.route = .download }
                     .keyboardShortcut("2", modifiers: .command)
-                Button("Mostra attivita'") { ui.showTransfers.toggle() }
+                Button(.ui("Show Activity")) { ui.showTransfers.toggle() }
                     .keyboardShortcut("t", modifiers: [.command, .shift])
             }
         }

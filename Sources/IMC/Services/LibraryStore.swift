@@ -58,7 +58,7 @@ final class LibraryStore {
             includingPropertiesForKeys: [.fileSizeKey, .contentModificationDateKey],
             options: [.skipsHiddenFiles]
         ) else {
-            lastError = "Impossibile leggere la cartella \(libraryURL.path)."
+            lastError = String.ui("Cannot read the folder \(libraryURL.path).")
             return
         }
 
@@ -129,7 +129,7 @@ final class LibraryStore {
             cache.removeValue(forKey: package.url.path)
             await refresh()
         } catch {
-            lastError = "Impossibile spostare nel cestino: \(error.localizedDescription)"
+            lastError = String.ui("Cannot move to Trash: \(error.localizedDescription)")
         }
     }
 

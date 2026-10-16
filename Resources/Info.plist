@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>
-    <string>it</string>
+    <string>en</string>
     <key>CFBundleExecutable</key>
     <string>IMC</string>
     <key>CFBundleIconFile</key>
@@ -29,12 +29,12 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSHumanReadableCopyright</key>
-    <string>Utilita' locale per la gestione delle app sui dispositivi iOS collegati.</string>
+    <string>Local utility to manage apps on connected iOS devices.</string>
     <key>CFBundleDocumentTypes</key>
     <array>
         <dict>
             <key>CFBundleTypeName</key>
-            <string>Archivio applicazione iOS</string>
+            <string>iOS application archive</string>
             <key>CFBundleTypeRole</key>
             <string>Viewer</string>
             <key>LSHandlerRank</key>

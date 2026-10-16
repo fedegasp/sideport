@@ -12,18 +12,20 @@ struct StoreBrowserView: View {
     private enum Mode: String, CaseIterable, Identifiable {
         case search, purchases
         var id: String { rawValue }
-        var label: String { self == .search ? "Cerca" : "I miei acquisti" }
+        var label: LocalizedStringResource {
+            self == .search ? .ui("Search") : .ui("My purchases")
+        }
     }
 
     private var apps: [StoreApp] {
         mode == .search ? store.searchResults : store.purchases
     }
 
-    private var purchasesLabel: String {
+    private var purchasesLabel: LocalizedStringResource {
         let loaded = store.purchases.count
-        guard loaded > 0 else { return "App associate al tuo Apple ID" }
-        if store.purchasesTotal > loaded { return "\(loaded) di \(store.purchasesTotal) app" }
-        return "\(loaded) app"
+        guard loaded > 0 else { return .ui("Apps linked to your Apple ID") }
+        if store.purchasesTotal > loaded { return .ui("\(loaded) of \(store.purchasesTotal) apps") }
+        return .ui("\(loaded) apps")
     }
 
     var body: some View {
@@ -43,9 +45,9 @@ struct StoreBrowserView: View {
                         Text(account.displayName)
                     }
                     Divider()
-                    Button("Esci dall'account") { Task { await store.signOut() } }
+                    Button(.ui("Sign out")) { Task { await store.signOut() } }
                 } label: {
-                    Label("Account", systemImage: "person.crop.circle")
+                    Label(.ui("Account"), systemImage: "person.crop.circle")
                 }
             }
         }
@@ -64,7 +66,7 @@ struct StoreBrowserView: View {
 
     private var controls: some View {
         VStack(spacing: 10) {
-            Picker("Modalita'", selection: $mode) {
+            Picker(.ui("Mode"), selection: $mode) {
                 ForEach(Mode.allCases) { Text($0.label).tag($0) }
             }
             .pickerStyle(.segmented)
@@ -72,29 +74,32 @@ struct StoreBrowserView: View {
 
             HStack(spacing: 10) {
                 if mode == .search {
-                    TextField("Cerca nell'App Store", text: $term)
-                        .textFieldStyle(.roundedBorder)
-                        .onSubmit(runSearch)
+                    TextField(text: $term, prompt: Text(.ui("Search the App Store"))) {
+                        Text(.ui("Search the App Store"))
+                    }
+                    .textFieldStyle(.roundedBorder)
+                    .labelsHidden()
+                    .onSubmit(runSearch)
                 } else {
                     Text(purchasesLabel).foregroundStyle(.secondary)
                     Spacer()
                 }
 
-                Picker("Piattaforma", selection: $platform) {
-                    ForEach(StorePlatform.allCases) { Text($0.label).tag($0) }
+                Picker(.ui("Platform"), selection: $platform) {
+                    ForEach(StorePlatform.allCases) { Text(verbatim: $0.label).tag($0) }
                 }
                 .labelsHidden()
                 .frame(width: 100)
-                .help("Filtra per tipo di dispositivo")
+                .help(Text(.ui("Filter by device type")))
 
                 if mode == .search {
-                    Stepper("\(limit) risultati", value: $limit, in: 1...50, step: 5)
+                    Stepper(.ui("\(limit) results"), value: $limit, in: 1...50, step: 5)
                         .frame(width: 150)
-                    Button("Cerca", action: runSearch)
+                    Button(.ui("Search"), action: runSearch)
                         .buttonStyle(.borderedProminent)
                         .disabled(term.trimmingCharacters(in: .whitespaces).isEmpty || store.isSearching)
                 } else {
-                    Button("Aggiorna") {
+                    Button(.ui("Refresh")) {
                         Task { await store.loadPurchases(platform: platform) }
                     }
                     .disabled(store.isLoadingPurchases)
@@ -109,18 +114,24 @@ struct StoreBrowserView: View {
         if store.isSearching || store.isLoadingPurchases {
             VStack(spacing: 8) {
                 ProgressView()
-                Text(mode == .search ? "Ricerca in corso…" : "Lettura acquisti…")
+                Text(mode == .search ? .ui("Searching…") : .ui("Reading purchases…"))
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if apps.isEmpty {
-            EmptyStateView(
-                symbol: mode == .search ? "magnifyingglass" : "bag",
-                title: mode == .search ? "Nessun risultato" : "Nessun acquisto",
-                message: store.lastError ?? (mode == .search
-                    ? "Cerca un'app per nome per scaricarne il pacchetto .ipa."
-                    : "Non risultano app associate a questo Apple ID.")
-            )
+            let symbol = mode == .search ? "magnifyingglass" : "bag"
+            let title: LocalizedStringResource = mode == .search ? .ui("No results") : .ui("No purchases")
+            if let error = store.lastError {
+                EmptyStateView(symbol: symbol, title: title, error: error)
+            } else {
+                EmptyStateView(
+                    symbol: symbol,
+                    title: title,
+                    message: mode == .search
+                        ? .ui("Search for an app by name to download its .ipa package.")
+                        : .ui("No apps are linked to this Apple ID.")
+                )
+            }
         } else {
             List {
                 if let error = store.lastError {

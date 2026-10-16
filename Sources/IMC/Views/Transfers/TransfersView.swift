@@ -6,13 +6,13 @@ struct TransfersView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Attivita'").font(.headline)
+                Text(.ui("Activity")).font(.headline)
                 Spacer()
                 if queue.hasActivity {
-                    Button("Annulla tutto", action: queue.cancelAll)
+                    Button(.ui("Cancel all"), action: queue.cancelAll)
                         .buttonStyle(.link)
                 }
-                Button("Pulisci", action: queue.clearFinished)
+                Button(.ui("Clear"), action: queue.clearFinished)
                     .buttonStyle(.link)
                     .disabled(queue.jobs.allSatisfy { !$0.status.isFinished })
             }
@@ -26,7 +26,7 @@ struct TransfersView: View {
                         .font(.largeTitle)
                         .foregroundStyle(.tertiary)
                         .accessibilityHidden(true)
-                    Text("Nessun trasferimento")
+                    Text(.ui("No transfers"))
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

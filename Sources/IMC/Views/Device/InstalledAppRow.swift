@@ -21,15 +21,16 @@ struct InstalledAppRow: View {
             Spacer(minLength: 12)
 
             if let upgrade {
-                Button("Aggiorna a \(upgrade.versionLabel)", systemImage: "arrow.up.circle") {
+                Button(.ui("Update to \(upgrade.versionLabel)"), systemImage: "arrow.up.circle") {
                     onInstallUpgrade(upgrade)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
-                .help("Installa la versione presente in libreria")
+                .help(Text(.ui("Install the version in the library")))
             }
 
             Text(app.versionLabel)
+                .multilineTextAlignment(.trailing)
                 .font(.callout)
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
@@ -40,18 +41,18 @@ struct InstalledAppRow: View {
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
                 .frame(width: 80, alignment: .trailing)
-                .help(diskUsageDetail)
+                .help(Text(diskUsageDetail))
 
-            Button("Rimuovi", systemImage: "trash", role: .destructive, action: onUninstall)
+            Button(.ui("Remove"), systemImage: "trash", role: .destructive, action: onUninstall)
                 .labelStyle(.iconOnly)
                 .buttonStyle(.borderless)
                 .disabled(!app.isRemovable)
-                .help(app.isRemovable ? "Rimuovi dal dispositivo" : "Le app di sistema non sono rimovibili")
+                .help(Text(app.isRemovable ? .ui("Remove from the device") : .ui("System apps cannot be removed")))
         }
         .padding(.vertical, 3)
     }
 
-    private var diskUsageDetail: String {
-        "App \(Format.bytes(app.appDiskUsage)) · Documenti e dati \(Format.bytes(app.dataDiskUsage))"
+    private var diskUsageDetail: LocalizedStringResource {
+        .ui("App \(Format.bytes(app.appDiskUsage)) · Documents and data \(Format.bytes(app.dataDiskUsage))")
     }
 }

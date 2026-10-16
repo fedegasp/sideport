@@ -29,7 +29,13 @@ targets:
     platform: macOS
     sources:
       - path: Sources/IMC
+        # Xcode compila il catalogo di stringhe da solo: le .lproj generate da
+        # Scripts/compile-strings.sh servono solo alla build con SwiftPM.
+        excludes:
+          - "Resources/*.lproj"
       - path: Resources/AppIcon.icns
+        buildPhase: resources
+      - path: Resources/InfoPlist.xcstrings
         buildPhase: resources
       - path: README.md
         buildPhase: none
@@ -39,6 +45,10 @@ targets:
         buildPhase: none
       - path: Helpers
         buildPhase: none
+        # I prodotti di cargo non vanno nel progetto.
+        excludes:
+          - "imc-icon/target"
+          - "imc-icon/target/**"
     settings:
       base:
         PRODUCT_NAME: IMC

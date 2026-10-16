@@ -9,39 +9,39 @@ struct DeviceInfoList: View {
 
     var body: some View {
         Form {
-            Section("Dispositivo") {
-                InfoRow(label: "Nome", value: device.name)
-                InfoRow(label: "Modello", value: "\(device.marketingName) (\(device.productType))")
-                InfoRow(label: "Numero di serie", value: device.serialNumber)
-                InfoRow(label: "UDID", value: device.udid)
+            Section(.ui("Device")) {
+                InfoRow(label: .ui("Name"), value: device.name)
+                InfoRow(label: .ui("Model"), value: String.ui("\(device.marketingName) (\(device.productType))"))
+                InfoRow(label: .ui("Serial number"), value: device.serialNumber)
+                InfoRow(label: .ui("UDID"), value: device.udid)
             }
-            Section("Sistema") {
-                InfoRow(label: "Versione", value: device.systemVersionLabel)
-                InfoRow(label: "Build", value: device.buildVersion)
-                InfoRow(label: "Classe", value: device.deviceClass)
+            Section(.ui("System")) {
+                InfoRow(label: .ui("Version"), value: device.systemVersionLabel)
+                InfoRow(label: .ui("Build"), value: device.buildVersion)
+                InfoRow(label: .ui("Class"), value: device.deviceClass)
             }
-            Section("Archiviazione") {
-                InfoRow(label: "Capacita' totale", value: Format.bytes(device.totalDiskCapacity))
-                InfoRow(label: "Spazio disponibile", value: Format.bytes(device.availableDiskCapacity))
-                InfoRow(label: "Spazio usato", value: Format.bytes(device.usedDiskCapacity))
+            Section(.ui("Storage")) {
+                InfoRow(label: .ui("Total capacity"), value: Format.bytes(device.totalDiskCapacity))
+                InfoRow(label: .ui("Available space"), value: Format.bytes(device.availableDiskCapacity))
+                InfoRow(label: .ui("Used space"), value: Format.bytes(device.usedDiskCapacity))
             }
             Section {
-                Button("Rinomina dispositivo…", action: beginRename)
+                Button(.ui("Rename device…"), action: beginRename)
                 .disabled(ToolLocator.shared.url(for: .ideviceName) == nil)
             }
         }
         .formStyle(.grouped)
-        .alert("Rinomina dispositivo", isPresented: $isRenaming) {
-            TextField("Nome", text: $newName)
-            Button("Annulla", role: .cancel) {}
-            Button("Rinomina", action: rename)
+        .alert(Text(.ui("Rename device")), isPresented: $isRenaming) {
+            TextField(text: $newName, prompt: Text(.ui("Name"))) { Text(.ui("Name")) }
+            Button(.ui("Cancel"), role: .cancel) {}
+            Button(.ui("Rename"), action: rename)
         }
         .alert(
-            "Rinomina non riuscita",
+            Text(.ui("Rename failed")),
             isPresented: Binding(get: { renameError != nil }, set: { if !$0 { renameError = nil } }),
             presenting: renameError
         ) { _ in
-            Button("OK") {}
+            Button(.ui("OK")) {}
         } message: { message in
             Text(message)
         }

@@ -9,17 +9,17 @@ struct SidebarView: View {
         @Bindable var ui = ui
 
         List(selection: $ui.route) {
-            Section("Libreria") {
-                Label("App (.ipa)", systemImage: "square.stack.3d.down.right")
+            Section(.ui("Library")) {
+                Label(.ui("Apps (.ipa)"), systemImage: "square.stack.3d.down.right")
                     .badge(library.packages.count)
                     .tag(Route.library)
-                Label("Download", systemImage: "arrow.down.app")
+                Label(.ui("Downloads"), systemImage: "arrow.down.app")
                     .tag(Route.download)
             }
 
-            Section("Dispositivi") {
+            Section(.ui("Devices")) {
                 if devices.devices.isEmpty {
-                    Label("Nessun dispositivo", systemImage: "cable.connector")
+                    Label(.ui("No devices"), systemImage: "cable.connector")
                         .foregroundStyle(.secondary)
                         .selectionDisabled()
                 } else {

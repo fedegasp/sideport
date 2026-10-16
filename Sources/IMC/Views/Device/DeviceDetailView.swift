@@ -17,7 +17,9 @@ struct DeviceDetailView: View {
     private enum Tab: String, CaseIterable, Identifiable {
         case apps, info
         var id: String { rawValue }
-        var label: String { self == .apps ? "App installate" : "Informazioni" }
+        var label: LocalizedStringResource {
+            self == .apps ? .ui("Installed apps") : .ui("Info")
+        }
     }
 
     var body: some View {
@@ -34,15 +36,15 @@ struct DeviceDetailView: View {
         // Rilancia anche dopo installazioni e rimozioni, che ricaricano l'elenco.
         .task(id: installedApps.apps(for: device.udid)) { await loadIcons() }
         .confirmationDialog(
-            "Rimuovere \(pendingUninstall?.name ?? "")?",
+            Text(.ui("Remove \(pendingUninstall?.name ?? "")?")),
             isPresented: Binding(get: { pendingUninstall != nil }, set: { if !$0 { pendingUninstall = nil } }),
             titleVisibility: .visible,
             presenting: pendingUninstall
         ) { app in
-            Button("Rimuovi", role: .destructive) { uninstall(app) }
-            Button("Annulla", role: .cancel) {}
+            Button(.ui("Remove"), role: .destructive) { uninstall(app) }
+            Button(.ui("Cancel"), role: .cancel) {}
         } message: { _ in
-            Text("L'app e tutti i suoi dati verranno eliminati dal dispositivo.")
+            Text(.ui("The app and all its data will be deleted from the device."))
         }
     }
 
@@ -52,23 +54,23 @@ struct DeviceDetailView: View {
         case .untrusted:
             EmptyStateView(
                 symbol: "lock.shield",
-                title: "Autorizza questo computer",
-                message: "Sblocca il dispositivo e tocca Autorizza nella richiesta che appare, poi premi il pulsante qui sotto.",
-                action: ("Avvia abbinamento", { Task { await devices.pair(udid: device.udid) } })
+                title: .ui("Trust this computer"),
+                message: .ui("Unlock the device and tap Trust in the prompt that appears, then press the button below."),
+                action: (.ui("Start pairing"), { Task { await devices.pair(udid: device.udid) } })
             )
         case .locked:
             EmptyStateView(
                 symbol: "lock.iphone",
-                title: "Dispositivo bloccato",
-                message: "Sblocca il dispositivo con il codice per consentire la comunicazione.",
-                action: ("Riprova", { Task { await devices.refreshNow() } })
+                title: .ui("Device locked"),
+                message: .ui("Unlock the device with its passcode to allow communication."),
+                action: (.ui("Try again"), { Task { await devices.refreshNow() } })
             )
         case .error(let message):
             EmptyStateView(
                 symbol: "exclamationmark.triangle",
-                title: "Errore di comunicazione",
-                message: message,
-                action: ("Riprova", { Task { await devices.refreshNow() } })
+                title: .ui("Communication error"),
+                error: message,
+                action: (.ui("Try again"), { Task { await devices.refreshNow() } })
             )
         case .ready:
             switch tab {
@@ -95,23 +97,23 @@ struct DeviceDetailView: View {
         if let error = installedApps.errorsByDevice[device.udid] {
             EmptyStateView(
                 symbol: "exclamationmark.triangle",
-                title: "Impossibile leggere l'elenco app",
-                message: error,
-                action: ("Riprova", { Task { await reloadApps() } })
+                title: .ui("Cannot read the app list"),
+                error: error,
+                action: (.ui("Try again"), { Task { await reloadApps() } })
             )
         } else if installedApps.isLoading(device.udid) && filteredApps.isEmpty {
             VStack(spacing: 10) {
                 ProgressView()
-                Text("Lettura app installate…").foregroundStyle(.secondary)
+                Text(.ui("Reading installed apps…")).foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else if filteredApps.isEmpty {
             EmptyStateView(
                 symbol: "app.dashed",
-                title: appSearch.isEmpty ? "Nessuna app" : "Nessun risultato",
+                title: appSearch.isEmpty ? .ui("No apps") : .ui("No results"),
                 message: appSearch.isEmpty
-                    ? "Su questo dispositivo non risultano app installate dall'utente."
-                    : "Nessuna app corrisponde a “\(appSearch)”."
+                    ? .ui("No user-installed apps were found on this device.")
+                    : .ui("No app matches “\(appSearch)”.")
             )
         } else {
             List {
@@ -126,7 +128,7 @@ struct DeviceDetailView: View {
                 }
             }
             .listStyle(.inset)
-            .searchable(text: $appSearch, prompt: "Cerca tra le app installate")
+            .searchable(text: $appSearch, prompt: Text(.ui("Search installed apps")))
         }
     }
 
@@ -160,7 +162,7 @@ struct DeviceDetailView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .principal) {
-            Picker("Sezione", selection: $tab) {
+            Picker(.ui("Section"), selection: $tab) {
                 ForEach(Tab.allCases) { Text($0.label).tag($0) }
             }
             .pickerStyle(.segmented)
@@ -169,13 +171,13 @@ struct DeviceDetailView: View {
             .disabled(!device.isReady)
         }
         ToolbarItemGroup {
-            Picker("Tipo", selection: Bindable(ui).appScope) {
+            Picker(.ui("Type"), selection: Bindable(ui).appScope) {
                 ForEach(InstalledAppsService.Scope.allCases) { Text($0.label).tag($0) }
             }
-            .help("Filtra app utente o di sistema")
+            .help(Text(.ui("Filter user or system apps")))
             .disabled(!device.isReady || tab != .apps)
 
-            Button("Aggiorna", systemImage: "arrow.clockwise", action: refreshAll)
+            Button(.ui("Refresh"), systemImage: "arrow.clockwise", action: refreshAll)
                 .disabled(installedApps.isLoading(device.udid))
         }
     }

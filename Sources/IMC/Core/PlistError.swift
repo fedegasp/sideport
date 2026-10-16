@@ -3,5 +3,5 @@ import Foundation
 enum PlistError: LocalizedError {
     case unexpectedShape
 
-    var errorDescription: String? { "Formato property list non riconosciuto." }
+    var errorDescription: String? { String.ui("Unrecognized property list format.") }
 }

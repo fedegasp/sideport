@@ -34,17 +34,17 @@ struct LibraryView: View {
             if library.packages.isEmpty && !library.isScanning {
                 EmptyStateView(
                     symbol: "square.stack.3d.down.right",
-                    title: "Libreria vuota",
-                    message: "Aggiungi i file .ipa che vuoi installare sui tuoi dispositivi. Puoi anche trascinarli qui.",
-                    action: ("Importa .ipa…", { isImporting = true })
+                    title: .ui("Empty library"),
+                    message: .ui("Add the .ipa files you want to install on your devices. You can also drag them here."),
+                    action: (.ui("Import .ipa…"), { isImporting = true })
                 )
             } else {
                 table
             }
         }
-        .navigationTitle("Libreria")
+        .navigationTitle(.ui("Library"))
         .navigationSubtitle(subtitle)
-        .searchable(text: $search, prompt: "Cerca per nome o bundle ID")
+        .searchable(text: $search, prompt: Text(.ui("Search by name or bundle ID")))
         .toolbar { toolbarContent }
         .overlay {
             if isTargeted {
@@ -85,12 +85,12 @@ struct LibraryView: View {
 
     private var subtitle: String {
         let total = library.packages.reduce(Int64(0)) { $0 + $1.fileSize }
-        return "\(library.packages.count) app · \(Format.bytes(total))"
+        return String.ui("\(library.packages.count) apps · \(Format.bytes(total))")
     }
 
     private var table: some View {
         Table(filtered, selection: $selection) {
-            TableColumn("App") { package in
+            TableColumn(.ui("App")) { package in
                 HStack(spacing: 8) {
                     AppIconView(data: package.iconData, size: 28)
                     VStack(alignment: .leading, spacing: 1) {
@@ -104,49 +104,49 @@ struct LibraryView: View {
             }
             .width(min: 220, ideal: 300)
 
-            TableColumn("Versione") { Text($0.versionLabel).monospacedDigit() }
+            TableColumn(.ui("Version")) { Text($0.versionLabel).monospacedDigit() }
                 .width(min: 80, ideal: 110)
 
-            TableColumn("iOS min.") { package in
+            TableColumn(.ui("Min. iOS")) { package in
                 Text(package.minimumOSVersion.isEmpty ? "—" : package.minimumOSVersion).monospacedDigit()
             }
             .width(min: 60, ideal: 80)
 
-            TableColumn("Dispositivi") { Text($0.deviceFamilyLabel).foregroundStyle(.secondary) }
+            TableColumn(.ui("Devices")) { Text($0.deviceFamilyLabel).foregroundStyle(.secondary) }
                 .width(min: 80, ideal: 110)
 
-            TableColumn("Firma") { Text($0.signing.rawValue).foregroundStyle(.secondary) }
+            TableColumn(.ui("Signature")) { Text($0.signing.label).foregroundStyle(.secondary) }
                 .width(min: 90, ideal: 130)
 
             // L'azione vive nell'ultima colonna invece che in una colonna
             // dedicata: SwiftUI distribuisce la larghezza fra le colonne
             // esistenti e una settima finirebbe fuori dal bordo della finestra.
-            TableColumn("Dimensione") { package in
+            TableColumn(.ui("Size")) { package in
                 HStack(spacing: 10) {
                     Text(Format.bytes(package.fileSize)).monospacedDigit()
                     Spacer(minLength: 8)
                     Button {
                         ui.inspectPackage = package
                     } label: {
-                        Label("Ispeziona", systemImage: "list.bullet.indent")
+                        Label(.ui("Inspect"), systemImage: "list.bullet.indent")
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.small)
-                    .help("Mostra il contenuto dell'archivio .ipa")
+                    .help(Text(.ui("Show the contents of the .ipa archive")))
                 }
             }
             .width(min: 180, ideal: 210)
         }
         .contextMenu(forSelectionType: URL.self) { urls in
             let packages = library.packages.filter { urls.contains($0.url) }
-            Button("Installa su…") { ui.installSheet = .init(packages: packages) }
+            Button(.ui("Install on…")) { ui.installSheet = .init(packages: packages) }
                 .disabled(packages.isEmpty || readyDevices.isEmpty)
-            Button("Ispeziona contenuto") { ui.inspectPackage = packages.first }
+            Button(.ui("Inspect contents")) { ui.inspectPackage = packages.first }
                 .disabled(packages.count != 1)
-            Button("Mostra nel Finder") { packages.first.map(library.reveal) }
+            Button(.ui("Show in Finder")) { packages.first.map(library.reveal) }
                 .disabled(packages.isEmpty)
             Divider()
-            Button("Sposta nel cestino", role: .destructive) {
+            Button(.ui("Move to Trash"), role: .destructive) {
                 Task { for package in packages { await library.delete(package) } }
             }
             .disabled(packages.isEmpty)
@@ -163,7 +163,7 @@ struct LibraryView: View {
             HStack(spacing: 12) {
                 if library.isScanning {
                     ProgressView().controlSize(.small)
-                    Text("Analisi archivi…").font(.caption).foregroundStyle(.secondary)
+                    Text(.ui("Scanning archives…")).font(.caption).foregroundStyle(.secondary)
                 } else if let error = library.lastError {
                     Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
                     Text(error).font(.caption).lineLimit(2).foregroundStyle(.secondary)
@@ -178,11 +178,13 @@ struct LibraryView: View {
                 Button {
                     ui.installSheet = .init(packages: selectedPackages)
                 } label: {
-                    Label("Installa su…", systemImage: "arrow.down.to.line")
+                    Label(.ui("Install on…"), systemImage: "arrow.down.to.line")
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(selectedPackages.isEmpty || readyDevices.isEmpty)
-                .help(readyDevices.isEmpty ? "Collega e autorizza un dispositivo" : "Installa le app selezionate")
+                .help(Text(readyDevices.isEmpty
+                           ? .ui("Connect and trust a device")
+                           : .ui("Install the selected apps")))
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
@@ -194,23 +196,23 @@ struct LibraryView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup {
             Button { isImporting = true } label: {
-                Label("Importa", systemImage: "plus")
+                Label(.ui("Import"), systemImage: "plus")
             }
-            .help("Importa file .ipa nella libreria")
+            .help(Text(.ui("Import .ipa files into the library")))
 
             Button { Task { await library.refresh() } } label: {
-                Label("Aggiorna", systemImage: "arrow.clockwise")
+                Label(.ui("Refresh"), systemImage: "arrow.clockwise")
             }
             .disabled(library.isScanning)
 
             Menu {
-                Button("Apri cartella libreria") { library.openLibraryFolder() }
-                Button("Cambia cartella…") { isChoosingFolder = true }
-                Button("Ripristina cartella predefinita") {
+                Button(.ui("Open library folder")) { library.openLibraryFolder() }
+                Button(.ui("Change folder…")) { isChoosingFolder = true }
+                Button(.ui("Restore default folder")) {
                     Task { await library.setLibraryURL(LibraryStore.defaultLibraryURL) }
                 }
             } label: {
-                Label("Cartella", systemImage: "folder")
+                Label(.ui("Folder"), systemImage: "folder")
             }
         }
     }

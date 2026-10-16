@@ -20,9 +20,9 @@ struct SignInView: View {
                         .font(.system(size: 36))
                         .foregroundStyle(.tint)
                         .accessibilityHidden(true)
-                    Text("Accedi all'App Store")
+                    Text(.ui("Sign in to the App Store"))
                         .font(.title3.weight(.semibold))
-                    Text("Servono le credenziali dell'Apple ID con cui hai ottenuto le app: si possono scaricare solo app gratuite o gia' acquistate da quell'account.")
+                    Text(.ui("You need the Apple ID credentials that own the apps: only free apps, or apps already purchased with that account, can be downloaded."))
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -31,11 +31,11 @@ struct SignInView: View {
                 }
 
                 VStack(spacing: 10) {
-                    TextField("Apple ID", text: $email)
+                    TextField(text: $email, prompt: Text(.ui("Apple ID"))) { Text(.ui("Apple ID")) }
                         .textContentType(.username)
                         .focused($focus, equals: .email)
                         .disabled(awaitingCode || store.authState.isBusy)
-                    SecureField("Password", text: $password)
+                    SecureField(text: $password, prompt: Text(.ui("Password"))) { Text(.ui("Password")) }
                         .textContentType(.password)
                         .focused($focus, equals: .password)
                         .disabled(awaitingCode || store.authState.isBusy)
@@ -44,16 +44,19 @@ struct SignInView: View {
                     if awaitingCode {
                         VStack(alignment: .leading, spacing: 6) {
                             Divider()
-                            Text("Apple ha inviato un codice di verifica ai tuoi dispositivi.")
+                            Text(.ui("Apple sent a verification code to your devices."))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            TextField("Codice a 6 cifre", text: $authCode)
-                                .focused($focus, equals: .code)
+                            TextField(text: $authCode, prompt: Text(.ui("6-digit code"))) {
+                                Text(.ui("6-digit code"))
+                            }
+                            .focused($focus, equals: .code)
                                 .onSubmit { store.submitAuthCode(authCode) }
                         }
                     }
                 }
                 .textFieldStyle(.roundedBorder)
+                .labelsHidden()
                 .frame(maxWidth: 340)
 
                 if let error = store.lastError {
@@ -67,10 +70,10 @@ struct SignInView: View {
 
                 HStack(spacing: 10) {
                     if store.authState.isBusy || awaitingCode {
-                        Button("Annulla") { store.cancelSignIn() }
+                        Button(.ui("Cancel")) { store.cancelSignIn() }
                     }
                     if awaitingCode {
-                        Button("Verifica") { store.submitAuthCode(authCode) }
+                        Button(.ui("Verify")) { store.submitAuthCode(authCode) }
                             .buttonStyle(.borderedProminent)
                             .disabled(authCode.trimmingCharacters(in: .whitespaces).count < 4)
                     } else {
@@ -80,10 +83,10 @@ struct SignInView: View {
                             if store.authState.isBusy {
                                 HStack(spacing: 6) {
                                     ProgressView().controlSize(.small)
-                                    Text("Accesso…")
+                                    Text(.ui("Signing in…"))
                                 }
                             } else {
-                                Text("Accedi")
+                                Text(.ui("Sign in"))
                             }
                         }
                         .buttonStyle(.borderedProminent)
@@ -93,9 +96,9 @@ struct SignInView: View {
 
                 GroupBox {
                     VStack(alignment: .leading, spacing: 6) {
-                        Label("La password viene passata a ipatool attraverso uno pseudo-terminale, non sulla riga di comando: non compare in `ps` e IMC non la salva da nessuna parte.", systemImage: "lock")
-                        Label("Il token di sessione lo gestisce ipatool nel portachiavi di macOS. Alla prima richiesta macOS puo' chiedere l'autorizzazione di accesso.", systemImage: "key")
-                        Label("Il download usa un'API privata di Apple, la stessa di iTunes: puo' cambiare senza preavviso.", systemImage: "info.circle")
+                        Label(.ui("The password reaches ipatool through a pseudo-terminal, not the command line: it does not appear in `ps` and IMC never stores it."), systemImage: "lock")
+                        Label(.ui("ipatool keeps the session token in the macOS keychain. On first use macOS may ask for permission to access it."), systemImage: "key")
+                        Label(.ui("The download uses a private Apple API, the same one iTunes uses: it can change without notice."), systemImage: "info.circle")
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)

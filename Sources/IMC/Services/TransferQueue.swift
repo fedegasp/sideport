@@ -80,7 +80,7 @@ final class TransferQueue {
         }
 
         update(jobID) {
-            $0.status = .running(stage: "Preparazione", fraction: nil)
+            $0.status = .running(stage: String.ui("Preparing"), fraction: nil)
             $0.startedAt = Date()
         }
 
@@ -88,7 +88,7 @@ final class TransferQueue {
         switch job.kind {
         case .install(let package):
             guard FileManager.default.fileExists(atPath: package.url.path) else {
-                finish(jobID, with: .failed("Il file \(package.url.lastPathComponent) non esiste piu'."))
+                finish(jobID, with: .failed(String.ui("The file \(package.url.lastPathComponent) no longer exists.")))
                 return
             }
             arguments = ["-u", job.deviceUDID, "install", package.url.path]
@@ -131,14 +131,15 @@ final class TransferQueue {
             if job.log.count > 200 { job.log.removeFirst(job.log.count - 200) }
             guard !job.status.isFinished else { return }
             if let progress = Self.parseProgress(trimmed) {
-                job.status = .running(stage: progress.stage, fraction: progress.fraction)
+                job.status = .running(stage: Self.stageLabel(for: progress.stage), fraction: progress.fraction)
             } else if trimmed.lowercased().hasPrefix("copying") {
-                job.status = .running(stage: "Copia sul dispositivo", fraction: nil)
+                job.status = .running(stage: String.ui("Copying to device"), fraction: nil)
             }
         }
     }
 
-    /// Righe del tipo ` - ExtractingPackage (15%)`. Interno per i test.
+    /// Righe del tipo ` - ExtractingPackage (15%)`, con la fase come la
+    /// chiama `installation_proxy`. Interno per i test.
     nonisolated static func parseProgress(_ line: String) -> (stage: String, fraction: Double?)? {
         guard let match = line.range(of: #"([A-Za-z]+)\s*\((\d{1,3})%\)"#, options: .regularExpression) else {
             return nil
@@ -149,50 +150,85 @@ final class TransferQueue {
             .components(separatedBy: "(").last?
             .replacingOccurrences(of: "%)", with: "") ?? ""
         let fraction = Double(percentText).map { min(max($0 / 100, 0), 1) }
-        return (stageLabel(for: stage), fraction)
+        return (stage, fraction)
     }
 
-    nonisolated private static func stageLabel(for stage: String) -> String {
+    /// Le fasi sconosciute restano con il nome del tool: e' meglio di niente
+    /// quando Apple ne aggiunge una.
+    nonisolated static func stageLabel(for stage: String) -> String {
         switch stage {
-        case "CreatingStagingDirectory": return "Creazione area di staging"
-        case "ExtractingPackage": return "Estrazione pacchetto"
-        case "InspectingPackage": return "Analisi pacchetto"
-        case "TakingInstallLock": return "Blocco installazione"
-        case "PreflightingApplication": return "Verifica preliminare"
-        case "InstallingEmbeddedProfile": return "Installazione profilo"
-        case "VerifyingApplication": return "Verifica firma"
-        case "CreatingContainer": return "Creazione container"
-        case "InstallingApplication": return "Installazione"
-        case "PostflightingApplication": return "Finalizzazione"
-        case "SandboxingApplication": return "Applicazione sandbox"
-        case "GeneratingApplicationMap": return "Aggiornamento indice app"
-        case "RemovingOldApplication": return "Rimozione versione precedente"
+        case "CreatingStagingDirectory": return String.ui("Creating staging area")
+        case "ExtractingPackage": return String.ui("Extracting package")
+        case "InspectingPackage": return String.ui("Inspecting package")
+        case "TakingInstallLock": return String.ui("Taking install lock")
+        case "PreflightingApplication": return String.ui("Preflight check")
+        case "InstallingEmbeddedProfile": return String.ui("Installing profile")
+        case "VerifyingApplication": return String.ui("Verifying signature")
+        case "CreatingContainer": return String.ui("Creating container")
+        case "InstallingApplication": return String.ui("Installing")
+        case "PostflightingApplication": return String.ui("Finalizing")
+        case "SandboxingApplication": return String.ui("Sandboxing app")
+        case "GeneratingApplicationMap": return String.ui("Updating app index")
+        case "RemovingOldApplication": return String.ui("Removing previous version")
         default: return stage
         }
     }
 
-    /// Traduce gli errori piu' comuni di installation_proxy in indicazioni utili. Interno per i test.
-    nonisolated static func humanize(_ message: String) -> String {
+    /// Errori ricorrenti di `installation_proxy`. Il riconoscimento e' separato
+    /// dal testo mostrato: quello cambia con la lingua, i messaggi del tool no.
+    enum Failure {
+        case invalidSignature
+        case unsupportedDeviceFamily
+        case incompatibleArchitecture
+        case missingEntitlements
+        case unreachableDevice
+        case lockedDevice
+
+        var message: String {
+            switch self {
+            case .invalidSignature:
+                String.ui("Invalid signature for this device. An App Store .ipa installs only if it was purchased with the Apple ID configured on the device.")
+            case .unsupportedDeviceFamily:
+                String.ui("This app does not support the selected device type.")
+            case .incompatibleArchitecture:
+                String.ui("Architecture not compatible with this device.")
+            case .missingEntitlements:
+                String.ui("The app requires entitlements the signing profile does not grant.")
+            case .unreachableDevice:
+                String.ui("Device unreachable: check the cable and that it is unlocked and trusted.")
+            case .lockedDevice:
+                String.ui("Unlock the device with its passcode and try again.")
+            }
+        }
+    }
+
+    /// Interno per i test.
+    nonisolated static func failure(in message: String) -> Failure? {
         let lowered = message.lowercased()
         if lowered.contains("applicationverificationfailed") || lowered.contains("mismatchedapplicationidentifierentitlement") {
-            return "Firma non valida per questo dispositivo. Una .ipa dell'App Store si installa solo se e' stata acquistata con l'Apple ID configurato sul dispositivo."
+            return .invalidSignature
         }
         if lowered.contains("devicefamilynotsupported") {
-            return "Questa app non supporta il tipo di dispositivo selezionato."
+            return .unsupportedDeviceFamily
         }
         if lowered.contains("incorrectarchitecture") {
-            return "Architettura non compatibile con questo dispositivo."
+            return .incompatibleArchitecture
         }
         if lowered.contains("notentitled") || lowered.contains("missingentitlement") {
-            return "L'app richiede entitlement non concessi dal profilo di firma."
+            return .missingEntitlements
         }
         if lowered.contains("could not connect to lockdownd") || lowered.contains("no device found") {
-            return "Dispositivo non raggiungibile: verifica il cavo e che sia sbloccato e autorizzato."
+            return .unreachableDevice
         }
         if lowered.contains("passcode") {
-            return "Sblocca il dispositivo con il codice e riprova."
+            return .lockedDevice
         }
-        return message
+        return nil
+    }
+
+    /// Traduce gli errori piu' comuni di installation_proxy in indicazioni utili.
+    nonisolated static func humanize(_ message: String) -> String {
+        failure(in: message)?.message ?? message
     }
 
     // MARK: - Controllo

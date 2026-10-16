@@ -34,7 +34,7 @@ final class PTYProcess: @unchecked Sendable {
 
     func start() throws {
         guard openpty(&master, &slave, nil, nil, nil) == 0 else {
-            throw ProcessError.launchFailed("impossibile creare lo pseudo-terminale")
+            throw ProcessError.launchFailed(String.ui("cannot create the pseudo-terminal"))
         }
 
         process.standardInput = FileHandle(fileDescriptor: slave, closeOnDealloc: false)

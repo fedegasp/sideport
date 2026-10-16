@@ -6,7 +6,7 @@ enum ToolError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missing(let tool):
-            "Strumento '\(tool.rawValue)' non trovato. Installa libimobiledevice con: brew install libimobiledevice ideviceinstaller"
+            String.ui("Tool \u{201C}\(tool.rawValue)\u{201D} not found. Install libimobiledevice with: brew install libimobiledevice ideviceinstaller")
         }
     }
 }

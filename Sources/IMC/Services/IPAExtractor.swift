@@ -14,8 +14,8 @@ enum IPAExtractor {
 
         var errorDescription: String? {
             switch self {
-            case .failed(let detail): return "Estrazione non riuscita: \(detail)"
-            case .nothingExtracted(let path): return "L'archivio non contiene «\(path)»."
+            case .failed(let detail): return String.ui("Extraction failed: \(detail)")
+            case .nothingExtracted(let path): return String.ui("The archive does not contain “\(path)”.")
             }
         }
     }

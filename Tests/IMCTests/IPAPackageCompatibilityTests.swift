@@ -32,7 +32,9 @@ struct IPAPackageCompatibilityTests {
     @Test func rejectsOlderSystemVersion() {
         let iPhone = Device(udid: "1", productVersion: "16.4", deviceClass: "iPhone")
         let result = package(families: [1], minimumOS: "17.0").compatibility(with: iPhone)
-        #expect(result.reason == "Richiede iOS 17.0, il dispositivo ha 16.4.")
+        // Il testo dipende dalla lingua: conta che riporti le due versioni.
+        #expect(result.reason?.contains("17.0") == true)
+        #expect(result.reason?.contains("16.4") == true)
     }
 
     @Test func acceptsUnknownDeviceVersion() {

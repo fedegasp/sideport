@@ -38,12 +38,12 @@ struct StoreServiceParsingTests {
 
     @Test func humanizesReportedErrors() {
         let message = StoreService.errorMessage(stdout: #"{"error":"license is required"}"#, stderr: "")
-        #expect(message.hasPrefix("Licenza mancante"))
+        #expect(message == StoreService.Failure.missingLicense.message)
     }
 
     @Test func fallsBackToStderrThenGenericMessage() {
         #expect(StoreService.errorMessage(stdout: "", stderr: "  boom \n") == "boom")
-        #expect(StoreService.errorMessage(stdout: "", stderr: "") == "ipatool e' terminato con un errore.")
+        #expect(StoreService.errorMessage(stdout: "", stderr: "") == String.ui("ipatool exited with an error."))
     }
 
     @Test func reportsOutputPath() {

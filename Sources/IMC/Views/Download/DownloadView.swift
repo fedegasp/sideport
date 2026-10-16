@@ -12,7 +12,7 @@ struct DownloadView: View {
             } else {
                 switch store.authState {
                 case .unknown:
-                    ProgressView("Verifica dell'account…")
+                    ProgressView(.ui("Checking the account…"))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 case .signedOut, .signingIn, .awaitingAuthCode:
                     SignInView()
@@ -21,7 +21,7 @@ struct DownloadView: View {
                 }
             }
         }
-        .navigationTitle("Download")
+        .navigationTitle(.ui("Downloads"))
         .navigationSubtitle(store.authState.account?.email ?? "")
         .task {
             if store.authState == .unknown { await store.refreshAccount() }

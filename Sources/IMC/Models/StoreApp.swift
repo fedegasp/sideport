@@ -49,8 +49,11 @@ struct StoreApp: Identifiable, Hashable, Decodable {
 
     var isFree: Bool { price <= 0 }
 
-    var priceLabel: String {
-        isFree ? "Gratis" : price.formatted(.currency(code: Locale.current.currency?.identifier ?? "EUR"))
+    /// La valuta non arriva da ipatool: si usa quella della lingua corrente,
+    /// che il chiamante legge dall'ambiente della vista.
+    func priceLabel(locale: Locale) -> String {
+        guard !isFree else { return String.ui("Free") }
+        return price.formatted(.currency(code: locale.currency?.identifier ?? "EUR").locale(locale))
     }
 
     /// Vero solo quando ipatool riporta esplicitamente la data d'acquisto

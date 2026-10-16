@@ -14,8 +14,8 @@ enum IPAInspector {
 
         var errorDescription: String? {
             switch self {
-            case .notAnArchive(let detail): return "Archivio .ipa non leggibile: \(detail)"
-            case .missingInfoPlist: return "L'archivio non contiene Payload/<App>.app/Info.plist: non sembra un .ipa valido."
+            case .notAnArchive(let detail): return String.ui("Cannot read the .ipa archive: \(detail)")
+            case .missingInfoPlist: return String.ui("The archive does not contain Payload/<App>.app/Info.plist: it does not look like a valid .ipa.")
             }
         }
     }
@@ -77,7 +77,7 @@ enum IPAInspector {
     private static func extract(entry: String, from url: URL) async throws -> Data {
         let (code, data, stderr) = try await ProcessRunner.runData(unzip, ["-p", url.path, entry])
         guard code == 0, !data.isEmpty else {
-            throw InspectError.notAnArchive(stderr.isEmpty ? "voce '\(entry)' non estraibile" : stderr)
+            throw InspectError.notAnArchive(stderr.isEmpty ? String.ui("entry “\(entry)” could not be extracted") : stderr)
         }
         return data
     }

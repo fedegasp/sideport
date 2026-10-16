@@ -9,7 +9,7 @@ struct DeviceTargetRow: View {
     private var warnings: [String] {
         packages.compactMap { package in
             guard let reason = package.compatibility(with: device).reason else { return nil }
-            return packages.count == 1 ? reason : "\(package.name): \(reason)"
+            return packages.count == 1 ? reason : String.ui("\(package.name): \(reason)")
         }
     }
 
@@ -23,7 +23,7 @@ struct DeviceTargetRow: View {
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(device.displayName)
-                    Text("\(device.marketingName) · \(device.systemVersionLabel) · \(Format.bytes(device.availableDiskCapacity)) liberi")
+                    Text(.ui("\(device.marketingName) · \(device.systemVersionLabel) · \(Format.bytes(device.availableDiskCapacity)) free"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     ForEach(warnings, id: \.self) { warning in

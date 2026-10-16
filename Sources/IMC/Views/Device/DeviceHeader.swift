@@ -12,13 +12,13 @@ struct DeviceHeader: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(device.displayName).font(.title2.weight(.semibold))
-                Text("\(device.marketingName) · \(device.systemVersionLabel)")
+                Text(.ui("\(device.marketingName) · \(device.systemVersionLabel)"))
                     .foregroundStyle(.secondary)
                 if let used = device.usedDiskCapacity, let total = device.totalDiskCapacity, total > 0 {
                     VStack(alignment: .leading, spacing: 3) {
                         ProgressView(value: Double(used), total: Double(total))
                             .frame(width: 240)
-                        Text("\(Format.bytes(used)) usati di \(Format.bytes(total))")
+                        Text(.ui("\(Format.bytes(used)) used of \(Format.bytes(total))"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -33,7 +33,9 @@ struct DeviceHeader: View {
                     Image(systemName: device.isCharging == true ? "battery.100.bolt" : batterySymbol(level))
                         .font(.title2)
                         .symbolRenderingMode(.hierarchical)
-                    Text("\(level)%").font(.caption).monospacedDigit()
+                    Text((Double(level) / 100).formatted(.percent.precision(.fractionLength(0))))
+                        .font(.caption)
+                        .monospacedDigit()
                 }
                 .foregroundStyle(level <= 20 && device.isCharging != true ? .red : .secondary)
             }

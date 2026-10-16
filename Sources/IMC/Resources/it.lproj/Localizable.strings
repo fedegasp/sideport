@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%@ (%@)</key>
+	<string>%@ (%@)</string>
+	<key>%@ used of %@</key>
+	<string>%@ usati di %@</string>
+	<key>%@ · %@</key>
+	<string>%@ · %@</string>
+	<key>%@ · %@ · %@ free</key>
+	<string>%@ · %@ · %@ liberi</string>
+	<key>%@: %@</key>
+	<string>%@: %@</string>
+	<key>%lld of %lld apps</key>
+	<string>%lld di %lld app</string>
+	<key>6-digit code</key>
+	<string>Codice a 6 cifre</string>
+	<key>Account</key>
+	<string>Account</string>
+	<key>Acquires the free license on your account, then downloads the package</key>
+	<string>Acquisisce la licenza gratuita sul tuo account, poi scarica il pacchetto</string>
+	<key>Activity</key>
+	<string>Attività</string>
+	<key>Add the .ipa files you want to install on your devices. You can also drag them here.</key>
+	<string>Aggiungi i file .ipa che vuoi installare sui tuoi dispositivi. Puoi anche trascinarli qui.</string>
+	<key>All</key>
+	<string>Tutte</string>
+	<key>App</key>
+	<string>App</string>
+	<key>App %@ · Documents and data %@</key>
+	<string>App %@ · Documenti e dati %@</string>
+	<key>App Store</key>
+	<string>App Store</string>
+	<key>Apple ID</key>
+	<string>Apple ID</string>
+	<key>Apple sent a verification code to your devices.</key>
+	<string>Apple ha inviato un codice di verifica ai tuoi dispositivi.</string>
+	<key>Apps (.ipa)</key>
+	<string>App (.ipa)</string>
+	<key>Apps linked to your Apple ID</key>
+	<string>App associate al tuo Apple ID</string>
+	<key>Architecture not compatible with this device.</key>
+	<string>Architettura non compatibile con questo dispositivo.</string>
+	<key>Available space</key>
+	<string>Spazio disponibile</string>
+	<key>Awaiting trust</key>
+	<string>Da autorizzare</string>
+	<key>Build</key>
+	<string>Build</string>
+	<key>Cancel</key>
+	<string>Annulla</string>
+	<key>Cancel all</key>
+	<string>Annulla tutto</string>
+	<key>Cancelled</key>
+	<string>Annullato</string>
+	<key>Cannot move to Trash: %@</key>
+	<string>Impossibile spostare nel cestino: %@</string>
+	<key>Cannot read the .ipa archive: %@</key>
+	<string>Archivio .ipa non leggibile: %@</string>
+	<key>Cannot read the app list</key>
+	<string>Impossibile leggere l'elenco app</string>
+	<key>Cannot read the folder %@.</key>
+	<string>Impossibile leggere la cartella %@.</string>
+	<key>Cannot start the process: %@</key>
+	<string>Impossibile avviare il processo: %@</string>
+	<key>Change folder…</key>
+	<string>Cambia cartella…</string>
+	<key>Checking the account…</key>
+	<string>Verifica dell'account…</string>
+	<key>Class</key>
+	<string>Classe</string>
+	<key>Clear</key>
+	<string>Pulisci</string>
+	<key>Clear filter</key>
+	<string>Cancella filtro</string>
+	<key>Close</key>
+	<string>Chiudi</string>
+	<key>Collapse</key>
+	<string>Comprimi</string>
+	<key>Communication error</key>
+	<string>Errore di comunicazione</string>
+	<key>Communication with the device failed.</key>
+	<string>Comunicazione con il dispositivo fallita.</string>
+	<key>Connect an iPhone or iPad with the cable, unlock it and tap Trust.</key>
+	<string>Collega un iPhone o iPad con il cavo, sbloccalo e tocca Autorizza.</string>
+	<key>Connect and trust a device</key>
+	<string>Collega e autorizza un dispositivo</string>
+	<key>Connection error</key>
+	<string>Errore di connessione</string>
+	<key>Copy path</key>
+	<string>Copia percorso</string>
+	<key>Copy the command</key>
+	<string>Copia il comando</string>
+	<key>Copying to device</key>
+	<string>Copia sul dispositivo</string>
+	<key>Creating container</key>
+	<string>Creazione container</string>
+	<key>Creating staging area</key>
+	<string>Creazione area di staging</string>
+	<key>Deselect all</key>
+	<string>Deseleziona tutti</string>
+	<key>Detects connected devices</key>
+	<string>Rileva i dispositivi collegati</string>
+	<key>Device</key>
+	<string>Dispositivo</string>
+	<key>Device disconnected</key>
+	<string>Dispositivo scollegato</string>
+	<key>Device locked</key>
+	<string>Dispositivo bloccato</string>
+	<key>Device unreachable: check the cable and that it is unlocked and trusted.</key>
+	<string>Dispositivo non raggiungibile: verifica il cavo e che sia sbloccato e autorizzato.</string>
+	<key>Devices</key>
+	<string>Dispositivi</string>
+	<key>Download</key>
+	<string>Scarica</string>
+	<key>Downloaded %@</key>
+	<string>Scaricati %@</string>
+	<key>Downloading from the App Store uses ipatool. Install it and reopen IMC, or rebuild the app: the build script embeds it in the bundle when present.</key>
+	<string>Il download dall'App Store usa ipatool. Installalo e riapri IMC, oppure ricompila l'app: lo script di build lo incorpora nel bundle quando è presente.</string>
+	<key>Downloads</key>
+	<string>Download</string>
+	<key>Downloads .ipa files from the App Store</key>
+	<string>Scarica le .ipa dall'App Store</string>
+	<key>Drag an item to the Finder to extract it, or select more than one with ⌘ or ⇧.</key>
+	<string>Trascina un elemento nel Finder per estrarlo, oppure selezionane più d'uno con ⌘ o ⇧.</string>
+	<key>Empty library</key>
+	<string>Libreria vuota</string>
+	<key>Expand</key>
+	<string>Espandi</string>
+	<key>Extract all…</key>
+	<string>Estrai tutto…</string>
+	<key>Extract selection…</key>
+	<string>Estrai selezione…</string>
+	<key>Extracting package</key>
+	<string>Estrazione pacchetto</string>
+	<key>Extracting…</key>
+	<string>Estrazione…</string>
+	<key>Extraction failed</key>
+	<string>Estrazione non riuscita</string>
+	<key>Extraction failed: %@</key>
+	<string>Estrazione non riuscita: %@</string>
+	<key>Extract…</key>
+	<string>Estrai…</string>
+	<key>Filter by device type</key>
+	<string>Filtra per tipo di dispositivo</string>
+	<key>Filter by name or path</key>
+	<string>Filtra per nome o percorso</string>
+	<key>Filter user or system apps</key>
+	<string>Filtra app utente o di sistema</string>
+	<key>Finalizing</key>
+	<string>Finalizzazione</string>
+	<key>Folder</key>
+	<string>Cartella</string>
+	<key>Free</key>
+	<string>Gratis</string>
+	<key>Get and download</key>
+	<string>Ottieni e scarica</string>
+	<key>Hide log</key>
+	<string>Nascondi log</string>
+	<key>I installed them, check again</key>
+	<string>Ho installato, verifica di nuovo</string>
+	<key>IMC talks to iOS devices through libimobiledevice. These tools were not found:</key>
+	<string>IMC comunica con i dispositivi iOS tramite libimobiledevice. Questi strumenti non sono stati trovati:</string>
+	<key>Import</key>
+	<string>Importa</string>
+	<key>Import .ipa files into the library</key>
+	<string>Importa file .ipa nella libreria</string>
+	<key>Import .ipa…</key>
+	<string>Importa .ipa…</string>
+	<key>Incorrect Apple ID or password.</key>
+	<string>Apple ID o password non corretti.</string>
+	<key>Info</key>
+	<string>Informazioni</string>
+	<key>Inspect</key>
+	<string>Ispeziona</string>
+	<key>Inspect contents</key>
+	<string>Ispeziona contenuto</string>
+	<key>Inspecting package</key>
+	<string>Analisi pacchetto</string>
+	<key>Install</key>
+	<string>Installa</string>
+	<key>Install %@</key>
+	<string>Installa %@</string>
+	<key>Install (%lld)</key>
+	<string>Installa (%lld)</string>
+	<key>Install on %@</key>
+	<string>Installa su %@</string>
+	<key>Install on…</key>
+	<string>Installa su…</string>
+	<key>Install the selected apps</key>
+	<string>Installa le app selezionate</string>
+	<key>Install the version in the library</key>
+	<string>Installa la versione presente in libreria</string>
+	<key>Install them with Homebrew:</key>
+	<string>Installali con Homebrew:</string>
+	<key>Installed apps</key>
+	<string>App installate</string>
+	<key>Installing</key>
+	<string>Installazione</string>
+	<key>Installing profile</key>
+	<string>Installazione profilo</string>
+	<key>Invalid or expired verification code.</key>
+	<string>Codice di verifica non valido o scaduto.</string>
+	<key>Invalid signature for this device. An App Store .ipa installs only if it was purchased with the Apple ID configured on the device.</key>
+	<string>Firma non valida per questo dispositivo. Una .ipa dell'App Store si installa solo se è stata acquistata con l'Apple ID configurato sul dispositivo.</string>
+	<key>Library</key>
+	<string>Libreria</string>
+	<key>Lists, installs and removes apps</key>
+	<string>Elenca, installa e rimuove le app</string>
+	<key>Locked</key>
+	<string>Bloccato</string>
+	<key>Manages pairing (Trust This Computer)</key>
+	<string>Gestisce l'abbinamento (Autorizza questo computer)</string>
+	<key>Min. iOS</key>
+	<string>iOS min.</string>
+	<key>Missing components</key>
+	<string>Componenti mancanti</string>
+	<key>Mode</key>
+	<string>Modalità</string>
+	<key>Model</key>
+	<string>Modello</string>
+	<key>Move to Trash</key>
+	<string>Sposta nel cestino</string>
+	<key>My purchases</key>
+	<string>I miei acquisti</string>
+	<key>Name</key>
+	<string>Nome</string>
+	<key>No app matches “%@”.</key>
+	<string>Nessuna app corrisponde a «%@».</string>
+	<key>No apps</key>
+	<string>Nessuna app</string>
+	<key>No apps are linked to this Apple ID.</key>
+	<string>Non risultano app associate a questo Apple ID.</string>
+	<key>No authenticated account: sign in with your Apple ID.</key>
+	<string>Nessun account autenticato: accedi con il tuo Apple ID.</string>
+	<key>No device ready</key>
+	<string>Nessun dispositivo pronto</string>
+	<key>No devices</key>
+	<string>Nessun dispositivo</string>
+	<key>No file in the archive contains “%@”.</key>
+	<string>Nessun file dell'archivio contiene «%@».</string>
+	<key>No license for this app. If it is free use “Get and download”; if it is paid, buy it from the App Store with this Apple ID.</key>
+	<string>Licenza mancante per questa app. Se è gratuita usa «Ottieni e scarica»; se è a pagamento va acquistata dall'App Store con questo Apple ID.</string>
+	<key>No matches</key>
+	<string>Nessuna corrispondenza</string>
+	<key>No purchases</key>
+	<string>Nessun acquisto</string>
+	<key>No results</key>
+	<string>Nessun risultato</string>
+	<key>No results for “%@”.</key>
+	<string>Nessun risultato per «%@».</string>
+	<key>No transfers</key>
+	<string>Nessun trasferimento</string>
+	<key>No user-installed apps were found on this device.</key>
+	<string>Su questo dispositivo non risultano app installate dall'utente.</string>
+	<key>OK</key>
+	<string>OK</string>
+	<key>Open library folder</key>
+	<string>Apri cartella libreria</string>
+	<key>Paid app: it downloads only if already purchased with this Apple ID, otherwise buy it from the App Store</key>
+	<string>App a pagamento: si scarica solo se già acquistata con questo Apple ID, altrimenti va comprata dall'App Store</string>
+	<key>Password</key>
+	<string>Password</string>
+	<key>Platform</key>
+	<string>Piattaforma</string>
+	<key>Preflight check</key>
+	<string>Verifica preliminare</string>
+	<key>Preparing</key>
+	<string>Preparazione</string>
+	<key>Provisioning profile</key>
+	<string>Profilo di provisioning</string>
+	<key>Reading installed apps…</key>
+	<string>Lettura app installate…</string>
+	<key>Reading purchases…</key>
+	<string>Lettura acquisti…</string>
+	<key>Reading the archive…</key>
+	<string>Lettura dell'archivio…</string>
+	<key>Reads model, iOS version and disk space</key>
+	<string>Legge modello, versione iOS e spazio disco</string>
+	<key>Reads the battery level</key>
+	<string>Legge lo stato della batteria</string>
+	<key>Reads the icons of installed apps</key>
+	<string>Legge le icone delle app installate</string>
+	<key>Reconnect the device with the cable to continue.</key>
+	<string>Ricollega il dispositivo con il cavo per continuare.</string>
+	<key>Refresh</key>
+	<string>Aggiorna</string>
+	<key>Refresh Devices</key>
+	<string>Aggiorna dispositivi</string>
+	<key>Remove</key>
+	<string>Rimuovi</string>
+	<key>Remove %@?</key>
+	<string>Rimuovere %@?</string>
+	<key>Remove from %@</key>
+	<string>Rimuovi da %@</string>
+	<key>Remove from the device</key>
+	<string>Rimuovi dal dispositivo</string>
+	<key>Removing previous version</key>
+	<string>Rimozione versione precedente</string>
+	<key>Rename</key>
+	<string>Rinomina</string>
+	<key>Rename device</key>
+	<string>Rinomina dispositivo</string>
+	<key>Rename device…</key>
+	<string>Rinomina dispositivo…</string>
+	<key>Rename failed</key>
+	<string>Rinomina non riuscita</string>
+	<key>Renames the device</key>
+	<string>Rinomina il dispositivo</string>
+	<key>Requires iOS %@, the device has %@.</key>
+	<string>Richiede iOS %@, il dispositivo ha %@.</string>
+	<key>Restore default folder</key>
+	<string>Ripristina cartella predefinita</string>
+	<key>Retry</key>
+	<string>Riprova</string>
+	<key>Sandboxing app</key>
+	<string>Applicazione sandbox</string>
+	<key>Scanning archives…</key>
+	<string>Analisi archivi…</string>
+	<key>Search</key>
+	<string>Cerca</string>
+	<key>Search by name or bundle ID</key>
+	<string>Cerca per nome o bundle ID</string>
+	<key>Search for an app by name to download its .ipa package.</key>
+	<string>Cerca un'app per nome per scaricarne il pacchetto .ipa.</string>
+	<key>Search installed apps</key>
+	<string>Cerca tra le app installate</string>
+	<key>Search the App Store</key>
+	<string>Cerca nell'App Store</string>
+	<key>Searching…</key>
+	<string>Ricerca in corso…</string>
+	<key>Section</key>
+	<string>Sezione</string>
+	<key>Select all</key>
+	<string>Seleziona tutti</string>
+	<key>Serial number</key>
+	<string>Numero di serie</string>
+	<key>Show Activity</key>
+	<string>Mostra attività</string>
+	<key>Show Downloads</key>
+	<string>Mostra download</string>
+	<key>Show Library</key>
+	<string>Mostra libreria</string>
+	<key>Show in Finder</key>
+	<string>Mostra nel Finder</string>
+	<key>Show log</key>
+	<string>Mostra log</string>
+	<key>Show the contents of the .ipa archive</key>
+	<string>Mostra il contenuto dell'archivio .ipa</string>
+	<key>Show the transfer queue</key>
+	<string>Mostra la coda dei trasferimenti</string>
+	<key>Sign in</key>
+	<string>Accedi</string>
+	<key>Sign in to the App Store</key>
+	<string>Accedi all'App Store</string>
+	<key>Sign out</key>
+	<string>Esci dall'account</string>
+	<key>Sign-in failed: ipatool does not report an active account.</key>
+	<string>Login non riuscito: ipatool non riporta un account attivo.</string>
+	<key>Signature</key>
+	<string>Firma</string>
+	<key>Signing in…</key>
+	<string>Accesso…</string>
+	<key>Size</key>
+	<string>Dimensione</string>
+	<key>Start pairing</key>
+	<string>Avvia abbinamento</string>
+	<key>Starting the download…</key>
+	<string>Avvio del download…</string>
+	<key>Storage</key>
+	<string>Archiviazione</string>
+	<key>System</key>
+	<string>Sistema</string>
+	<key>System apps</key>
+	<string>App di sistema</string>
+	<key>System apps cannot be removed</key>
+	<string>Le app di sistema non sono rimovibili</string>
+	<key>Taking install lock</key>
+	<string>Blocco installazione</string>
+	<key>The app and all its data will be deleted from the device.</key>
+	<string>L'app e tutti i suoi dati verranno eliminati dal dispositivo.</string>
+	<key>The app requires entitlements the signing profile does not grant.</key>
+	<string>L'app richiede entitlement non concessi dal profilo di firma.</string>
+	<key>The archive does not contain Payload/&lt;App&gt;.app/Info.plist: it does not look like a valid .ipa.</key>
+	<string>L'archivio non contiene Payload/&lt;App&gt;.app/Info.plist: non sembra un .ipa valido.</string>
+	<key>The archive does not contain “%@”.</key>
+	<string>L'archivio non contiene «%@».</string>
+	<key>The command exited with code %lld.</key>
+	<string>Il comando è terminato con codice %lld.</string>
+	<key>The download uses a private Apple API, the same one iTunes uses: it can change without notice.</key>
+	<string>Il download usa un'API privata di Apple, la stessa di iTunes: può cambiare senza preavviso.</string>
+	<key>The file %@ no longer exists.</key>
+	<string>Il file %@ non esiste più.</string>
+	<key>The password reaches ipatool through a pseudo-terminal, not the command line: it does not appear in `ps` and IMC never stores it.</key>
+	<string>La password viene passata a ipatool attraverso uno pseudo-terminale, non sulla riga di comando: non compare in `ps` e IMC non la salva da nessuna parte.</string>
+	<key>This app does not support %@.</key>
+	<string>Questa app non supporta %@.</string>
+	<key>This app does not support the selected device type.</key>
+	<string>Questa app non supporta il tipo di dispositivo selezionato.</string>
+	<key>Too many attempts: Apple has temporarily blocked requests. Try again later.</key>
+	<string>Troppi tentativi: Apple ha temporaneamente bloccato le richieste. Riprova più tardi.</string>
+	<key>Tool “%@” not found. Install libimobiledevice with: brew install libimobiledevice ideviceinstaller</key>
+	<string>Strumento «%@» non trovato. Installa libimobiledevice con: brew install libimobiledevice ideviceinstaller</string>
+	<key>Total capacity</key>
+	<string>Capacità totale</string>
+	<key>Trust this computer</key>
+	<string>Autorizza questo computer</string>
+	<key>Try again</key>
+	<string>Riprova</string>
+	<key>Type</key>
+	<string>Tipo</string>
+	<key>UDID</key>
+	<string>UDID</string>
+	<key>Unknown</key>
+	<string>Sconosciuta</string>
+	<key>Unlock the device and tap Trust in the prompt that appears, then press the button below.</key>
+	<string>Sblocca il dispositivo e tocca Autorizza nella richiesta che appare, poi premi il pulsante qui sotto.</string>
+	<key>Unlock the device with its passcode and try again.</key>
+	<string>Sblocca il dispositivo con il codice e riprova.</string>
+	<key>Unlock the device with its passcode to allow communication.</key>
+	<string>Sblocca il dispositivo con il codice per consentire la comunicazione.</string>
+	<key>Unreadable archive</key>
+	<string>Archivio non leggibile</string>
+	<key>Unrecognized property list format.</key>
+	<string>Formato property list non riconosciuto.</string>
+	<key>Update to %@</key>
+	<string>Aggiorna a %@</string>
+	<key>Updating app index</key>
+	<string>Aggiornamento indice app</string>
+	<key>Used space</key>
+	<string>Spazio usato</string>
+	<key>User apps</key>
+	<string>App utente</string>
+	<key>Verify</key>
+	<string>Verifica</string>
+	<key>Verifying signature</key>
+	<string>Verifica firma</string>
+	<key>Version</key>
+	<string>Versione</string>
+	<key>Version %@ · %@</key>
+	<string>Versione %@ · %@</string>
+	<key>You need the Apple ID credentials that own the apps: only free apps, or apps already purchased with that account, can be downloaded.</key>
+	<string>Servono le credenziali dell'Apple ID con cui hai ottenuto le app: si possono scaricare solo app gratuite o già acquistate da quell'account.</string>
+	<key>cannot create the pseudo-terminal</key>
+	<string>impossibile creare lo pseudo-terminale</string>
+	<key>entry “%@” could not be extracted</key>
+	<string>voce «%@» non estraibile</string>
+	<key>iOS device</key>
+	<string>Dispositivo iOS</string>
+	<key>ipatool exited with an error.</key>
+	<string>ipatool è terminato con un errore.</string>
+	<key>ipatool keeps the session token in the macOS keychain. On first use macOS may ask for permission to access it.</key>
+	<string>Il token di sessione lo gestisce ipatool nel portachiavi di macOS. Alla prima richiesta macOS puo' chiedere l'autorizzazione di accesso.</string>
+	<key>ipatool not found</key>
+	<string>ipatool non trovato</string>
+	<key>less than 1 s</key>
+	<string>meno di 1 s</string>
+	<key>purchased on %@</key>
+	<string>acquistata il %@</string>
+	<key>unknown</key>
+	<string>sconosciuto</string>
+	<key>v%@</key>
+	<string>v%@</string>
+</dict>
+</plist>

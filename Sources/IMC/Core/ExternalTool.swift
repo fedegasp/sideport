@@ -21,16 +21,16 @@ enum ExternalTool: String, CaseIterable, Identifiable {
         }
     }
 
-    var purpose: String {
+    var purpose: LocalizedStringResource {
         switch self {
-        case .ideviceID: "Rileva i dispositivi collegati"
-        case .ideviceInfo: "Legge modello, versione iOS e spazio disco"
-        case .idevicePair: "Gestisce l'abbinamento (Autorizza questo computer)"
-        case .ideviceInstaller: "Elenca, installa e rimuove le app"
-        case .ideviceName: "Rinomina il dispositivo"
-        case .ideviceDiagnostics: "Legge lo stato della batteria"
-        case .ipatool: "Scarica le .ipa dall'App Store"
-        case .iconHelper: "Legge le icone delle app installate"
+        case .ideviceID: .ui("Detects connected devices")
+        case .ideviceInfo: .ui("Reads model, iOS version and disk space")
+        case .idevicePair: .ui("Manages pairing (Trust This Computer)")
+        case .ideviceInstaller: .ui("Lists, installs and removes apps")
+        case .ideviceName: .ui("Renames the device")
+        case .ideviceDiagnostics: .ui("Reads the battery level")
+        case .ipatool: .ui("Downloads .ipa files from the App Store")
+        case .iconHelper: .ui("Reads the icons of installed apps")
         }
     }
 }

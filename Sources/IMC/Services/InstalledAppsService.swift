@@ -14,11 +14,11 @@ final class InstalledAppsService {
         var id: String { rawValue }
 
         var flag: String { "--\(rawValue)" }
-        var label: String {
+        var label: LocalizedStringResource {
             switch self {
-            case .user: return "App utente"
-            case .system: return "App di sistema"
-            case .all: return "Tutte"
+            case .user: .ui("User apps")
+            case .system: .ui("System apps")
+            case .all: .ui("All")
             }
         }
     }

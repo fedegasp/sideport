@@ -9,9 +9,9 @@ struct StoreUnavailableView: View {
                 .font(.system(size: 42))
                 .foregroundStyle(.tint)
                 .accessibilityHidden(true)
-            Text("ipatool non trovato")
+            Text(.ui("ipatool not found"))
                 .font(.title3.weight(.semibold))
-            Text("Il download dall'App Store usa ipatool. Installalo e riapri IMC, oppure ricompila l'app: lo script di build lo incorpora nel bundle quando e' presente.")
+            Text(.ui("Downloading from the App Store uses ipatool. Install it and reopen IMC, or rebuild the app: the build script embeds it in the bundle when present."))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 420)
@@ -22,9 +22,9 @@ struct StoreUnavailableView: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
-                Button("Copia il comando", systemImage: "doc.on.doc", action: copyCommand)
+                Button(.ui("Copy the command"), systemImage: "doc.on.doc", action: copyCommand)
                     .labelStyle(.iconOnly)
-                    .help("Copia il comando")
+                    .help(Text(.ui("Copy the command")))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
