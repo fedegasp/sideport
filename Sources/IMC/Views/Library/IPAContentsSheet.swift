@@ -11,7 +11,7 @@ import UniformTypeIdentifiers
 struct IPAContentsSheet: View {
     let package: IPAPackage
 
-    @EnvironmentObject private var library: LibraryStore
+    @Environment(LibraryStore.self) private var library
     @Environment(\.dismiss) private var dismiss
 
     @State private var entries: [IPAEntry] = []
@@ -72,11 +72,12 @@ struct IPAContentsSheet: View {
         }
         .alert(
             "Estrazione non riuscita",
-            isPresented: Binding(get: { actionError != nil }, set: { if !$0 { actionError = nil } })
-        ) {
-            Button("OK") { actionError = nil }
-        } message: {
-            Text(actionError ?? "")
+            isPresented: Binding(get: { actionError != nil }, set: { if !$0 { actionError = nil } }),
+            presenting: actionError
+        ) { _ in
+            Button("OK") {}
+        } message: { message in
+            Text(message)
         }
     }
 
@@ -104,14 +105,16 @@ struct IPAContentsSheet: View {
             }
 
             HStack(spacing: 6) {
-                Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 TextField("Filtra per nome o percorso", text: $search)
                     .textFieldStyle(.plain)
                 if !search.isEmpty {
-                    Button { search = "" } label: {
-                        Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
+                    Button("Cancella filtro", systemImage: "xmark.circle.fill", action: clearSearch)
+                        .labelStyle(.iconOnly)
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.secondary)
                 }
             }
             .padding(.horizontal, 8)
@@ -173,13 +176,18 @@ struct IPAContentsSheet: View {
             Color.clear.frame(width: CGFloat(row.depth) * 14, height: 1)
 
             if row.node.isDirectory && row.subtitle == nil {
+                let isExpanded = expanded.contains(row.node.id)
                 Button {
                     toggle(row.node.id)
                 } label: {
-                    Image(systemName: expanded.contains(row.node.id) ? "chevron.down" : "chevron.right")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                        .frame(width: 12)
+                    Label(
+                        isExpanded ? "Comprimi" : "Espandi",
+                        systemImage: isExpanded ? "chevron.down" : "chevron.right"
+                    )
+                    .labelStyle(.iconOnly)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 12)
                 }
                 .buttonStyle(.plain)
             } else {
@@ -189,6 +197,7 @@ struct IPAContentsSheet: View {
             Image(systemName: icon(for: row.node))
                 .foregroundStyle(row.node.isDirectory ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                 .frame(width: 16)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(row.node.name).lineLimit(1).truncationMode(.middle)
@@ -214,7 +223,15 @@ struct IPAContentsSheet: View {
             RoundedRectangle(cornerRadius: 6)
                 .fill(isSelected ? AnyShapeStyle(.selection) : AnyShapeStyle(.clear))
         )
-        .contentShape(Rectangle())
+        .contentShape(.rect)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityAction { click(row) }
+        .accessibilityActions {
+            if row.node.isDirectory && row.subtitle == nil {
+                Button(expanded.contains(row.node.id) ? "Comprimi" : "Espandi") { toggle(row.node.id) }
+            }
+        }
         // Gesti simultanei: `.draggable` installa il suo riconoscitore sulla
         // riga e un `onTapGesture` normale glielo ruberebbe, lasciando la riga
         // selezionabile ma non trascinabile.
@@ -307,6 +324,10 @@ struct IPAContentsSheet: View {
                     subtitle: entry.path
                 )
             }
+    }
+
+    private func clearSearch() {
+        search = ""
     }
 
     private func toggle(_ id: String) {

@@ -2,9 +2,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct LibraryView: View {
-    @EnvironmentObject private var library: LibraryStore
-    @EnvironmentObject private var devices: DeviceMonitor
-    @EnvironmentObject private var ui: UIState
+    @Environment(LibraryStore.self) private var library
+    @Environment(DeviceMonitor.self) private var devices
+    @Environment(UIState.self) private var ui
 
     @State private var search = ""
     @State private var selection = Set<URL>()
@@ -28,6 +28,8 @@ struct LibraryView: View {
     private var readyDevices: [Device] { devices.devices.filter(\.isReady) }
 
     var body: some View {
+        @Bindable var ui = ui
+
         Group {
             if library.packages.isEmpty && !library.isScanning {
                 EmptyStateView(

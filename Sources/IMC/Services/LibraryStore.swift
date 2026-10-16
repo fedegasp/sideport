@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 import AppKit
 
 /// Libreria locale di file .ipa su disco, con cache dei metadati.
@@ -6,13 +7,14 @@ import AppKit
 /// L'ispezione di un .ipa richiede di aprire lo zip, quindi i risultati sono
 /// memorizzati in cache e invalidati quando cambiano dimensione o data del file.
 @MainActor
-final class LibraryStore: ObservableObject {
-    @Published private(set) var packages: [IPAPackage] = []
-    @Published private(set) var isScanning = false
-    @Published var lastError: String?
-    @Published private(set) var libraryURL: URL
+@Observable
+final class LibraryStore {
+    private(set) var packages: [IPAPackage] = []
+    private(set) var isScanning = false
+    var lastError: String?
+    private(set) var libraryURL: URL
 
-    private var cache: [String: CacheEntry] = [:]
+    @ObservationIgnored private var cache: [String: CacheEntry] = [:]
     private let defaultsKey = "libraryFolderPath"
 
     private struct CacheEntry: Codable {

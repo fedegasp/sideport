@@ -10,7 +10,7 @@ options:
 
 settings:
   base:
-    SWIFT_VERSION: "5.0"
+    SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
     # Firma ad-hoc: l'app e' uno strumento locale, non distribuito.
@@ -37,6 +37,8 @@ targets:
         buildPhase: none
       - path: Scripts
         buildPhase: none
+      - path: Helpers
+        buildPhase: none
     settings:
       base:
         PRODUCT_NAME: IMC
@@ -56,11 +58,27 @@ targets:
         script: "\"$SRCROOT/Scripts/bundle-tools.sh\" \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\""
         basedOnDependencyAnalysis: false
 
+  IMCTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/IMCTests
+    dependencies:
+      - target: IMC
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.imc.tests
+
 schemes:
   IMC:
     build:
       targets:
         IMC: all
+        IMCTests: [test]
+    test:
+      targets:
+        - IMCTests
     run:
       config: Debug
     archive:

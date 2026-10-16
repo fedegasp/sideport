@@ -76,13 +76,3 @@ struct IPAPackage: Identifiable, Hashable, Codable {
         }
     }
 }
-
-enum VersionCompare {
-    static func isLower(_ lhs: String, than rhs: String) -> Bool {
-        lhs.compare(rhs, options: .numeric) == .orderedAscending
-    }
-
-    static func isHigher(_ lhs: String, than rhs: String) -> Bool {
-        lhs.compare(rhs, options: .numeric) == .orderedDescending
-    }
-}

@@ -1,23 +1,5 @@
 import Foundation
 
-/// Una voce dell'archivio .ipa, come la riporta `unzip -l`.
-struct IPAEntry: Hashable {
-    let path: String
-    let size: Int64
-    let isDirectory: Bool
-
-    var name: String { path.split(separator: "/").last.map(String.init) ?? path }
-}
-
-/// Nodo dell'albero dei contenuti: per le cartelle `size` e' la somma dei figli.
-struct IPANode: Identifiable, Hashable {
-    let id: String
-    let name: String
-    let isDirectory: Bool
-    let size: Int64
-    let children: [IPANode]?
-}
-
 enum IPAContents {
 
     /// Costruisce l'albero a partire dall'elenco piatto delle voci.

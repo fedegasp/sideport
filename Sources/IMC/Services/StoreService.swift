@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 
 /// Accesso all'App Store tramite `ipatool`.
 ///
@@ -6,7 +7,8 @@ import Foundation
 /// download delle .ipa associate a un Apple ID. Le credenziali di sessione le
 /// conserva lui nel portachiavi di macOS; questa classe non le memorizza mai.
 @MainActor
-final class StoreService: ObservableObject {
+@Observable
+final class StoreService {
 
     enum AuthState: Equatable {
         case unknown
@@ -25,21 +27,26 @@ final class StoreService: ObservableObject {
         var isBusy: Bool { self == .signingIn }
     }
 
-    @Published private(set) var authState: AuthState = .unknown
-    @Published private(set) var searchResults: [StoreApp] = []
-    @Published private(set) var purchases: [StoreApp] = []
-    @Published private(set) var downloads: [StoreDownload] = []
-    @Published private(set) var isSearching = false
-    @Published private(set) var isLoadingPurchases = false
-    @Published private(set) var purchasesPage = 1
-    @Published private(set) var purchasesTotal = 0
-    @Published var lastError: String?
+    private(set) var authState: AuthState = .unknown
+    private(set) var searchResults: [StoreApp] = []
+    private(set) var purchases: [StoreApp] = []
+    private(set) var downloads: [StoreDownload] = []
+    private(set) var isSearching = false
+    private(set) var isLoadingPurchases = false
+    private(set) var purchasesPage = 1
+    private(set) var purchasesTotal = 0
+    var lastError: String?
 
     /// Processo di login vivo mentre attendiamo il codice 2FA.
-    private var loginProcess: PTYProcess?
-    private var downloadTasks: [UUID: Task<Void, Never>] = [:]
+    @ObservationIgnored private var loginProcess: PTYProcess?
+    @ObservationIgnored private var downloadTasks: [UUID: Task<Void, Never>] = [:]
 
     var isAvailable: Bool { ToolLocator.shared.url(for: .ipatool) != nil }
+
+    /// Download conclusi con successo: quando cambia la libreria va riletta.
+    var completedDownloadsCount: Int {
+        downloads.count { if case .finished = $0.status { true } else { false } }
+    }
 
     // MARK: - Autenticazione
 
@@ -269,7 +276,7 @@ final class StoreService: ObservableObject {
                     try? await Task.sleep(for: .milliseconds(700))
                     guard let size = try? FileManager.default
                         .attributesOfItem(atPath: destination.path)[.size] as? NSNumber else { continue }
-                    await self?.updateDownloadBytes(jobID, bytes: size.int64Value)
+                    self?.updateDownloadBytes(jobID, bytes: size.int64Value)
                 }
             }
             defer { progressWatcher.cancel() }
@@ -418,64 +425,4 @@ final class StoreService: ObservableObject {
         guard let value = Double(digits) else { return nil }
         return min(max(value / 100, 0), 1)
     }
-}
-
-/// Riconosce i prompt interattivi di ipatool nel flusso di stderr.
-///
-/// I prompt non terminano con newline, quindi il testo va accumulato e ogni
-/// richiesta va riconosciuta una sola volta.
-final class PromptWatcher: @unchecked Sendable {
-    enum Action {
-        case needsPassword
-        case needsAuthCode
-    }
-
-    private let lock = NSLock()
-    private var buffer = ""
-    private var passwordRequested = false
-    private var codeRequested = false
-
-    func consume(_ chunk: String) -> [Action] {
-        lock.lock()
-        defer { lock.unlock() }
-        buffer += chunk.lowercased()
-        var actions: [Action] = []
-        if !passwordRequested, buffer.contains("enter password") {
-            passwordRequested = true
-            actions.append(.needsPassword)
-        }
-        if !codeRequested, buffer.contains("2fa code") || buffer.contains("verification code") {
-            codeRequested = true
-            actions.append(.needsAuthCode)
-        }
-        return actions
-    }
-}
-
-enum StorePlatform: String, CaseIterable, Identifiable {
-    case iphone
-    case ipad
-
-    var id: String { rawValue }
-    var label: String { self == .iphone ? "iPhone" : "iPad" }
-}
-
-struct StoreDownload: Identifiable {
-    enum Status: Equatable {
-        case running(bytes: Int64, fraction: Double?)
-        case finished(URL)
-        case failed(String)
-        case cancelled
-
-        var isFinished: Bool {
-            if case .running = self { return false }
-            return true
-        }
-    }
-
-    let id = UUID()
-    let app: StoreApp
-    let destination: URL
-    var status: Status = .running(bytes: 0, fraction: nil)
-    var finishedAt: Date?
 }

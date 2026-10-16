@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct SidebarView: View {
-    @EnvironmentObject private var devices: DeviceMonitor
-    @EnvironmentObject private var library: LibraryStore
-    @EnvironmentObject private var ui: UIState
+    @Environment(DeviceMonitor.self) private var devices
+    @Environment(LibraryStore.self) private var library
+    @Environment(UIState.self) private var ui
 
     var body: some View {
+        @Bindable var ui = ui
+
         List(selection: $ui.route) {
             Section("Libreria") {
                 Label("App (.ipa)", systemImage: "square.stack.3d.down.right")
@@ -39,42 +41,6 @@ struct SidebarView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.quaternary)
             }
-        }
-    }
-}
-
-private struct DeviceRow: View {
-    let device: Device
-
-    var body: some View {
-        Label {
-            VStack(alignment: .leading, spacing: 1) {
-                Text(device.displayName)
-                    .lineLimit(1)
-                Text(statusLine)
-                    .font(.caption)
-                    .foregroundStyle(statusColor)
-                    .lineLimit(1)
-            }
-        } icon: {
-            Image(systemName: device.symbolName)
-        }
-    }
-
-    private var statusLine: String {
-        switch device.state {
-        case .ready: return device.systemVersionLabel
-        case .untrusted: return "Da autorizzare"
-        case .locked: return "Bloccato"
-        case .error: return "Errore di connessione"
-        }
-    }
-
-    private var statusColor: Color {
-        switch device.state {
-        case .ready: return .secondary
-        case .untrusted, .locked: return .orange
-        case .error: return .red
         }
     }
 }

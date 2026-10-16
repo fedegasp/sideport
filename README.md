@@ -21,6 +21,12 @@ Tutti e tre i tool vengono copiati dentro `IMC.app` in fase di build, quindi l'a
 risultante funziona anche su un Mac senza Homebrew (il bundle pesa circa 40 MB,
 di cui 30 sono ipatool).
 
+Nel bundle finisce anche `imc-icon`, un piccolo helper in C ([`Helpers/imc-icon`](Helpers/imc-icon/main.c))
+che legge le icone delle app installate dal servizio SpringBoard del dispositivo: nessun
+tool di libimobiledevice lo espone. Viene compilato in fase di build contro la
+libimobiledevice di Homebrew (serve `pkg-config`); se manca, le app installate mostrano
+un segnaposto.
+
 ## Build
 
 ### Xcode
@@ -70,8 +76,11 @@ bundle equivalenti.
    l'intero archivio con *Estrai tutto…*.
 4. L'avanzamento e' nel pannello **Attivita'** nella barra strumenti (⇧⌘T).
 
-Nella scheda di un dispositivo trovi le app installate, con rimozione e, quando la libreria
-contiene una versione piu' recente della stessa app, un pulsante *Aggiorna*.
+Nella scheda di un dispositivo trovi le app installate, con icona, versione e spazio occupato
+(app piu' documenti e dati, come in Impostazioni su iOS; il dettaglio e' nel tooltip), con
+rimozione e, quando la libreria contiene una versione piu' recente della stessa app, un
+pulsante *Aggiorna*. Le icone restano in cache in `~/Library/Caches/IMC/Icone`, per bundle
+ID e versione.
 
 ### Download dall'App Store
 
@@ -126,8 +135,12 @@ Sources/IMC/
   Models/       Device, InstalledApp, IPAPackage, IPAContents, TransferJob, StoreApp
   Services/     DeviceMonitor, InstalledAppsService, TransferQueue, LibraryStore,
                 IPAInspector, IPAExtractor, StoreService
-  Views/        interfaccia SwiftUI
+  State/        stato condiviso dell'interfaccia (UIState, Route)
+  Views/        interfaccia SwiftUI, una cartella per sezione (Root, Library, Device,
+                Download, Transfers) piu' Shared per i componenti comuni
+Tests/IMCTests/ test della logica di parsing (Swift Testing): `swift test`
 Resources/      Info.plist e icona dell'app
+Helpers/        helper in C incorporati nel bundle (imc-icon)
 Scripts/        build del bundle, incorporamento dei tool, generazione icona
 project.yml     sorgente del progetto Xcode (XcodeGen)
 Package.swift   build da riga di comando

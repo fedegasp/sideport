@@ -1,5 +1,5 @@
 import Foundation
-import Combine
+import Observation
 
 /// Rileva i dispositivi collegati via USB e ne mantiene aggiornate le informazioni.
 ///
@@ -8,15 +8,16 @@ import Combine
 /// dispositivo vengono rilette solo quando compare o periodicamente, perche'
 /// ogni query apre una sessione lockdownd.
 @MainActor
-final class DeviceMonitor: ObservableObject {
-    @Published private(set) var devices: [Device] = []
-    @Published private(set) var isRefreshing = false
-    @Published var lastError: String?
+@Observable
+final class DeviceMonitor {
+    private(set) var devices: [Device] = []
+    private(set) var isRefreshing = false
+    var lastError: String?
 
-    private var pollTask: Task<Void, Never>?
+    @ObservationIgnored private var pollTask: Task<Void, Never>?
     private let pollInterval: Duration = .seconds(2)
     private let detailRefreshEveryTicks = 8
-    private var tickCount = 0
+    @ObservationIgnored private var tickCount = 0
 
     func start() {
         guard pollTask == nil else { return }

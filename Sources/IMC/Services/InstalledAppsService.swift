@@ -1,11 +1,13 @@
 import Foundation
+import Observation
 
 /// Elenca le app presenti su un dispositivo tramite `installation_proxy`.
 @MainActor
-final class InstalledAppsService: ObservableObject {
-    @Published private(set) var appsByDevice: [String: [InstalledApp]] = [:]
-    @Published private(set) var loadingUDIDs: Set<String> = []
-    @Published private(set) var errorsByDevice: [String: String] = [:]
+@Observable
+final class InstalledAppsService {
+    private(set) var appsByDevice: [String: [InstalledApp]] = [:]
+    private(set) var loadingUDIDs: Set<String> = []
+    private(set) var errorsByDevice: [String: String] = [:]
 
     enum Scope: String, CaseIterable, Identifiable {
         case user, system, all
@@ -34,7 +36,8 @@ final class InstalledAppsService: ObservableObject {
         defer { loadingUDIDs.remove(udid) }
 
         do {
-            let result = try await ProcessRunner.run(tool, ["-u", udid, "list", scope.flag, "--xml"])
+            let attributes = InstalledApp.requestedAttributes.flatMap { ["-a", $0] }
+            let result = try await ProcessRunner.run(tool, ["-u", udid, "list", scope.flag, "--xml"] + attributes)
             guard result.succeeded else {
                 errorsByDevice[udid] = result.failureMessage
                 return

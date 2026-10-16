@@ -13,6 +13,7 @@ struct SetupView: View {
             Image(systemName: "wrench.and.screwdriver")
                 .font(.system(size: 44))
                 .foregroundStyle(.tint)
+                .accessibilityHidden(true)
 
             Text("Componenti mancanti")
                 .font(.title2.weight(.semibold))
@@ -43,13 +44,9 @@ struct SetupView: View {
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
-                    Button {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(command, forType: .string)
-                    } label: {
-                        Image(systemName: "doc.on.doc")
-                    }
-                    .help("Copia il comando")
+                    Button("Copia il comando", systemImage: "doc.on.doc", action: copyCommand)
+                        .labelStyle(.iconOnly)
+                        .help("Copia il comando")
                 }
             }
 
@@ -58,5 +55,10 @@ struct SetupView: View {
         }
         .padding(32)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func copyCommand() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(command, forType: .string)
     }
 }

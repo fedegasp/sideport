@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 
 /// Coda delle installazioni e rimozioni.
 ///
@@ -6,16 +7,17 @@ import Foundation
 /// alla volta) ma eseguiti in parallelo su dispositivi diversi, cosi' da poter
 /// distribuire la stessa .ipa su piu' device contemporaneamente.
 @MainActor
-final class TransferQueue: ObservableObject {
-    @Published private(set) var jobs: [TransferJob] = []
+@Observable
+final class TransferQueue {
+    private(set) var jobs: [TransferJob] = []
 
     /// Invocato quando un job si conclude con successo, con l'UDID del
     /// dispositivo coinvolto. Serve a ricaricare l'elenco app senza che una
     /// vista debba osservare `jobs` e scriverci dentro per tenerne traccia.
-    var onJobSucceeded: ((String) -> Void)?
+    @ObservationIgnored var onJobSucceeded: ((String) -> Void)?
 
-    private var drainTasks: [String: Task<Void, Never>] = [:]
-    private var activeTasks: [UUID: Task<Void, Never>] = [:]
+    @ObservationIgnored private var drainTasks: [String: Task<Void, Never>] = [:]
+    @ObservationIgnored private var activeTasks: [UUID: Task<Void, Never>] = [:]
 
     var activeJobs: [TransferJob] { jobs.filter { !$0.status.isFinished } }
     var hasActivity: Bool { !activeJobs.isEmpty }

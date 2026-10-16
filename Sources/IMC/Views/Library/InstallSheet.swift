@@ -4,9 +4,9 @@ import SwiftUI
 struct InstallSheet: View {
     let packages: [IPAPackage]
 
-    @EnvironmentObject private var devices: DeviceMonitor
-    @EnvironmentObject private var queue: TransferQueue
-    @EnvironmentObject private var ui: UIState
+    @Environment(DeviceMonitor.self) private var devices
+    @Environment(TransferQueue.self) private var queue
+    @Environment(UIState.self) private var ui
     @Environment(\.dismiss) private var dismiss
 
     @State private var selectedUDIDs = Set<String>()
@@ -71,10 +71,8 @@ struct InstallSheet: View {
                         DeviceTargetRow(
                             device: device,
                             packages: packages,
-                            isSelected: selectedUDIDs.contains(device.udid)
-                        ) { isOn in
-                            if isOn { selectedUDIDs.insert(device.udid) } else { selectedUDIDs.remove(device.udid) }
-                        }
+                            isSelected: $selectedUDIDs[contains: device.udid]
+                        )
                     }
                 }
                 .listStyle(.inset)
@@ -116,44 +114,5 @@ struct InstallSheet: View {
         }
         dismiss()
         ui.showTransfers = true
-    }
-}
-
-private struct DeviceTargetRow: View {
-    let device: Device
-    let packages: [IPAPackage]
-    let isSelected: Bool
-    let onToggle: (Bool) -> Void
-
-    /// Avvisi di compatibilita' raccolti su tutte le app selezionate.
-    private var warnings: [String] {
-        packages.compactMap { package in
-            guard let reason = package.compatibility(with: device).reason else { return nil }
-            return packages.count == 1 ? reason : "\(package.name): \(reason)"
-        }
-    }
-
-    var body: some View {
-        Toggle(isOn: Binding(get: { isSelected }, set: onToggle)) {
-            HStack(spacing: 10) {
-                Image(systemName: device.symbolName)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 24)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(device.displayName)
-                    Text("\(device.marketingName) · \(device.systemVersionLabel) · \(Format.bytes(device.availableDiskCapacity)) liberi")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    ForEach(warnings, id: \.self) { warning in
-                        Label(warning, systemImage: "exclamationmark.triangle.fill")
-                            .font(.caption)
-                            .foregroundStyle(.orange)
-                    }
-                }
-            }
-        }
-        .toggleStyle(.checkbox)
-        .padding(.vertical, 2)
     }
 }

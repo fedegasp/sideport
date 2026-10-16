@@ -1,15 +1,17 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject private var devices: DeviceMonitor
-    @EnvironmentObject private var library: LibraryStore
-    @EnvironmentObject private var installedApps: InstalledAppsService
-    @EnvironmentObject private var queue: TransferQueue
-    @EnvironmentObject private var ui: UIState
+    @Environment(DeviceMonitor.self) private var devices
+    @Environment(LibraryStore.self) private var library
+    @Environment(InstalledAppsService.self) private var installedApps
+    @Environment(TransferQueue.self) private var queue
+    @Environment(UIState.self) private var ui
 
     @State private var missingTools: [ExternalTool] = []
 
     var body: some View {
+        @Bindable var ui = ui
+
         NavigationSplitView {
             SidebarView()
                 .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 320)
@@ -18,40 +20,28 @@ struct RootView: View {
                 .toolbar { toolbarContent }
         }
         .frame(minWidth: 940, idealWidth: 1180, minHeight: 600, idealHeight: 760)
-        .task {
-            missingTools = ToolLocator.shared.missingRequiredTools
-            guard missingTools.isEmpty else { return }
-            // Al termine di un'installazione o rimozione si rilegge l'elenco
-            // app del dispositivo interessato.
-            queue.onJobSucceeded = { [weak installedApps, weak devices] udid in
-                Task { @MainActor in
-                    await installedApps?.load(udid: udid, scope: ui.appScope)
-                    await devices?.refreshNow()
-                }
-            }
-            devices.start()
-            await library.refresh()
-        }
+        .task { await start() }
         .onDisappear { devices.stop() }
         .sheet(item: $ui.installSheet) { request in
             InstallSheet(packages: request.packages)
         }
-        .alert(item: $ui.alert) { content in
-            Alert(title: Text(content.title), message: Text(content.message), dismissButton: .default(Text("OK")))
+        // Il titolo dipende dal contenuto: la variante `item:` accetta solo un
+        // titolo fisso, quindi serve il binding booleano derivato.
+        .alert(
+            ui.alert?.title ?? "",
+            isPresented: Binding(get: { ui.alert != nil }, set: { if !$0 { ui.alert = nil } }),
+            presenting: ui.alert
+        ) { _ in
+            Button("OK") {}
+        } message: { content in
+            Text(content.message)
         }
     }
 
     @ViewBuilder
     private var detail: some View {
         if !missingTools.isEmpty {
-            SetupView(missing: missingTools) {
-                ToolLocator.shared.invalidateCache()
-                missingTools = ToolLocator.shared.missingRequiredTools
-                if missingTools.isEmpty {
-                    devices.start()
-                    Task { await library.refresh() }
-                }
-            }
+            SetupView(missing: missingTools, onRecheck: recheckTools)
         } else {
             switch ui.route {
             case .library, .none:
@@ -88,11 +78,35 @@ struct RootView: View {
                         .fill(.tint)
                         .frame(width: 7, height: 7)
                         .offset(x: 3, y: -2)
+                        .accessibilityHidden(true)
                 }
             }
-            .popover(isPresented: $ui.showTransfers, arrowEdge: .bottom) {
+            .popover(isPresented: Bindable(ui).showTransfers, arrowEdge: .bottom) {
                 TransfersView()
             }
         }
+    }
+
+    private func start() async {
+        missingTools = ToolLocator.shared.missingRequiredTools
+        guard missingTools.isEmpty else { return }
+        // Al termine di un'installazione o rimozione si rilegge l'elenco
+        // app del dispositivo interessato.
+        queue.onJobSucceeded = { [weak installedApps, weak devices, weak ui] udid in
+            Task { @MainActor in
+                await installedApps?.load(udid: udid, scope: ui?.appScope ?? .user)
+                await devices?.refreshNow()
+            }
+        }
+        devices.start()
+        await library.refresh()
+    }
+
+    private func recheckTools() {
+        ToolLocator.shared.invalidateCache()
+        missingTools = ToolLocator.shared.missingRequiredTools
+        guard missingTools.isEmpty else { return }
+        devices.start()
+        Task { await library.refresh() }
     }
 }

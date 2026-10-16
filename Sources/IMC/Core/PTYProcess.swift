@@ -20,8 +20,8 @@ final class PTYProcess: @unchecked Sendable {
     private var exitContinuation: CheckedContinuation<Int32, Never>?
 
     /// Invocati con i blocchi di testo via via che arrivano, su coda arbitraria.
-    var onStdout: ((String) -> Void)?
-    var onStderr: ((String) -> Void)?
+    var onStdout: (@Sendable (String) -> Void)?
+    var onStderr: (@Sendable (String) -> Void)?
 
     init(executable: URL, arguments: [String]) {
         process.executableURL = executable

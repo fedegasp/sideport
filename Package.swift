@@ -8,7 +8,13 @@ let package = Package(
         .executableTarget(
             name: "IMC",
             path: "Sources/IMC",
-            swiftSettings: [.swiftLanguageMode(.v5)]
+            swiftSettings: [.swiftLanguageMode(.v6)]
+        ),
+        .testTarget(
+            name: "IMCTests",
+            dependencies: ["IMC"],
+            path: "Tests/IMCTests",
+            swiftSettings: [.swiftLanguageMode(.v6)]
         )
     ]
 )

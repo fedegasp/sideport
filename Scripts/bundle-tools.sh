@@ -75,6 +75,13 @@ for tool in "${TOOLS[@]}"; do
     collect_deps "$TOOLS_DIR/$tool"
 done
 
+# L'helper delle icone non esiste in Homebrew: si compila direttamente nel bundle.
+if "$(dirname "$0")/build-icon-helper.sh" "$TOOLS_DIR/imc-icon"; then
+    collect_deps "$TOOLS_DIR/imc-icon"
+else
+    echo "Attenzione: helper delle icone non compilato, le app installate mostreranno un segnaposto." >&2
+fi
+
 if [ ${#missing[@]} -gt 0 ]; then
     echo "Attenzione: tool non trovati nel PATH e non incorporati: ${missing[*]}" >&2
     echo "Installali con: brew install libimobiledevice ideviceinstaller" >&2

@@ -1,52 +1,8 @@
 import SwiftUI
 
-struct TransfersView: View {
-    @EnvironmentObject private var queue: TransferQueue
-
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Text("Attivita'").font(.headline)
-                Spacer()
-                if queue.hasActivity {
-                    Button("Annulla tutto") { queue.cancelAll() }
-                        .buttonStyle(.link)
-                }
-                Button("Pulisci") { queue.clearFinished() }
-                    .buttonStyle(.link)
-                    .disabled(queue.jobs.allSatisfy { !$0.status.isFinished })
-            }
-            .padding(12)
-
-            Divider()
-
-            if queue.jobs.isEmpty {
-                VStack(spacing: 8) {
-                    Image(systemName: "tray")
-                        .font(.largeTitle)
-                        .foregroundStyle(.tertiary)
-                    Text("Nessun trasferimento")
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(queue.jobs.reversed()) { job in
-                            JobRow(job: job)
-                            Divider()
-                        }
-                    }
-                }
-            }
-        }
-        .frame(width: 420, height: 340)
-    }
-}
-
-private struct JobRow: View {
+struct JobRow: View {
     let job: TransferJob
-    @EnvironmentObject private var queue: TransferQueue
+    @Environment(TransferQueue.self) private var queue
     @State private var showLog = false
 
     var body: some View {
@@ -126,13 +82,11 @@ private struct JobRow: View {
     private var trailingControl: some View {
         switch job.status {
         case .queued, .running:
-            Button {
-                queue.cancel(job)
-            } label: {
-                Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary)
-            }
-            .buttonStyle(.borderless)
-            .help("Annulla")
+            Button("Annulla", systemImage: "xmark.circle.fill") { queue.cancel(job) }
+                .labelStyle(.iconOnly)
+                .foregroundStyle(.secondary)
+                .buttonStyle(.borderless)
+                .help("Annulla")
         case .succeeded:
             if let duration = Format.duration(from: job.startedAt, to: job.finishedAt) {
                 Text(duration).font(.caption).foregroundStyle(.secondary)

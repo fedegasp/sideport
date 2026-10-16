@@ -32,6 +32,11 @@ cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 if [ "$EMBED_TOOLS" = "1" ]; then
     echo "==> Incorporamento di libimobiledevice"
     "$ROOT/Scripts/bundle-tools.sh" "$APP"
+else
+    # Senza tool incorporati l'helper resta collegato alla libimobiledevice di sistema.
+    echo "==> Helper delle icone"
+    "$ROOT/Scripts/build-icon-helper.sh" "$APP/Contents/Resources/tools/imc-icon" || \
+        echo "Helper delle icone non compilato: le app installate mostreranno un segnaposto." >&2
 fi
 
 echo "==> Firma ad-hoc"
