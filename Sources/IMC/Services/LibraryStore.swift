@@ -18,9 +18,14 @@ final class LibraryStore {
     private let defaultsKey = "libraryFolderPath"
 
     private struct CacheEntry: Codable {
+        /// Sale quando `IPAPackage` guadagna campi: le voci vecchie non si
+        /// decodificano piu' e la libreria viene riletta una volta.
+        var schema = currentSchema
         let fileSize: Int64
         let modificationDate: Date
         let package: IPAPackage
+
+        static let currentSchema = 2
     }
 
     init() {

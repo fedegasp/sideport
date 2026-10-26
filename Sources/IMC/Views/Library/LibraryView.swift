@@ -43,6 +43,11 @@ struct LibraryView: View {
 
     private var readyDevices: [Device] { devices.devices.filter(\.isReady) }
 
+    /// Due .ipa della stessa app (per esempio l'originale e una rifirmata)
+    /// hanno nome, versione e dimensione quasi identici: solo per quelle si
+    /// mostra anche il nome del file.
+    private var duplicated: Set<String> { IPAPackage.duplicatedBundleIdentifiers(in: library.packages) }
+
     var body: some View {
         @Bindable var ui = ui
 
@@ -96,12 +101,22 @@ struct LibraryView: View {
         .sheet(item: $ui.inspectPackage) { package in
             IPAContentsSheet(package: package)
         }
+        .sheet(item: $ui.resignPackage) { package in
+            ResignSheet(package: package)
+        }
         .safeAreaInset(edge: .bottom) { bottomBar }
     }
 
     private var subtitle: String {
         let total = library.packages.reduce(Int64(0)) { $0 + $1.fileSize }
         return String.ui("\(library.packages.count) apps · \(Format.bytes(total))")
+    }
+
+    /// L'identificativo, piu' il nome del file quando non basta a dire quale
+    /// delle due .ipa e'.
+    private func subtitle(for package: IPAPackage) -> String {
+        guard duplicated.contains(package.bundleIdentifier) else { return package.bundleIdentifier }
+        return String.ui("\(package.bundleIdentifier) · \(package.url.lastPathComponent)")
     }
 
     private var table: some View {
@@ -111,10 +126,13 @@ struct LibraryView: View {
                     AppIconView(data: package.iconData, size: 28)
                     VStack(alignment: .leading, spacing: 1) {
                         Text(package.name).lineLimit(1)
-                        Text(package.bundleIdentifier)
+                        // Una riga sola: nella tabella l'altezza e' uniforme e
+                        // una terza riga verrebbe tagliata.
+                        Text(subtitle(for: package))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
+                            .truncationMode(.middle)
                     }
                 }
             }
@@ -131,8 +149,20 @@ struct LibraryView: View {
             TableColumn(.ui("Devices")) { Text($0.deviceFamilyLabel).foregroundStyle(.secondary) }
                 .width(min: 80, ideal: 110)
 
-            TableColumn(.ui("Signature")) { Text($0.signing.label).foregroundStyle(.secondary) }
-                .width(min: 90, ideal: 130)
+            TableColumn(.ui("Signature")) { package in
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(package.signatureLabel).foregroundStyle(.secondary)
+                    if let signer = package.signature?.signerLabel {
+                        Text(signer)
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                            .help(Text(signer))
+                    }
+                }
+            }
+            .width(min: 110, ideal: 170)
 
             // L'azione vive nell'ultima colonna invece che in una colonna
             // dedicata: SwiftUI distribuisce la larghezza fra le colonne
@@ -159,6 +189,10 @@ struct LibraryView: View {
                 .disabled(packages.isEmpty || readyDevices.isEmpty)
             Button(.ui("Inspect contents")) { ui.inspectPackage = packages.first }
                 .disabled(packages.count != 1)
+            // Una copia dell'App Store e' cifrata con FairPlay: rifirmarla non
+            // la rende installabile altrove.
+            Button(.ui("Re-sign…")) { ui.resignPackage = packages.first }
+                .disabled(packages.count != 1 || packages.first?.signing == .appStore)
             Button(.ui("Show in Finder")) { packages.first.map(library.reveal) }
                 .disabled(packages.isEmpty)
             Divider()

@@ -34,6 +34,54 @@
 			<string>%lld apps · %@</string>
 		</dict>
 	</dict>
+	<key>%lld certificates allowed</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld certificate allowed</string>
+			<key>other</key>
+			<string>%lld certificates allowed</string>
+		</dict>
+	</dict>
+	<key>%lld devices registered in the profile</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld device registered in the profile</string>
+			<key>other</key>
+			<string>%lld devices registered in the profile</string>
+		</dict>
+	</dict>
+	<key>%lld embedded extensions signed with their own profile</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld embedded extension signed with its own profile</string>
+			<key>other</key>
+			<string>%lld embedded extensions signed with their own profiles</string>
+		</dict>
+	</dict>
 	<key>%lld files · %@ extracted</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -64,6 +112,22 @@
 			<string>%lld item selected.</string>
 			<key>other</key>
 			<string>%lld items selected.</string>
+		</dict>
+	</dict>
+	<key>%lld registered devices</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld registered device</string>
+			<key>other</key>
+			<string>%lld registered devices</string>
 		</dict>
 	</dict>
 	<key>%lld results</key>
@@ -112,6 +176,22 @@
 			<string>Install %lld app</string>
 			<key>other</key>
 			<string>Install %lld apps</string>
+		</dict>
+	</dict>
+	<key>The profile covers the %lld embedded extensions</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@value@</string>
+		<key>value</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>The profile covers the %lld embedded extension</string>
+			<key>other</key>
+			<string>The profile covers the %lld embedded extensions</string>
 		</dict>
 	</dict>
 </dict>

@@ -45,6 +45,9 @@ enum IPAInspector {
         }
 
         let icon = await extractIcon(from: url, appDirectory: appDirectory, info: info, entries: entries)
+        // L'indice e' gia' in mano: la firma costa al massimo due letture in
+        // piu' dall'archivio, e il risultato finisce in cache con il resto.
+        let signature = await signature(of: url, entries: entries)
 
         return IPAPackage(
             url: url,
@@ -60,6 +63,7 @@ enum IPAInspector {
             fileSize: fileSize,
             modificationDate: modified,
             signing: signing,
+            signature: signature,
             iconData: icon
         )
     }
@@ -124,6 +128,71 @@ enum IPAInspector {
                 isDirectory: isDirectory
             )
         }
+    }
+
+    // MARK: - Firma
+
+    /// Dati di firma ricavati dall'elenco delle voci gia' letto dal chiamante,
+    /// cosi' l'archivio non viene riaperto per l'indice.
+    ///
+    /// Best effort: un profilo illeggibile lascia i campi vuoti invece di
+    /// interrompere tutto, perche' il resto del foglio resta utile.
+    static func signature(of url: URL, entries: [String]) async -> IPASignature {
+        var signature = IPASignature()
+
+        guard let infoPlistEntry = entries.first(where: isAppInfoPlist) else { return signature }
+        let appDirectory = String(infoPlistEntry.dropLast("Info.plist".count))
+
+        signature.isCodeSigned = entries.contains(appDirectory + "_CodeSignature/CodeResources")
+        signature.isFairPlayProtected = entries.contains {
+            $0.hasPrefix(appDirectory + "SC_Info/") && $0.hasSuffix(".sinf")
+        }
+
+        let provisioning = appDirectory + "embedded.mobileprovision"
+        if entries.contains(provisioning),
+           let data = try? await extract(entry: provisioning, from: url),
+           let profile = IPASignature.profile(inProvisioning: data) {
+            signature.apply(profile: profile)
+        }
+
+        // I metadati dell'acquisto vengono dopo il profilo: una copia dello
+        // Store li ha entrambi solo in casi strani, e in quel caso conta come
+        // e' stata consegnata.
+        if entries.contains("iTunesMetadata.plist"),
+           let data = try? await extract(entry: "iTunesMetadata.plist", from: url),
+           let metadata = try? PlistParsing.dictionary(from: data) {
+            signature.apply(storeMetadata: metadata)
+        }
+
+        if signature.kind == .unknown && !signature.isCodeSigned {
+            signature.kind = .unsigned
+        }
+        return signature
+    }
+
+    /// Identificativi dei bundle annidati: estensioni e app di watchOS. La
+    /// firma deve coprire anche quelli, e un profilo non jolly di solito non ci
+    /// arriva, quindi vanno noti prima di proporre la rifirma.
+    static func nestedBundleIdentifiers(of url: URL, entries: [String]) async -> [String] {
+        guard let infoPlistEntry = entries.first(where: isAppInfoPlist) else { return [] }
+        let appDirectory = String(infoPlistEntry.dropLast("Info.plist".count))
+
+        let nested = entries.filter { entry in
+            guard entry != infoPlistEntry, entry.hasPrefix(appDirectory), entry.hasSuffix("/Info.plist") else {
+                return false
+            }
+            let bundle = entry.dropLast("/Info.plist".count)
+            return bundle.hasSuffix(".appex") || bundle.hasSuffix(".app")
+        }
+
+        var identifiers: [String] = []
+        for entry in nested {
+            guard let data = try? await extract(entry: entry, from: url),
+                  let info = try? PlistParsing.dictionary(from: data),
+                  let identifier = info.string("CFBundleIdentifier") else { continue }
+            identifiers.append(identifier)
+        }
+        return identifiers
     }
 
     // MARK: - Icona

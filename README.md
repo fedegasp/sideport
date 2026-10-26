@@ -84,6 +84,44 @@ pulsante *Aggiorna*. Le icone restano in cache in `~/Library/Caches/IMC/Icone`, 
 ID e versione. Il pulsante *Informazioni* nell'intestazione apre un foglio con i dati del
 dispositivo (modello, numero di serie, UDID, sistema, spazio) e la rinomina.
 
+### Rifirma
+
+Una `.ipa` firmata per un altro team non si installa: il dispositivo non e' nel profilo e
+`ideviceinstaller` risponde `ApplicationVerificationFailed`. Il pulsante *Rifirma…* (nel
+foglio del contenuto, accanto ai dati di firma, e nel menu contestuale della libreria)
+rifa' la firma con un certificato del tuo portachiavi e un profilo di provisioning tuo,
+e salva una nuova `.ipa` nella libreria, pronta da installare.
+
+Il foglio elenca le identita' di firma iOS trovate nel portachiavi e i profili installati
+in `~/Library/MobileDevice/Provisioning Profiles` e nella cartella di Xcode (oppure si
+sceglie un file `.mobileprovision`), e prima di firmare controlla cio' che altrimenti si
+scoprirebbe solo al momento dell'installazione: che il profilo copra l'app e le sue
+estensioni, che accetti il certificato scelto, che non sia scaduto e che includa i
+dispositivi collegati. Al momento della firma macOS puo' chiedere l'autorizzazione a usare
+la chiave privata.
+
+Si rifirma cio' che e' tecnicamente rifirmabile:
+
+- **Le copie dell'App Store no.** Il binario e' cifrato con FairPlay e resta illeggibile a
+  un Apple ID diverso: cambiare la firma non lo rende installabile.
+- **Estensioni.** Hanno un identificativo proprio, quindi servono un profilo jolly
+  (`TEAM.*`) oppure, come nei target di Xcode, un profilo installato per ciascuna: IMC li
+  cerca da solo fra quelli disponibili e lo dice nei controlli.
+- **Identificativo diverso.** Con un profilo esplicito che copre un'altra app, IMC propone
+  di adottare l'identificativo del profilo: l'app si installa accanto all'originale invece
+  di sostituirla, e le estensioni seguono il nuovo prefisso.
+
+La firma segue l'ordine di Xcode (librerie e framework, poi le estensioni, infine il
+bundle dell'app) e gli entitlements vengono dal profilo, con l'identificativo concreto al
+posto del jolly: `*` dentro la firma del binario il dispositivo lo rifiuta.
+
+In libreria l'originale e la copia rifirmata restano distinguibili: la colonna *Firma*
+mostra il genere (App Store, Sviluppo, Ad Hoc, Enterprise, Distribuzione App Store) e chi
+firma, e quando due `.ipa` hanno lo stesso identificativo accanto a quest'ultimo compare
+il nome del file. Il nome del certificato si legge solo se il profilo ne ammette uno: chi
+ha firmato davvero sta nel binario, e un profilo di squadra elenca i certificati di tutti,
+quindi negli altri casi si mostra il team.
+
 ### Download dall'App Store
 
 Nella scheda **Download** accedi con l'Apple ID che possiede le app. Da li' puoi cercare
@@ -140,6 +178,10 @@ open dist/IMC.app --args -AppleLanguages '(en)'
   Le .ipa firmate con un profilo di sviluppo o enterprise richiedono che il dispositivo
   sia incluso nel profilo. In caso contrario l'installazione fallisce con
   `ApplicationVerificationFailed`, che l'app traduce in un messaggio esplicito.
+  Il foglio del contenuto mostra i dati di firma letti dall'archivio (profilo
+  incorporato o metadati dell'acquisto), ma non la verifica: servirebbe estrarre il
+  bundle e `codesign` su macOS non valuta comunque le firme iOS. Quando la firma e' il
+  problema, *Rifirma…* la rifa' con un certificato e un profilo tuoi.
 - **Estrazione delle app dal dispositivo.** Non supportata: le API di archiviazione di
   `installation_proxy` sono state rimosse da Apple a partire da iOS 9, quindi non esiste
   piu' un modo per ricostruire una `.ipa` da un'app installata.
@@ -157,9 +199,10 @@ open dist/IMC.app --args -AppleLanguages '(en)'
 Sources/IMC/
   App/          punto di ingresso e menu
   Core/         esecuzione processi, individuazione tool, parsing plist
-  Models/       Device, InstalledApp, IPAPackage, IPAContents, TransferJob, StoreApp
+  Models/       Device, InstalledApp, IPAPackage, IPASignature, IPAContents, TransferJob,
+                StoreApp, SigningIdentity, ProvisioningProfile
   Services/     DeviceMonitor, InstalledAppsService, TransferQueue, LibraryStore,
-                IPAInspector, IPAExtractor, StoreService
+                IPAInspector, IPAExtractor, IPAResigner, SigningAssets, StoreService
   State/        stato condiviso dell'interfaccia (UIState, Route)
   Views/        interfaccia SwiftUI, una cartella per sezione (Root, Library, Device,
                 Download, Transfers) piu' Shared per i componenti comuni

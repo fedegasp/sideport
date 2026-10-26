@@ -10,6 +10,11 @@ enum Format {
         value.formatted(date: .abbreviated, time: .shortened)
     }
 
+    /// Data senza orario, per scadenze e validita'.
+    static func day(_ value: Date) -> String {
+        value.formatted(date: .abbreviated, time: .omitted)
+    }
+
     static func duration(from start: Date?, to end: Date?) -> String? {
         guard let start, let end else { return nil }
         let seconds = end.timeIntervalSince(start)

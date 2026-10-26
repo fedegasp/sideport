@@ -26,6 +26,9 @@ struct IPAPackage: Identifiable, Hashable, Codable {
     var fileSize: Int64
     var modificationDate: Date
     var signing: Signing
+    /// Dati di firma completi: il genere grossolano di `signing` non basta a
+    /// distinguere due copie della stessa app firmate da team diversi.
+    var signature: IPASignature?
     var iconData: Data?
 
     var id: URL { url }
@@ -34,6 +37,22 @@ struct IPAPackage: Identifiable, Hashable, Codable {
         if shortVersion.isEmpty { return buildVersion }
         if buildVersion.isEmpty || buildVersion == shortVersion { return shortVersion }
         return "\(shortVersion) (\(buildVersion))"
+    }
+
+    /// Genere della firma, dal dato piu' preciso disponibile.
+    var signatureLabel: LocalizedStringResource {
+        signature?.kind.label ?? signing.label
+    }
+
+    /// Identificativi presenti in piu' di una .ipa della libreria: le loro
+    /// righe hanno bisogno del nome del file per essere distinte.
+    static func duplicatedBundleIdentifiers(in packages: [IPAPackage]) -> Set<String> {
+        var seen = Set<String>()
+        var duplicated = Set<String>()
+        for package in packages where !seen.insert(package.bundleIdentifier).inserted {
+            duplicated.insert(package.bundleIdentifier)
+        }
+        return duplicated
     }
 
     /// "iPhone, iPad" ricavato da UIDeviceFamily.

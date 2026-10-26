@@ -10,12 +10,14 @@ enum ProcessRunner {
         _ executable: URL,
         _ arguments: [String],
         environment: [String: String]? = nil,
+        currentDirectory: URL? = nil,
         onStdoutLine: (@Sendable (String) -> Void)? = nil,
         onStderrLine: (@Sendable (String) -> Void)? = nil
     ) async throws -> CommandResult {
         let process = Process()
         process.executableURL = executable
         process.arguments = arguments
+        process.currentDirectoryURL = currentDirectory
         if let environment {
             process.environment = ProcessInfo.processInfo.environment.merging(environment) { _, new in new }
         }

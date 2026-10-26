@@ -16,6 +16,7 @@ final class UIState {
     var appScope: InstalledAppsService.Scope = .user
     var installSheet: InstallRequest?
     var inspectPackage: IPAPackage?
+    var resignPackage: IPAPackage?
     var alert: AlertContent?
 
     struct InstallRequest: Identifiable {

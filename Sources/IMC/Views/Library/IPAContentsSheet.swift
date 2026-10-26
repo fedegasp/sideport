@@ -21,6 +21,8 @@ struct IPAContentsSheet: View {
     @State private var selection = Set<String>()
     @State private var selectionAnchor: String?
     @State private var search = ""
+    @State private var signature: IPASignature?
+    @State private var isResigning = false
     @State private var isLoading = true
     @State private var error: String?
 
@@ -57,10 +59,15 @@ struct IPAContentsSheet: View {
                 nodes = IPAContents.tree(from: found)
                 index = IPAContents.index(nodes)
                 expanded = IPAContents.defaultExpansion(in: nodes)
+                isLoading = false
+                signature = await IPAInspector.signature(of: package.url, entries: found.map(\.path))
             } catch {
                 self.error = error.localizedDescription
+                isLoading = false
             }
-            isLoading = false
+        }
+        .sheet(isPresented: $isResigning) {
+            ResignSheet(package: package)
         }
         .fileImporter(
             isPresented: $isChoosingDestination,
@@ -104,6 +111,8 @@ struct IPAContentsSheet: View {
                 }
             }
 
+            signatureStrip
+
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
@@ -137,6 +146,97 @@ struct IPAContentsSheet: View {
             let uncompressed = files.reduce(Int64(0)) { $0 + $1.size }
             Text(.ui("\(files.count) files · \(Format.bytes(uncompressed)) extracted"))
         }
+    }
+
+    // MARK: - Firma
+
+    /// Riga compatta fra la descrizione e il filtro: tipo di firma, chi l'ha
+    /// emessa e scadenza. I dettagli che non entrano nella riga restano nel
+    /// suggerimento al passaggio del mouse.
+    @ViewBuilder
+    private var signatureStrip: some View {
+        if error == nil {
+            HStack(spacing: 8) {
+                Image(systemName: signature?.kind.symbol ?? "lock.doc")
+                    .foregroundStyle(signatureTint)
+                    .frame(width: 16)
+                    .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 1) {
+                    if let signature {
+                        Text(signature.kind.label).font(.caption.weight(.semibold))
+                    } else {
+                        Text(.ui("Reading the signature…")).font(.caption.weight(.semibold))
+                    }
+                    if !signatureDetails.isEmpty {
+                        Text(signatureDetails.joined(separator: " · "))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                    }
+                }
+
+                Spacer(minLength: 12)
+
+                if let expiry = expiryText {
+                    expiry
+                        .font(.caption)
+                        .foregroundStyle(signature?.isExpired == true ? AnyShapeStyle(.red) : AnyShapeStyle(.secondary))
+                }
+
+                Button(.ui("Re-sign…")) { isResigning = true }
+                    .controlSize(.small)
+                    .disabled(signature == nil || signature?.isFairPlayProtected == true)
+                    .help(Text(signature?.isFairPlayProtected == true
+                               ? .ui("An App Store copy is encrypted with FairPlay: re-signing does not make it installable elsewhere.")
+                               : .ui("Sign the archive again with one of your certificates")))
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+            .accessibilityElement(children: .combine)
+            .help(signatureDetails.joined(separator: " · "))
+        }
+    }
+
+    private var signatureTint: AnyShapeStyle {
+        guard let signature else { return AnyShapeStyle(.secondary) }
+        if signature.isExpired || signature.kind == .unsigned { return AnyShapeStyle(.red) }
+        return AnyShapeStyle(.tint)
+    }
+
+    /// Il certificato di firma e' il dato piu' specifico, quindi apre la riga;
+    /// il team lo sostituisce quando il certificato non si legge.
+    private var signatureDetails: [String] {
+        guard let signature else { return [] }
+        var parts: [String] = []
+        if let certificate = signature.certificate {
+            parts.append(certificate)
+        } else if let team = signature.teamLabel {
+            parts.append(team)
+        }
+        // Senza un certificato solo nel profilo non si puo' dire chi ha
+        // firmato: il nome sta nel binario, non qui.
+        if signature.certificate == nil, signature.certificateCount > 1 {
+            parts.append(String.ui("\(signature.certificateCount) certificates allowed"))
+        }
+        if let seller = signature.seller { parts.append(seller) }
+        if let appleID = signature.appleID { parts.append(appleID) }
+        if let name = signature.profileName { parts.append(name) }
+        if let devices = signature.provisionedDeviceCount {
+            parts.append(String.ui("\(devices) registered devices"))
+        }
+        if signature.isFairPlayProtected { parts.append(String.ui("FairPlay protected")) }
+        if !signature.isCodeSigned { parts.append(String.ui("no code signature in the bundle")) }
+        return parts
+    }
+
+    private var expiryText: Text? {
+        guard let signature, let date = signature.expirationDate else { return nil }
+        return signature.isExpired
+            ? Text(.ui("Expired on \(Format.day(date))"))
+            : Text(.ui("Expires on \(Format.day(date))"))
     }
 
     // MARK: - Elenco

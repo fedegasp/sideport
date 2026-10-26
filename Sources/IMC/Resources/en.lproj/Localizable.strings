@@ -4,12 +4,18 @@
 <dict>
 	<key>%@ (%@)</key>
 	<string>%@ (%@)</string>
+	<key>%@ failed: %@</key>
+	<string>%@ failed: %@</string>
 	<key>%@ used of %@</key>
 	<string>%@ used of %@</string>
 	<key>%@ · %@</key>
 	<string>%@ · %@</string>
 	<key>%@ · %@ · %@ free</key>
 	<string>%@ · %@ · %@ free</string>
+	<key>%@ — %@</key>
+	<string>%@ — %@</string>
+	<key>%@ — %@ (expired)</key>
+	<string>%@ — %@ (expired)</string>
 	<key>%@: %@</key>
 	<string>%@: %@</string>
 	<key>%lld of %lld apps</key>
@@ -22,16 +28,24 @@
 	<string>Acquires the free license on your account, then downloads the package</string>
 	<key>Activity</key>
 	<string>Activity</string>
+	<key>Ad Hoc</key>
+	<string>Ad Hoc</string>
+	<key>Add an Apple Development or Apple Distribution certificate to the keychain, for example from Xcode under Settings › Accounts.</key>
+	<string>Add an Apple Development or Apple Distribution certificate to the keychain, for example from Xcode under Settings › Accounts.</string>
 	<key>Add the .ipa files you want to install on your devices. You can also drag them here.</key>
 	<string>Add the .ipa files you want to install on your devices. You can also drag them here.</string>
 	<key>All</key>
 	<string>All</string>
+	<key>An App Store copy is encrypted with FairPlay: re-signing does not make it installable elsewhere.</key>
+	<string>An App Store copy is encrypted with FairPlay: re-signing does not make it installable elsewhere.</string>
 	<key>App</key>
 	<string>App</string>
 	<key>App %@ · Documents and data %@</key>
 	<string>App %@ · Documents and data %@</string>
 	<key>App Store</key>
 	<string>App Store</string>
+	<key>App Store distribution</key>
+	<string>App Store distribution</string>
 	<key>Apple ID</key>
 	<string>Apple ID</string>
 	<key>Apple sent a verification code to your devices.</key>
@@ -58,6 +72,8 @@
 	<string>Cannot move to Trash: %@</string>
 	<key>Cannot read the .ipa archive: %@</key>
 	<string>Cannot read the .ipa archive: %@</string>
+	<key>Cannot read the Info.plist of “%@”.</key>
+	<string>Cannot read the Info.plist of “%@”.</string>
 	<key>Cannot read the app list</key>
 	<string>Cannot read the app list</string>
 	<key>Cannot read the folder %@.</key>
@@ -68,6 +84,10 @@
 	<string>Change folder…</string>
 	<key>Checking the account…</key>
 	<string>Checking the account…</string>
+	<key>Choose a file…</key>
+	<string>Choose a file…</string>
+	<key>Choose a profile…</key>
+	<string>Choose a profile…</string>
 	<key>Class</key>
 	<string>Class</string>
 	<key>Clear</key>
@@ -94,6 +114,8 @@
 	<string>Copy the command</string>
 	<key>Copying to device</key>
 	<string>Copying to device</string>
+	<key>Covers every connected device</key>
+	<string>Covers every connected device</string>
 	<key>Creating container</key>
 	<string>Creating container</string>
 	<key>Creating staging area</key>
@@ -102,6 +124,8 @@
 	<string>Deselect all</string>
 	<key>Detects connected devices</key>
 	<string>Detects connected devices</string>
+	<key>Development</key>
+	<string>Development</string>
 	<key>Device</key>
 	<string>Device</string>
 	<key>Device disconnected</key>
@@ -112,6 +136,8 @@
 	<string>Device unreachable: check the cable and that it is unlocked and trusted.</string>
 	<key>Devices</key>
 	<string>Devices</string>
+	<key>Does not cover %@</key>
+	<string>Does not cover %@</string>
 	<key>Download</key>
 	<string>Download</string>
 	<key>Downloaded %@</key>
@@ -126,14 +152,22 @@
 	<string>Drag an item to the Finder to extract it, or select more than one with ⌘ or ⇧.</string>
 	<key>Empty library</key>
 	<string>Empty library</string>
+	<key>Enterprise (in-house)</key>
+	<string>Enterprise (in-house)</string>
 	<key>Expand</key>
 	<string>Expand</string>
+	<key>Expired on %@</key>
+	<string>Expired on %@</string>
+	<key>Expires on %@</key>
+	<string>Expires on %@</string>
 	<key>Extract all…</key>
 	<string>Extract all…</string>
 	<key>Extract selection…</key>
 	<string>Extract selection…</string>
 	<key>Extracting package</key>
 	<string>Extracting package</string>
+	<key>Extracting the archive…</key>
+	<string>Extracting the archive…</string>
 	<key>Extracting…</key>
 	<string>Extracting…</string>
 	<key>Extraction failed</key>
@@ -142,6 +176,8 @@
 	<string>Extraction failed: %@</string>
 	<key>Extract…</key>
 	<string>Extract…</string>
+	<key>FairPlay protected</key>
+	<string>FairPlay protected</string>
 	<key>Filter by device type</key>
 	<string>Filter by device type</string>
 	<key>Filter by name or path</key>
@@ -168,6 +204,8 @@
 	<string>Import .ipa files into the library</string>
 	<key>Import .ipa…</key>
 	<string>Import .ipa…</string>
+	<key>In-house profile: valid on any device</key>
+	<string>In-house profile: valid on any device</string>
 	<key>Incorrect Apple ID or password.</key>
 	<string>Incorrect Apple ID or password.</string>
 	<key>Info</key>
@@ -184,6 +222,8 @@
 	<string>Install %@</string>
 	<key>Install (%lld)</key>
 	<string>Install (%lld)</string>
+	<key>Install a profile with Xcode, or choose a .mobileprovision file.</key>
+	<string>Install a profile with Xcode, or choose a .mobileprovision file.</string>
 	<key>Install on %@</key>
 	<string>Install on %@</string>
 	<key>Install on…</key>
@@ -242,16 +282,24 @@
 	<string>No license for this app. If it is free use “Get and download”; if it is paid, buy it from the App Store with this Apple ID.</string>
 	<key>No matches</key>
 	<string>No matches</string>
+	<key>No profile covers %@: use a wildcard profile or install one for this extension</key>
+	<string>No profile covers %@: use a wildcard profile or install one for this extension</string>
+	<key>No provisioning profile</key>
+	<string>No provisioning profile</string>
 	<key>No purchases</key>
 	<string>No purchases</string>
 	<key>No results</key>
 	<string>No results</string>
 	<key>No results for “%@”.</key>
 	<string>No results for “%@”.</string>
+	<key>No signing identity</key>
+	<string>No signing identity</string>
 	<key>No transfers</key>
 	<string>No transfers</string>
 	<key>No user-installed apps were found on this device.</key>
 	<string>No user-installed apps were found on this device.</string>
+	<key>Not signed</key>
+	<string>Not signed</string>
 	<key>OK</key>
 	<string>OK</string>
 	<key>Open library folder</key>
@@ -266,20 +314,34 @@
 	<string>Preflight check</string>
 	<key>Preparing</key>
 	<string>Preparing</string>
+	<key>Preparing the bundle…</key>
+	<string>Preparing the bundle…</string>
 	<key>Provisioning profile</key>
 	<string>Provisioning profile</string>
+	<key>Re-sign</key>
+	<string>Re-sign</string>
+	<key>Re-sign %@</key>
+	<string>Re-sign %@</string>
+	<key>Re-signed archive ready</key>
+	<string>Re-signed archive ready</string>
+	<key>Re-sign…</key>
+	<string>Re-sign…</string>
 	<key>Reading installed apps…</key>
 	<string>Reading installed apps…</string>
 	<key>Reading purchases…</key>
 	<string>Reading purchases…</string>
 	<key>Reading the archive…</key>
 	<string>Reading the archive…</string>
+	<key>Reading the signature…</key>
+	<string>Reading the signature…</string>
 	<key>Reads model, iOS version and disk space</key>
 	<string>Reads model, iOS version and disk space</string>
 	<key>Reads the battery level</key>
 	<string>Reads the battery level</string>
 	<key>Reads the icons of installed apps</key>
 	<string>Reads the icons of installed apps</string>
+	<key>Rebuilding the archive…</key>
+	<string>Rebuilding the archive…</string>
 	<key>Reconnect the device with the cable to continue.</key>
 	<string>Reconnect the device with the cable to continue.</string>
 	<key>Refresh</key>
@@ -354,12 +416,18 @@
 	<string>Sign in to the App Store</string>
 	<key>Sign out</key>
 	<string>Sign out</string>
+	<key>Sign the archive again with one of your certificates</key>
+	<string>Sign the archive again with one of your certificates</string>
 	<key>Sign-in failed: ipatool does not report an active account.</key>
 	<string>Sign-in failed: ipatool does not report an active account.</string>
 	<key>Signature</key>
 	<string>Signature</string>
+	<key>Signing identity</key>
+	<string>Signing identity</string>
 	<key>Signing in…</key>
 	<string>Signing in…</string>
+	<key>Signing with %@…</key>
+	<string>Signing with %@…</string>
 	<key>Size</key>
 	<string>Size</string>
 	<key>Start pairing</key>
@@ -378,12 +446,20 @@
 	<string>Taking install lock</string>
 	<key>The app and all its data will be deleted from the device.</key>
 	<string>The app and all its data will be deleted from the device.</string>
+	<key>The app is installed as %@ and does not replace the original one on the device.</key>
+	<string>The app is installed as %@ and does not replace the original one on the device.</string>
 	<key>The app requires entitlements the signing profile does not grant.</key>
 	<string>The app requires entitlements the signing profile does not grant.</string>
 	<key>The archive does not contain Payload/&lt;App&gt;.app/Info.plist: it does not look like a valid .ipa.</key>
 	<string>The archive does not contain Payload/&lt;App&gt;.app/Info.plist: it does not look like a valid .ipa.</string>
+	<key>The archive does not contain Payload/&lt;App&gt;.app: it does not look like a valid .ipa.</key>
+	<string>The archive does not contain Payload/&lt;App&gt;.app: it does not look like a valid .ipa.</string>
 	<key>The archive does not contain “%@”.</key>
 	<string>The archive does not contain “%@”.</string>
+	<key>The binary is encrypted with FairPlay: an App Store copy cannot be re-signed.</key>
+	<string>The binary is encrypted with FairPlay: an App Store copy cannot be re-signed.</string>
+	<key>The binary is encrypted with FairPlay: it only runs on devices signed in with the Apple ID that downloaded it. Re-signing would change the signature but not the encryption.</key>
+	<string>The binary is encrypted with FairPlay: it only runs on devices signed in with the Apple ID that downloaded it. Re-signing would change the signature but not the encryption.</string>
 	<key>The command exited with code %lld.</key>
 	<string>The command exited with code %lld.</string>
 	<key>The download uses a private Apple API, the same one iTunes uses: it can change without notice.</key>
@@ -392,6 +468,18 @@
 	<string>The file %@ no longer exists.</string>
 	<key>The password reaches ipatool through a pseudo-terminal, not the command line: it does not appear in `ps` and IMC never stores it.</key>
 	<string>The password reaches ipatool through a pseudo-terminal, not the command line: it does not appear in `ps` and IMC never stores it.</string>
+	<key>The profile accepts this identity</key>
+	<string>The profile accepts this identity</string>
+	<key>The profile covers %@</key>
+	<string>The profile covers %@</string>
+	<key>The profile does not cover %@</key>
+	<string>The profile does not cover %@</string>
+	<key>The profile does not list this identity: pick another pair</key>
+	<string>The profile does not list this identity: pick another pair</string>
+	<key>The profile “%@” does not cover “%@”.</key>
+	<string>The profile “%@” does not cover “%@”.</string>
+	<key>This .ipa cannot be re-signed</key>
+	<string>This .ipa cannot be re-signed</string>
 	<key>This app does not support %@.</key>
 	<string>This app does not support %@.</string>
 	<key>This app does not support the selected device type.</key>
@@ -412,6 +500,8 @@
 	<string>UDID</string>
 	<key>Unknown</key>
 	<string>Unknown</string>
+	<key>Unknown signature</key>
+	<string>Unknown signature</string>
 	<key>Unlock the device and tap Trust in the prompt that appears, then press the button below.</key>
 	<string>Unlock the device and tap Trust in the prompt that appears, then press the button below.</string>
 	<key>Unlock the device with its passcode and try again.</key>
@@ -426,6 +516,8 @@
 	<string>Update to %@</string>
 	<key>Updating app index</key>
 	<string>Updating app index</string>
+	<key>Use the identifier from the profile</key>
+	<string>Use the identifier from the profile</string>
 	<key>Used space</key>
 	<string>Used space</string>
 	<key>User apps</key>
@@ -454,11 +546,19 @@
 	<string>ipatool not found</string>
 	<key>less than 1 s</key>
 	<string>less than 1 s</string>
+	<key>no code signature in the bundle</key>
+	<string>no code signature in the bundle</string>
 	<key>purchased on %@</key>
 	<string>purchased on %@</string>
+	<key>re-signed</key>
+	<string>re-signed</string>
 	<key>unknown</key>
 	<string>unknown</string>
 	<key>v%@</key>
 	<string>v%@</string>
+	<key>“%@” is in the library: install it from there.</key>
+	<string>“%@” is in the library: install it from there.</string>
+	<key>“%@” is not a readable provisioning profile.</key>
+	<string>“%@” is not a readable provisioning profile.</string>
 </dict>
 </plist>

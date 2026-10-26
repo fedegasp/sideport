@@ -19,6 +19,24 @@
         }
       }
     },
+    "%@ failed: %@": {
+      "comment": "Re-signing error: an external command failed; first the tool name, then its output.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ failed: %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ non è riuscito: %@"
+          }
+        }
+      }
+    },
     "%@ used of %@": {
       "comment": "Used storage out of the total capacity.",
       "extractionState": "manual",
@@ -69,6 +87,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ · %@ · %@ liberi"
+          }
+        }
+      }
+    },
+    "%@ — %@": {
+      "comment": "Profile in the picker: name, then the bundle identifier it allows.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@"
+          }
+        }
+      }
+    },
+    "%@ — %@ (expired)": {
+      "comment": "Expired profile in the picker: name, then the bundle identifier it allows.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@ (expired)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — %@ (scaduto)"
           }
         }
       }
@@ -175,6 +229,132 @@
         }
       }
     },
+    "%lld certificates allowed": {
+      "comment": "How many signing certificates the embedded profile accepts, when more than one.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld certificate allowed"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld certificates allowed"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld certificato ammesso"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld certificati ammessi"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld devices registered in the profile": {
+      "comment": "How many devices the profile covers, with nothing connected.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld device registered in the profile"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld devices registered in the profile"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld dispositivo registrato nel profilo"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld dispositivi registrati nel profilo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld embedded extensions signed with their own profile": {
+      "comment": "Compatibility check: extensions are covered by other installed profiles.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld embedded extension signed with its own profile"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld embedded extensions signed with their own profiles"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld estensione incorporata firmata con il suo profilo"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld estensioni incorporate firmate con i loro profili"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld files · %@ extracted": {
       "comment": "Number of files in the archive and their uncompressed size.",
       "extractionState": "manual",
@@ -272,6 +452,48 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld di %lld app"
+          }
+        }
+      }
+    },
+    "%lld registered devices": {
+      "comment": "How many devices the provisioning profile covers.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld registered device"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld registered devices"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld dispositivo registrato"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld dispositivi registrati"
+                }
+              }
+            }
           }
         }
       }
@@ -387,6 +609,42 @@
         }
       }
     },
+    "Ad Hoc": {
+      "comment": "Signature of a .ipa signed with an ad hoc distribution profile; Apple keeps the term untranslated.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ad Hoc"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ad Hoc"
+          }
+        }
+      }
+    },
+    "Add an Apple Development or Apple Distribution certificate to the keychain, for example from Xcode under Settings › Accounts.": {
+      "comment": "How to get a signing identity.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add an Apple Development or Apple Distribution certificate to the keychain, for example from Xcode under Settings › Accounts."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi al portachiavi un certificato Apple Development o Apple Distribution, per esempio da Xcode in Impostazioni › Account."
+          }
+        }
+      }
+    },
     "Add the .ipa files you want to install on your devices. You can also drag them here.": {
       "extractionState": "manual",
       "localizations": {
@@ -418,6 +676,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tutte"
+          }
+        }
+      }
+    },
+    "An App Store copy is encrypted with FairPlay: re-signing does not make it installable elsewhere.": {
+      "comment": "Tooltip on the disabled re-sign button.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An App Store copy is encrypted with FairPlay: re-signing does not make it installable elsewhere."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una copia dell'App Store è cifrata con FairPlay: rifirmarla non la rende installabile altrove."
           }
         }
       }
@@ -472,6 +748,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "App Store"
+          }
+        }
+      }
+    },
+    "App Store distribution": {
+      "comment": "Signature of a .ipa signed with an App Store distribution profile, not yet delivered by the Store.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Store distribution"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distribuzione App Store"
           }
         }
       }
@@ -700,6 +994,24 @@
         }
       }
     },
+    "Cannot read the Info.plist of “%@”.": {
+      "comment": "Re-signing error: unreadable bundle metadata.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot read the Info.plist of “%@”."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile leggere l'Info.plist di «%@»."
+          }
+        }
+      }
+    },
     "Cannot read the app list": {
       "extractionState": "manual",
       "localizations": {
@@ -781,6 +1093,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Verifica dell'account…"
+          }
+        }
+      }
+    },
+    "Choose a file…": {
+      "comment": "Link that opens the file picker for a .mobileprovision.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a file…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli un file…"
+          }
+        }
+      }
+    },
+    "Choose a profile…": {
+      "comment": "Button that opens the file picker for a .mobileprovision.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a profile…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli un profilo…"
           }
         }
       }
@@ -1009,6 +1357,24 @@
         }
       }
     },
+    "Covers every connected device": {
+      "comment": "Compatibility check: all connected devices are in the profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Covers every connected device"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copre tutti i dispositivi collegati"
+          }
+        }
+      }
+    },
     "Creating container": {
       "extractionState": "manual",
       "localizations": {
@@ -1073,6 +1439,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rileva i dispositivi collegati"
+          }
+        }
+      }
+    },
+    "Development": {
+      "comment": "Signature of a .ipa signed with a development profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Development"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sviluppo"
           }
         }
       }
@@ -1159,6 +1543,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dispositivi"
+          }
+        }
+      }
+    },
+    "Does not cover %@": {
+      "comment": "Compatibility check: these connected devices are missing from the profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Does not cover %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non copre %@"
           }
         }
       }
@@ -1285,6 +1687,24 @@
         }
       }
     },
+    "Enterprise (in-house)": {
+      "comment": "Signature of a .ipa signed with an in-house enterprise profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enterprise (in-house)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enterprise (in-house)"
+          }
+        }
+      }
+    },
     "Expand": {
       "comment": "Expands a folder in the archive tree.",
       "extractionState": "manual",
@@ -1299,6 +1719,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Espandi"
+          }
+        }
+      }
+    },
+    "Expired on %@": {
+      "comment": "Expiry date of a provisioning profile that is no longer valid.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expired on %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scaduto il %@"
+          }
+        }
+      }
+    },
+    "Expires on %@": {
+      "comment": "Expiry date of the provisioning profile the .ipa is signed with.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expires on %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scade il %@"
           }
         }
       }
@@ -1395,6 +1851,24 @@
         }
       }
     },
+    "Extracting the archive…": {
+      "comment": "Re-signing stage.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Extracting the archive…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estrazione dell'archivio…"
+          }
+        }
+      }
+    },
     "Extracting…": {
       "extractionState": "manual",
       "localizations": {
@@ -1460,6 +1934,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Estrai…"
+          }
+        }
+      }
+    },
+    "FairPlay protected": {
+      "comment": "The binary is encrypted with FairPlay; Apple keeps the brand name untranslated.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FairPlay protected"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protetta da FairPlay"
           }
         }
       }
@@ -1686,6 +2178,24 @@
         }
       }
     },
+    "In-house profile: valid on any device": {
+      "comment": "Compatibility check for enterprise profiles.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In-house profile: valid on any device"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profilo in-house: valido su qualunque dispositivo"
+          }
+        }
+      }
+    },
     "Incorrect Apple ID or password.": {
       "extractionState": "manual",
       "localizations": {
@@ -1862,6 +2372,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Installa (%lld)"
+          }
+        }
+      }
+    },
+    "Install a profile with Xcode, or choose a .mobileprovision file.": {
+      "comment": "How to get a provisioning profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install a profile with Xcode, or choose a .mobileprovision file."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installa un profilo con Xcode, oppure scegli un file .mobileprovision."
           }
         }
       }
@@ -2365,6 +2893,42 @@
         }
       }
     },
+    "No profile covers %@: use a wildcard profile or install one for this extension": {
+      "comment": "Compatibility check: no installed profile covers this app extension.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No profile covers %@: use a wildcard profile or install one for this extension"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun profilo copre %@: serve un profilo jolly o uno per questa estensione"
+          }
+        }
+      }
+    },
+    "No provisioning profile": {
+      "comment": "Title shown when no profile is installed.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No provisioning profile"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun profilo di provisioning"
+          }
+        }
+      }
+    },
     "No purchases": {
       "extractionState": "manual",
       "localizations": {
@@ -2416,6 +2980,24 @@
         }
       }
     },
+    "No signing identity": {
+      "comment": "Title shown when the keychain has no iOS certificate.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No signing identity"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna identità di firma"
+          }
+        }
+      }
+    },
     "No transfers": {
       "extractionState": "manual",
       "localizations": {
@@ -2446,6 +3028,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Su questo dispositivo non risultano app installate dall'utente."
+          }
+        }
+      }
+    },
+    "Not signed": {
+      "comment": "Signature of a .ipa with no code signature at all.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not signed"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non firmata"
           }
         }
       }
@@ -2570,6 +3170,24 @@
         }
       }
     },
+    "Preparing the bundle…": {
+      "comment": "Re-signing stage.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing the bundle…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparazione del bundle…"
+          }
+        }
+      }
+    },
     "Provisioning profile": {
       "comment": "Signature of a .ipa signed with a development or enterprise profile.",
       "extractionState": "manual",
@@ -2584,6 +3202,78 @@
           "stringUnit": {
             "state": "translated",
             "value": "Profilo di provisioning"
+          }
+        }
+      }
+    },
+    "Re-sign": {
+      "comment": "Button that starts the re-signing.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Re-sign"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rifirma"
+          }
+        }
+      }
+    },
+    "Re-sign %@": {
+      "comment": "Title of the re-signing sheet, with the app name.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Re-sign %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rifirma %@"
+          }
+        }
+      }
+    },
+    "Re-signed archive ready": {
+      "comment": "Title shown when re-signing succeeded.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Re-signed archive ready"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archivio rifirmato pronto"
+          }
+        }
+      }
+    },
+    "Re-sign…": {
+      "comment": "Menu item and button that open the re-signing sheet.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Re-sign…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rifirma…"
           }
         }
       }
@@ -2639,6 +3329,24 @@
         }
       }
     },
+    "Reading the signature…": {
+      "comment": "Placeholder while the signature of the .ipa is being read.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading the signature…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lettura della firma…"
+          }
+        }
+      }
+    },
     "Reads model, iOS version and disk space": {
       "extractionState": "manual",
       "localizations": {
@@ -2686,6 +3394,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Legge le icone delle app installate"
+          }
+        }
+      }
+    },
+    "Rebuilding the archive…": {
+      "comment": "Re-signing stage.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rebuilding the archive…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ricostruzione dell'archivio…"
           }
         }
       }
@@ -3327,6 +4053,24 @@
         }
       }
     },
+    "Sign the archive again with one of your certificates": {
+      "comment": "Tooltip on the re-sign button.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign the archive again with one of your certificates"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma di nuovo l'archivio con uno dei tuoi certificati"
+          }
+        }
+      }
+    },
     "Sign-in failed: ipatool does not report an active account.": {
       "extractionState": "manual",
       "localizations": {
@@ -3362,6 +4106,24 @@
         }
       }
     },
+    "Signing identity": {
+      "comment": "Picker label in the re-signing sheet.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signing identity"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identità di firma"
+          }
+        }
+      }
+    },
     "Signing in…": {
       "extractionState": "manual",
       "localizations": {
@@ -3375,6 +4137,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Accesso…"
+          }
+        }
+      }
+    },
+    "Signing with %@…": {
+      "comment": "Re-signing stage, with the name of the signing identity.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signing with %@…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma con %@…"
           }
         }
       }
@@ -3532,6 +4312,24 @@
         }
       }
     },
+    "The app is installed as %@ and does not replace the original one on the device.": {
+      "comment": "Consequence of renaming the bundle identifier.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app is installed as %@ and does not replace the original one on the device."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'app viene installata come %@ e non sostituisce quella originale sul dispositivo."
+          }
+        }
+      }
+    },
     "The app requires entitlements the signing profile does not grant.": {
       "extractionState": "manual",
       "localizations": {
@@ -3566,6 +4364,24 @@
         }
       }
     },
+    "The archive does not contain Payload/<App>.app: it does not look like a valid .ipa.": {
+      "comment": "Re-signing error: the archive has no app bundle.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The archive does not contain Payload/<App>.app: it does not look like a valid .ipa."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'archivio non contiene Payload/<App>.app: non sembra una .ipa valida."
+          }
+        }
+      }
+    },
     "The archive does not contain “%@”.": {
       "extractionState": "manual",
       "localizations": {
@@ -3579,6 +4395,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "L'archivio non contiene «%@»."
+          }
+        }
+      }
+    },
+    "The binary is encrypted with FairPlay: an App Store copy cannot be re-signed.": {
+      "comment": "Re-signing error: App Store copies are encrypted.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The binary is encrypted with FairPlay: an App Store copy cannot be re-signed."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il binario è cifrato con FairPlay: una copia dell'App Store non si può rifirmare."
+          }
+        }
+      }
+    },
+    "The binary is encrypted with FairPlay: it only runs on devices signed in with the Apple ID that downloaded it. Re-signing would change the signature but not the encryption.": {
+      "comment": "Why an App Store copy cannot be re-signed.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The binary is encrypted with FairPlay: it only runs on devices signed in with the Apple ID that downloaded it. Re-signing would change the signature but not the encryption."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il binario è cifrato con FairPlay: funziona solo sui dispositivi con l'Apple ID che l'ha scaricata. Rifirmarla cambierebbe la firma ma non la cifratura."
           }
         }
       }
@@ -3647,6 +4499,156 @@
           "stringUnit": {
             "state": "translated",
             "value": "La password viene passata a ipatool attraverso uno pseudo-terminale, non sulla riga di comando: non compare in `ps` e IMC non la salva da nessuna parte."
+          }
+        }
+      }
+    },
+    "The profile accepts this identity": {
+      "comment": "Compatibility check: the certificate is listed in the profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The profile accepts this identity"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il profilo accetta questa identità"
+          }
+        }
+      }
+    },
+    "The profile covers %@": {
+      "comment": "Compatibility check: the profile allows this bundle identifier.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The profile covers %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il profilo copre %@"
+          }
+        }
+      }
+    },
+    "The profile covers the %lld embedded extensions": {
+      "comment": "Compatibility check: the profile covers the app extensions too.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "The profile covers the %lld embedded extension"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "The profile covers the %lld embedded extensions"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Il profilo copre %lld estensione incorporata"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Il profilo copre %lld estensioni incorporate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "The profile does not cover %@": {
+      "comment": "Compatibility check: the profile does not allow this bundle identifier.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The profile does not cover %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il profilo non copre %@"
+          }
+        }
+      }
+    },
+    "The profile does not list this identity: pick another pair": {
+      "comment": "Compatibility check: the certificate is not listed in the profile.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The profile does not list this identity: pick another pair"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il profilo non elenca questa identità: scegli un'altra combinazione"
+          }
+        }
+      }
+    },
+    "The profile “%@” does not cover “%@”.": {
+      "comment": "Re-signing error: profile and bundle identifier do not match.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The profile “%@” does not cover “%@”."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il profilo «%@» non copre «%@»."
+          }
+        }
+      }
+    },
+    "This .ipa cannot be re-signed": {
+      "comment": "Title shown when the archive is an App Store copy.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This .ipa cannot be re-signed"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questa .ipa non si può rifirmare"
           }
         }
       }
@@ -3825,6 +4827,24 @@
         }
       }
     },
+    "Unknown signature": {
+      "comment": "Signature of a .ipa that is signed but carries no profile or purchase metadata.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown signature"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Firma sconosciuta"
+          }
+        }
+      }
+    },
     "Unlock the device and tap Trust in the prompt that appears, then press the button below.": {
       "extractionState": "manual",
       "localizations": {
@@ -3941,6 +4961,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aggiornamento indice app"
+          }
+        }
+      }
+    },
+    "Use the identifier from the profile": {
+      "comment": "Toggle that renames the app to the identifier the profile allows.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use the identifier from the profile"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa l'identificativo del profilo"
           }
         }
       }
@@ -4189,6 +5227,24 @@
         }
       }
     },
+    "no code signature in the bundle": {
+      "comment": "Detail shown when the .app inside the archive has no _CodeSignature folder.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no code signature in the bundle"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nessuna firma nel bundle"
+          }
+        }
+      }
+    },
     "purchased on %@": {
       "extractionState": "manual",
       "localizations": {
@@ -4202,6 +5258,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "acquistata il %@"
+          }
+        }
+      }
+    },
+    "re-signed": {
+      "comment": "Suffix added to the file name of the re-signed .ipa.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "re-signed"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rifirmata"
           }
         }
       }
@@ -4238,6 +5312,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "v%@"
+          }
+        }
+      }
+    },
+    "“%@” is in the library: install it from there.": {
+      "comment": "Where the re-signed .ipa ended up.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” is in the library: install it from there."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«%@» è nella libreria: installala da lì."
+          }
+        }
+      }
+    },
+    "“%@” is not a readable provisioning profile.": {
+      "comment": "Error shown when the chosen file cannot be parsed.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” is not a readable provisioning profile."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«%@» non è un profilo di provisioning leggibile."
           }
         }
       }
