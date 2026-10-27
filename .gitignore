@@ -1,9 +1,9 @@
 .build/
+build/
 .swiftpm/
 dist/
 DerivedData/
 *.xcuserstate
-Sideport.xcodeproj/xcuserdata/
-Sideport.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj
 .DS_Store
 Helpers/sideport-icon/target/
