@@ -1,4 +1,4 @@
-# IMC
+# Sideport
 
 App macOS nativa (SwiftUI) per scaricare le app iOS sul Mac e installarle sui dispositivi
 collegati via cavo: download delle `.ipa` dall'App Store con il proprio Apple ID, libreria
@@ -18,11 +18,11 @@ brew install rust       # oppure rustup, per l'helper delle icone
 brew install xcodegen   # solo per rigenerare il progetto Xcode
 ```
 
-Tutti e tre i tool vengono copiati dentro `IMC.app` in fase di build, quindi l'app
+Tutti e tre i tool vengono copiati dentro `Sideport.app` in fase di build, quindi l'app
 risultante funziona anche su un Mac senza Homebrew (il bundle pesa circa 40 MB,
 di cui 30 sono ipatool).
 
-Nel bundle finisce anche `imc-icon`, un piccolo helper in Rust ([`Helpers/imc-icon`](Helpers/imc-icon/src/main.rs))
+Nel bundle finisce anche `sideport-icon`, un piccolo helper in Rust ([`Helpers/sideport-icon`](Helpers/sideport-icon/src/main.rs))
 che legge le icone delle app installate dal servizio SpringBoard del dispositivo: nessun
 tool di libimobiledevice lo espone. E' un crate senza dipendenze, compilato in fase di
 build da `cargo` e collegato alla libimobiledevice di Homebrew (serve `pkg-config`); se
@@ -33,10 +33,10 @@ manca, le app installate mostrano un segnaposto.
 ### Xcode
 
 ```bash
-open IMC.xcodeproj
+open Sideport.xcodeproj
 ```
 
-Schema **IMC**, poi ⌘R. Il progetto compila l'app, genera l'icona e incorpora
+Schema **Sideport**, poi ⌘R. Il progetto compila l'app, genera l'icona e incorpora
 libimobiledevice nel bundle tramite due fasi di script.
 
 Il progetto e' generato da [`project.yml`](project.yml) con
@@ -56,7 +56,7 @@ Modificare il contenuto di file esistenti non richiede nulla.
 ./Scripts/build-app.sh
 ```
 
-Produce `dist/IMC.app`. Opzioni:
+Produce `dist/Sideport.app`. Opzioni:
 
 - `./Scripts/build-app.sh --no-tools` — non incorpora libimobiledevice, usa quello di sistema
 - `swift build && swift run` — esecuzione rapida in sviluppo (senza icona e senza tool incorporati)
@@ -80,7 +80,7 @@ bundle equivalenti.
 Nella scheda di un dispositivo trovi le app installate, con icona, versione e spazio occupato
 (app piu' documenti e dati, come in Impostazioni su iOS; il dettaglio e' nel tooltip), con
 rimozione e, quando la libreria contiene una versione piu' recente della stessa app, un
-pulsante *Aggiorna*. Le icone restano in cache in `~/Library/Caches/IMC/Icone`, per bundle
+pulsante *Aggiorna*. Le icone restano in cache in `~/Library/Caches/Sideport/Icone`, per bundle
 ID e versione. Il pulsante *Informazioni* nell'intestazione apre un foglio con i dati del
 dispositivo (modello, numero di serie, UDID, sistema, spazio) e la rinomina.
 
@@ -105,9 +105,9 @@ Si rifirma cio' che e' tecnicamente rifirmabile:
 - **Le copie dell'App Store no.** Il binario e' cifrato con FairPlay e resta illeggibile a
   un Apple ID diverso: cambiare la firma non lo rende installabile.
 - **Estensioni.** Hanno un identificativo proprio, quindi servono un profilo jolly
-  (`TEAM.*`) oppure, come nei target di Xcode, un profilo installato per ciascuna: IMC li
+  (`TEAM.*`) oppure, come nei target di Xcode, un profilo installato per ciascuna: Sideport li
   cerca da solo fra quelli disponibili e lo dice nei controlli.
-- **Identificativo diverso.** Con un profilo esplicito che copre un'altra app, IMC propone
+- **Identificativo diverso.** Con un profilo esplicito che copre un'altra app, Sideport propone
   di adottare l'identificativo del profilo: l'app si installa accanto all'originale invece
   di sostituirla, e le estensioni seguono il nuovo prefisso.
 
@@ -131,27 +131,27 @@ nella cartella libreria, da dove e' subito installabile.
 - Le app gia' acquistate si scaricano con *Scarica*; quelle gratuite mai ottenute con
   *Ottieni e scarica*, che prima acquisisce la licenza sul tuo account.
 - Le app a pagamento non acquistate vanno comprate dall'App Store: ipatool non effettua pagamenti.
-- Se l'account ha la verifica in due fattori, IMC chiede il codice e lo passa alla sessione
-  di login gia' aperta, senza ripetere l'autenticazione (altrimenti Apple invierebbe un
-  secondo codice invalidando il primo).
+- Se l'account ha la verifica in due fattori, Sideport chiede il codice e lo passa alla
+  sessione di login gia' aperta, senza ripetere l'autenticazione (altrimenti Apple
+  invierebbe un secondo codice invalidando il primo).
 
 La password viene consegnata a ipatool tramite uno pseudo-terminale invece che come
-argomento da riga di comando, quindi non e' visibile in `ps`; IMC non la conserva. Il token
-di sessione lo gestisce ipatool nel portachiavi di macOS, e al primo accesso macOS puo'
-chiedere l'autorizzazione.
+argomento da riga di comando, quindi non e' visibile in `ps`; Sideport non la conserva.
+Il token di sessione lo gestisce ipatool nel portachiavi di macOS, e al primo accesso
+macOS puo' chiedere l'autorizzazione.
 
 ### Lingue
 
 L'interfaccia e' in inglese (lingua sorgente) e in italiano, e segue la lingua di sistema.
-Tutti i testi stanno in [`Sources/IMC/Resources/Localizable.xcstrings`](Sources/IMC/Resources/Localizable.xcstrings),
+Tutti i testi stanno in [`Sources/Sideport/Resources/Localizable.xcstrings`](Sources/Sideport/Resources/Localizable.xcstrings),
 piu' [`Resources/InfoPlist.xcstrings`](Resources/InfoPlist.xcstrings) per copyright e nome
 del tipo di documento. Nel codice si leggono con `.ui("…")`, che punta al catalogo nel
 bundle del modulo (`Core/LocalizedText.swift`): con SwiftPM le risorse non finiscono nel
 bundle principale, dove SwiftUI cercherebbe le stringhe per impostazione predefinita.
 
 Xcode compila i `.xcstrings` da solo; `swift build` no, quindi i `.strings` generati sono
-versionati sotto `Sources/IMC/Resources/*.lproj` e **dopo ogni modifica al catalogo** vanno
-rigenerati (`build-app.sh` lo fa da solo):
+versionati sotto `Sources/Sideport/Resources/*.lproj` e **dopo ogni modifica al
+catalogo** vanno rigenerati (`build-app.sh` lo fa da solo):
 
 ```bash
 ./Scripts/compile-strings.sh
@@ -160,7 +160,7 @@ rigenerati (`build-app.sh` lo fa da solo):
 Per provare una lingua senza cambiare quella di sistema:
 
 ```bash
-open dist/IMC.app --args -AppleLanguages '(en)'
+open dist/Sideport.app --args -AppleLanguages '(en)'
 ```
 
 ### Scorciatoie
@@ -188,7 +188,7 @@ open dist/IMC.app --args -AppleLanguages '(en)'
 - **Download dall'App Store.** Si appoggia a ipatool, che usa l'API privata dell'iTunes
   Store: non e' documentata da Apple e puo' cambiare senza preavviso. Si scaricano solo app
   gratuite o gia' acquistate con l'Apple ID usato, e il formato dell'avanzamento non e'
-  affidabile, quindi durante il download IMC mostra i byte scritti sul file invece di una
+  affidabile, quindi durante il download Sideport mostra i byte scritti sul file invece di una
   percentuale.
 - **Icone.** Le icone delle .ipa dell'App Store usano il PNG modificato (CgBI) di Apple;
   vengono convertite con `pngcrush` se Xcode e' presente, altrimenti si vede un segnaposto.
@@ -196,7 +196,7 @@ open dist/IMC.app --args -AppleLanguages '(en)'
 ## Struttura
 
 ```
-Sources/IMC/
+Sources/Sideport/
   App/          punto di ingresso e menu
   Core/         esecuzione processi, individuazione tool, parsing plist
   Models/       Device, InstalledApp, IPAPackage, IPASignature, IPAContents, TransferJob,
@@ -207,9 +207,9 @@ Sources/IMC/
   Views/        interfaccia SwiftUI, una cartella per sezione (Root, Library, Device,
                 Download, Transfers) piu' Shared per i componenti comuni
   Resources/    catalogo di stringhe (.xcstrings) e .strings compilati
-Tests/IMCTests/ test della logica di parsing (Swift Testing): `swift test`
+Tests/          test della logica di parsing (Swift Testing): `swift test`
 Resources/      Info.plist, catalogo dell'Info.plist e icona dell'app
-Helpers/        helper in Rust incorporati nel bundle (imc-icon)
+Helpers/        helper in Rust incorporati nel bundle (sideport-icon)
 Scripts/        build del bundle, incorporamento dei tool, generazione icona,
                 compilazione delle stringhe
 project.yml     sorgente del progetto Xcode (XcodeGen)
@@ -226,11 +226,11 @@ con `term.ReadPassword`, che pretende un vero terminale e rifiuta una pipe. Coll
 stdin a uno pseudo-terminale si soddisfa quel controllo tenendo stdout e stderr su pipe
 normali, e la password non finisce in `argv`.
 
-La libreria predefinita e' `~/Library/Application Support/IMC/Libreria`, modificabile dal
+La libreria predefinita e' `~/Library/Application Support/Sideport/Libreria`, modificabile dal
 menu *Cartella*.
 
 ## Licenza
 
-Il codice di IMC e' sotto licenza [MIT](LICENSE). L'app incorpora nel bundle alcuni tool
+Il codice di Sideport e' sotto licenza [MIT](LICENSE). L'app incorpora nel bundle alcuni tool
 di terze parti (libimobiledevice, ideviceinstaller, ipatool) con licenze proprie: vedi
 [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md).

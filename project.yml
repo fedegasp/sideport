@@ -1,5 +1,5 @@
 # Sorgente del progetto Xcode: rigenera con `xcodegen generate` (brew install xcodegen).
-name: IMC
+name: Sideport
 
 options:
   bundleIdPrefix: com.local
@@ -24,11 +24,11 @@ settings:
     DEAD_CODE_STRIPPING: YES
 
 targets:
-  IMC:
+  Sideport:
     type: application
     platform: macOS
     sources:
-      - path: Sources/IMC
+      - path: Sources/Sideport
         # Xcode compila il catalogo di stringhe da solo: le .lproj generate da
         # Scripts/compile-strings.sh servono solo alla build con SwiftPM.
         excludes:
@@ -47,12 +47,12 @@ targets:
         buildPhase: none
         # I prodotti di cargo non vanno nel progetto.
         excludes:
-          - "imc-icon/target"
-          - "imc-icon/target/**"
+          - "sideport-icon/target"
+          - "sideport-icon/target/**"
     settings:
       base:
-        PRODUCT_NAME: IMC
-        PRODUCT_BUNDLE_IDENTIFIER: com.local.imc
+        PRODUCT_NAME: Sideport
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.sideport
         INFOPLIST_FILE: Resources/Info.plist
         GENERATE_INFOPLIST_FILE: NO
         COMBINE_HIDPI_IMAGES: YES
@@ -68,27 +68,27 @@ targets:
         script: "\"$SRCROOT/Scripts/bundle-tools.sh\" \"$BUILT_PRODUCTS_DIR/$FULL_PRODUCT_NAME\""
         basedOnDependencyAnalysis: false
 
-  IMCTests:
+  SideportTests:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: Tests/IMCTests
+      - path: Tests/SideportTests
     dependencies:
-      - target: IMC
+      - target: Sideport
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.local.imc.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.sideport.tests
 
 schemes:
-  IMC:
+  Sideport:
     build:
       targets:
-        IMC: all
-        IMCTests: [test]
+        Sideport: all
+        SideportTests: [test]
     test:
       targets:
-        - IMCTests
+        - SideportTests
     run:
       config: Debug
     archive:

@@ -8,7 +8,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-RESOURCES="$PWD/Sources/IMC/Resources"
+RESOURCES="$PWD/Sources/Sideport/Resources"
 
 rm -rf "$RESOURCES"/*.lproj
 xcrun xcstringstool compile "$RESOURCES/Localizable.xcstrings" --output-directory "$RESOURCES"

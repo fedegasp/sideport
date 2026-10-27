@@ -2,13 +2,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "IMC",
+    name: "Sideport",
     defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "IMC",
-            path: "Sources/IMC",
+            name: "Sideport",
+            path: "Sources/Sideport",
             // Il catalogo lo compila Xcode; a `swift build` servono i .strings
             // generati da Scripts/compile-strings.sh, nelle cartelle .lproj.
             exclude: ["Resources/Localizable.xcstrings"],
@@ -16,9 +16,9 @@ let package = Package(
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(
-            name: "IMCTests",
-            dependencies: ["IMC"],
-            path: "Tests/IMCTests",
+            name: "SideportTests",
+            dependencies: ["Sideport"],
+            path: "Tests/SideportTests",
             swiftSettings: [.swiftLanguageMode(.v6)]
         )
     ]

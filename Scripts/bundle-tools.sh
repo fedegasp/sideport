@@ -1,12 +1,12 @@
 #!/bin/bash
-# Copia i binari di libimobiledevice e le loro dipendenze dentro IMC.app,
+# Copia i binari di libimobiledevice e le loro dipendenze dentro Sideport.app,
 # riscrivendo gli install name in modo che l'app funzioni anche su un Mac
 # senza Homebrew.
 #
-# Uso: Scripts/bundle-tools.sh dist/IMC.app
+# Uso: Scripts/bundle-tools.sh dist/Sideport.app
 set -euo pipefail
 
-APP="${1:?Percorso di IMC.app richiesto}"
+APP="${1:?Percorso di Sideport.app richiesto}"
 TOOLS_DIR="$APP/Contents/Resources/tools"
 FW_DIR="$APP/Contents/Frameworks"
 TOOLS=(idevice_id ideviceinfo idevicepair ideviceinstaller idevicename idevicediagnostics ipatool)
@@ -76,8 +76,8 @@ for tool in "${TOOLS[@]}"; do
 done
 
 # L'helper delle icone non esiste in Homebrew: si compila direttamente nel bundle.
-if "$(dirname "$0")/build-icon-helper.sh" "$TOOLS_DIR/imc-icon"; then
-    collect_deps "$TOOLS_DIR/imc-icon"
+if "$(dirname "$0")/build-icon-helper.sh" "$TOOLS_DIR/sideport-icon"; then
+    collect_deps "$TOOLS_DIR/sideport-icon"
 else
     echo "Attenzione: helper delle icone non compilato, le app installate mostreranno un segnaposto." >&2
 fi

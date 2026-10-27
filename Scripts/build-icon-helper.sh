@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compila l'helper imc-icon, che legge le icone delle app dal dispositivo.
+# Compila l'helper sideport-icon, che legge le icone delle app dal dispositivo.
 #
 # Uso: Scripts/build-icon-helper.sh PERCORSO_ESEGUIBILE
 #
@@ -9,7 +9,7 @@ set -euo pipefail
 
 OUTPUT="${1:?Percorso di destinazione richiesto}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CRATE="$ROOT/Helpers/imc-icon"
+CRATE="$ROOT/Helpers/sideport-icon"
 
 # Xcode esegue le fasi di script con un PATH ridotto: cargo va cercato
 # esplicitamente fra le installazioni note. Lo stesso vale per pkg-config, che
@@ -27,5 +27,5 @@ fi
 "$CARGO" build --release --locked --manifest-path "$CRATE/Cargo.toml"
 
 mkdir -p "$(dirname "$OUTPUT")"
-cp "$CRATE/target/release/imc-icon" "$OUTPUT"
+cp "$CRATE/target/release/sideport-icon" "$OUTPUT"
 chmod u+w "$OUTPUT"
