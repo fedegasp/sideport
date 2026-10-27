@@ -55,5 +55,5 @@ install: build ## Installa l'app Release in ~/Applications
 uninstall: ## Rimuove l'app da ~/Applications
 	rm -rf "$(INSTALL_DIR)/$(APP_NAME).app"
 
-clean: ## Rimuove i prodotti di build (il progetto Xcode e' versionato: resta)
+clean: ## Rimuove i prodotti di build
 	rm -rf $(BUILD_DIR) $(APP_NAME).xcodeproj dist .build Helpers/sideport-icon/target
