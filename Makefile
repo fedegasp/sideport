@@ -9,7 +9,7 @@ INSTALL_DIR   := $(HOME)/Applications
 XCODEGEN ?= xcodegen
 
 .DEFAULT_GOAL := help
-.PHONY: help install-xcodegen generate edit build install uninstall clean
+.PHONY: help install-xcodegen generate edit build run test install uninstall clean
 
 help: ## Mostra questo aiuto
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "} {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -42,6 +42,16 @@ build: generate ## Compila la configurazione Release dentro ./build
 		build
 	@echo "App compilata: $(APP_PATH)"
 
+run: build ## Compila e avvia l'app
+	open "$(APP_PATH)"
+
+test: generate ## Esegue i test
+	xcodebuild test \
+		-project $(PROJECT) \
+		-scheme $(SCHEME) \
+		-destination 'platform=macOS' \
+		-derivedDataPath $(BUILD_DIR)
+
 install: build ## Installa l'app Release in ~/Applications
 	@if pgrep -x $(APP_NAME) >/dev/null; then \
 		echo "$(APP_NAME) e' in esecuzione: chiudila prima di installare." >&2; \
@@ -56,4 +66,4 @@ uninstall: ## Rimuove l'app da ~/Applications
 	rm -rf "$(INSTALL_DIR)/$(APP_NAME).app"
 
 clean: ## Rimuove i prodotti di build
-	rm -rf $(BUILD_DIR) $(APP_NAME).xcodeproj dist .build Helpers/sideport-icon/target
+	rm -rf $(BUILD_DIR) $(APP_NAME).xcodeproj Helpers/sideport-icon/target

@@ -1,7 +1,4 @@
-.build/
 build/
-.swiftpm/
-dist/
 DerivedData/
 *.xcuserstate
 *.xcodeproj

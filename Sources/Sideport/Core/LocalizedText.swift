@@ -1,12 +1,11 @@
 import Foundation
 
-/// Accesso al catalogo di stringhe del modulo (`Resources/Localizable.xcstrings`).
+/// Accesso al catalogo di stringhe (`Resources/Localizable.xcstrings`).
 ///
-/// Il catalogo non sta nel bundle principale dell'app: con SwiftPM le risorse
-/// finiscono in `Sideport_Sideport.bundle`, copiato accanto all'eseguibile e poi dentro
-/// `Sideport.app/Contents/Resources`. `Text("…")` e simili cercano le stringhe in
-/// `Bundle.main`, quindi senza indicare il bundle l'interfaccia resterebbe in
-/// inglese: queste due funzioni lo indicano una volta sola.
+/// `#bundle` si espande nel bundle del modulo in cui e' scritto, che nel target
+/// dell'app e' `Bundle.main`: li' Xcode compila il catalogo. Queste due funzioni
+/// risolvono il bundle in un punto solo invece di lasciarlo implicito in ognuna
+/// delle 349 chiamate.
 extension LocalizedStringResource {
     static func ui(_ key: String.LocalizationValue) -> Self {
         LocalizedStringResource(key, bundle: #bundle)

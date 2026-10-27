@@ -15,7 +15,7 @@ gia' presenti sul dispositivo.
 ```bash
 brew install libimobiledevice ideviceinstaller ipatool
 brew install rust       # oppure rustup, per l'helper delle icone
-brew install xcodegen   # solo per rigenerare il progetto Xcode
+brew install xcodegen   # genera il progetto Xcode, che non e' versionato
 ```
 
 Tutti e tre i tool vengono copiati dentro `Sideport.app` in fase di build, quindi l'app
@@ -33,19 +33,20 @@ manca, le app installate mostrano un segnaposto.
 ### Xcode
 
 ```bash
-open Sideport.xcodeproj
+make generate && open Sideport.xcodeproj
 ```
 
 Schema **Sideport**, poi ⌘R. Il progetto compila l'app, genera l'icona e incorpora
 libimobiledevice nel bundle tramite due fasi di script.
 
 Il progetto e' generato da [`project.yml`](project.yml) con
-[XcodeGen](https://github.com/yonaskolb/XcodeGen). L'elenco dei file viene risolto
-al momento della generazione, quindi **dopo aver aggiunto o rinominato un sorgente**
-(oltre che dopo aver cambiato la configurazione) va rigenerato:
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) e non e' versionato, quindi va
+generato almeno una volta. L'elenco dei file viene risolto al momento della
+generazione, quindi **dopo aver aggiunto o rinominato un sorgente** (oltre che dopo
+aver cambiato la configurazione) va rigenerato:
 
 ```bash
-xcodegen generate
+make generate
 ```
 
 Modificare il contenuto di file esistenti non richiede nulla.
@@ -53,16 +54,16 @@ Modificare il contenuto di file esistenti non richiede nulla.
 ### Riga di comando
 
 ```bash
-./Scripts/build-app.sh
+make build      # rigenera il progetto e compila Release in ./build
+make run        # compila e avvia l'app
+make test       # esegue i test
+make install    # copia l'app in ~/Applications
 ```
 
-Produce `dist/Sideport.app`. Opzioni:
-
-- `./Scripts/build-app.sh --no-tools` — non incorpora libimobiledevice, usa quello di sistema
-- `swift build && swift run` — esecuzione rapida in sviluppo (senza icona e senza tool incorporati)
-
-I due percorsi condividono gli stessi sorgenti e gli stessi script, quindi producono
-bundle equivalenti.
+`make` da solo elenca i target disponibili. Il bundle finisce in
+`build/Build/Products/Release/Sideport.app`, completo di icona, stringhe compilate e
+tool incorporati: e' lo stesso che produce ⌘R in Xcode, perche' entrambi passano per
+`project.yml` e per gli stessi script.
 
 ## Uso
 
@@ -145,22 +146,16 @@ macOS puo' chiedere l'autorizzazione.
 L'interfaccia e' in inglese (lingua sorgente) e in italiano, e segue la lingua di sistema.
 Tutti i testi stanno in [`Sources/Sideport/Resources/Localizable.xcstrings`](Sources/Sideport/Resources/Localizable.xcstrings),
 piu' [`Resources/InfoPlist.xcstrings`](Resources/InfoPlist.xcstrings) per copyright e nome
-del tipo di documento. Nel codice si leggono con `.ui("…")`, che punta al catalogo nel
-bundle del modulo (`Core/LocalizedText.swift`): con SwiftPM le risorse non finiscono nel
-bundle principale, dove SwiftUI cercherebbe le stringhe per impostazione predefinita.
+del tipo di documento. Nel codice si leggono con `.ui("…")`, che risolve il bundle in un
+punto solo (`Core/LocalizedText.swift`).
 
-Xcode compila i `.xcstrings` da solo; `swift build` no, quindi i `.strings` generati sono
-versionati sotto `Sources/Sideport/Resources/*.lproj` e **dopo ogni modifica al
-catalogo** vanno rigenerati (`build-app.sh` lo fa da solo):
-
-```bash
-./Scripts/compile-strings.sh
-```
+Xcode compila i cataloghi a ogni build: dopo aver modificato le stringhe non serve
+rigenerare nulla.
 
 Per provare una lingua senza cambiare quella di sistema:
 
 ```bash
-open dist/Sideport.app --args -AppleLanguages '(en)'
+open build/Build/Products/Release/Sideport.app --args -AppleLanguages '(en)'
 ```
 
 ### Scorciatoie
@@ -206,14 +201,14 @@ Sources/Sideport/
   State/        stato condiviso dell'interfaccia (UIState, Route)
   Views/        interfaccia SwiftUI, una cartella per sezione (Root, Library, Device,
                 Download, Transfers) piu' Shared per i componenti comuni
-  Resources/    catalogo di stringhe (.xcstrings) e .strings compilati
-Tests/          test della logica di parsing (Swift Testing): `swift test`
+  Resources/    catalogo di stringhe (.xcstrings)
+Tests/          test della logica di parsing (Swift Testing): `make test`
 Resources/      Info.plist, catalogo dell'Info.plist e icona dell'app
 Helpers/        helper in Rust incorporati nel bundle (sideport-icon)
-Scripts/        build del bundle, incorporamento dei tool, generazione icona,
-                compilazione delle stringhe
+Scripts/        incorporamento dei tool e generazione dell'icona, richiamati dalle
+                fasi di script del progetto
 project.yml     sorgente del progetto Xcode (XcodeGen)
-Package.swift   build da riga di comando
+Makefile        generazione, build, test e installazione da riga di comando
 ```
 
 L'app non parla direttamente con `usbmuxd` ne' con i server Apple: invoca i tool esterni e

@@ -1,5 +1,5 @@
 #!/usr/bin/env swift
-// Genera l'icona dell'app (PNG 1024x1024) usata da Scripts/build-app.sh.
+// Genera l'icona dell'app (PNG 1024x1024) usata da Scripts/make-icon.sh.
 import AppKit
 
 let size = 1024.0

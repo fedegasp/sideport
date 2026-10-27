@@ -29,10 +29,6 @@ targets:
     platform: macOS
     sources:
       - path: Sources/Sideport
-        # Xcode compila il catalogo di stringhe da solo: le .lproj generate da
-        # Scripts/compile-strings.sh servono solo alla build con SwiftPM.
-        excludes:
-          - "Resources/*.lproj"
       - path: Resources/AppIcon.icns
         buildPhase: resources
       - path: Resources/InfoPlist.xcstrings

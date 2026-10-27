@@ -3,7 +3,7 @@
 # riscrivendo gli install name in modo che l'app funzioni anche su un Mac
 # senza Homebrew.
 #
-# Uso: Scripts/bundle-tools.sh dist/Sideport.app
+# Uso: Scripts/bundle-tools.sh PERCORSO_BUNDLE.app
 set -euo pipefail
 
 APP="${1:?Percorso di Sideport.app richiesto}"
