@@ -29,6 +29,8 @@ targets:
     platform: macOS
     sources:
       - path: Sources/Sideport
+      # Generata da Scripts/make-icon.sh, non versionata: `make generate` la
+      # produce prima di XcodeGen, che altrimenti salterebbe un file mancante.
       - path: Resources/AppIcon.icns
         buildPhase: resources
       - path: Resources/InfoPlist.xcstrings

@@ -49,7 +49,10 @@ aver cambiato la configurazione) va rigenerato:
 make generate
 ```
 
-Modificare il contenuto di file esistenti non richiede nulla.
+Modificare il contenuto di file esistenti non richiede nulla. `make generate` produce
+anche `Resources/AppIcon.icns`, che non e' versionata: XcodeGen risolve i percorsi al
+momento della generazione, quindi `xcodegen generate` lanciato da solo lascerebbe l'app
+senza icona.
 
 ### Riga di comando
 
@@ -203,7 +206,7 @@ Sources/Sideport/
                 Download, Transfers) piu' Shared per i componenti comuni
   Resources/    catalogo di stringhe (.xcstrings)
 Tests/          test della logica di parsing (Swift Testing): `make test`
-Resources/      Info.plist, catalogo dell'Info.plist e icona dell'app
+Resources/      Info.plist, catalogo dell'Info.plist e icona generata (AppIcon.icns)
 Helpers/        helper in Rust incorporati nel bundle (sideport-icon)
 Scripts/        incorporamento dei tool e generazione dell'icona, richiamati dalle
                 fasi di script del progetto

@@ -9,7 +9,7 @@ INSTALL_DIR   := $(HOME)/Applications
 XCODEGEN ?= xcodegen
 
 .DEFAULT_GOAL := help
-.PHONY: help install-xcodegen generate edit build run test install uninstall clean
+.PHONY: help install-xcodegen icon generate edit build run test install uninstall clean
 
 help: ## Mostra questo aiuto
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "} {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -26,7 +26,10 @@ install-xcodegen: ## Installa XcodeGen (via mise o Homebrew) se manca
 		exit 1; \
 	fi
 
-generate: ## Rigenera Sideport.xcodeproj da project.yml con XcodeGen
+icon: ## Genera Resources/AppIcon.icns se manca o e' piu' vecchia del sorgente
+	@./Scripts/make-icon.sh
+
+generate: icon ## Rigenera Sideport.xcodeproj da project.yml con XcodeGen
 	$(XCODEGEN) generate
 
 edit: ## Apre project.yml, la sorgente del progetto Xcode
@@ -66,4 +69,4 @@ uninstall: ## Rimuove l'app da ~/Applications
 	rm -rf "$(INSTALL_DIR)/$(APP_NAME).app"
 
 clean: ## Rimuove i prodotti di build
-	rm -rf $(BUILD_DIR) $(APP_NAME).xcodeproj Helpers/sideport-icon/target
+	rm -rf $(BUILD_DIR) $(APP_NAME).xcodeproj Resources/AppIcon.icns Helpers/sideport-icon/target

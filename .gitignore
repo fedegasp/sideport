@@ -1,4 +1,5 @@
 build/
+Resources/AppIcon.icns
 DerivedData/
 *.xcuserstate
 *.xcodeproj

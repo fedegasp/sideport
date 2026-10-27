@@ -3,11 +3,15 @@
 import AppKit
 
 let size = 1024.0
-let image = NSImage(size: NSSize(width: size, height: size))
-image.lockFocus()
-
-let context = NSGraphicsContext.current!.cgContext
 let rect = CGRect(x: 0, y: 0, width: size, height: size)
+
+// Contesto sRGB esplicito: `NSImage.lockFocus` disegnerebbe nello spazio colore
+// dello schermo collegato, e l'icona cambierebbe da un Mac all'altro.
+let context = CGContext(data: nil, width: Int(size), height: Int(size),
+                        bitsPerComponent: 8, bytesPerRow: 0,
+                        space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+NSGraphicsContext.current = NSGraphicsContext(cgContext: context, flipped: false)
 
 // Sfondo: rettangolo arrotondato con gradiente blu.
 let squircle = NSBezierPath(roundedRect: rect.insetBy(dx: size * 0.08, dy: size * 0.08),
@@ -56,11 +60,8 @@ context.setShadow(offset: CGSize(width: 0, height: -6), blur: 18,
 NSColor.white.setFill()
 arrow.fill()
 
-image.unlockFocus()
-
-guard let tiff = image.tiffRepresentation,
-      let bitmap = NSBitmapImageRep(data: tiff),
-      let png = bitmap.representation(using: .png, properties: [:]) else {
+guard let cgImage = context.makeImage(),
+      let png = NSBitmapImageRep(cgImage: cgImage).representation(using: .png, properties: [:]) else {
     FileHandle.standardError.write("Impossibile generare il PNG dell'icona\n".data(using: .utf8)!)
     exit(1)
 }
