@@ -1080,6 +1080,24 @@
         }
       }
     },
+    "Change the version number": {
+      "comment": "Toggle in the re-signing sheet that enables editing the app version.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change the version number"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cambia il numero di versione"
+          }
+        }
+      }
+    },
     "Checking the account…": {
       "extractionState": "manual",
       "localizations": {
@@ -4312,6 +4330,24 @@
         }
       }
     },
+    "The app declares version %@": {
+      "comment": "Check in the re-signing sheet: version the re-signed app will declare.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app declares version %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'app dichiara la versione %@"
+          }
+        }
+      }
+    },
     "The app is installed as %@ and does not replace the original one on the device.": {
       "comment": "Consequence of renaming the bundle identifier.",
       "extractionState": "manual",
@@ -4448,6 +4484,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Il comando è terminato con codice %lld."
+          }
+        }
+      }
+    },
+    "The device shows this number and tells two installs of the same app apart by it.": {
+      "comment": "Explains what the version number is for, under the toggle that changes it.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The device shows this number and tells two installs of the same app apart by it."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il dispositivo mostra questo numero e distingue da questo due installazioni della stessa app."
           }
         }
       }
@@ -4631,6 +4685,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Il profilo «%@» non copre «%@»."
+          }
+        }
+      }
+    },
+    "The version must be digits separated by dots, like 1.2.3": {
+      "comment": "Check in the re-signing sheet when the typed version is not a valid one.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The version must be digits separated by dots, like 1.2.3"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La versione deve essere cifre separate da punti, come 1.2.3"
           }
         }
       }

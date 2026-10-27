@@ -31,6 +31,9 @@ struct ResignSheet: View {
     @State private var nestedIdentifiers: [String] = []
     @State private var fairPlay = false
     @State private var useProfileIdentifier = true
+    @State private var changeVersion = false
+    @State private var shortVersion = ""
+    @State private var buildVersion = ""
     @State private var isLoading = true
     @State private var isWorking = false
     @State private var isChoosingProfile = false
@@ -170,6 +173,26 @@ struct ResignSheet: View {
                 .disabled(isWorking)
             }
 
+            VStack(alignment: .leading, spacing: 8) {
+                Toggle(isOn: $changeVersion) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(.ui("Change the version number"))
+                        Text(.ui("The device shows this number and tells two installs of the same app apart by it."))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if changeVersion {
+                    HStack(alignment: .top, spacing: 10) {
+                        versionField(.ui("Version"), text: $shortVersion)
+                        versionField(.ui("Build"), text: $buildVersion)
+                        Spacer(minLength: 0)
+                    }
+                }
+            }
+            .disabled(isWorking)
+
             Divider()
 
             VStack(alignment: .leading, spacing: 6) {
@@ -190,6 +213,18 @@ struct ResignSheet: View {
                     .foregroundStyle(.red)
                     .textSelection(.enabled)
             }
+        }
+    }
+
+    private func versionField(
+        _ title: LocalizedStringResource,
+        text: Binding<String>
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title).font(.caption).foregroundStyle(.secondary)
+            TextField("", text: text)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 120)
         }
     }
 
@@ -232,6 +267,22 @@ struct ResignSheet: View {
             return package.bundleIdentifier
         }
         return canRenameBundle && useProfileIdentifier ? profile.bundlePattern : package.bundleIdentifier
+    }
+
+    /// La versione che l'app dichiarera' dopo la firma.
+    private var targetVersionLabel: String {
+        if buildVersion.isEmpty || buildVersion == shortVersion { return shortVersion }
+        return "\(shortVersion) (\(buildVersion))"
+    }
+
+    /// Cifre separate da punti, come le vuole `CFBundleVersion`: una versione
+    /// fuori formato passa la firma e fa fallire l'installazione.
+    private func isValidVersion(_ value: String) -> Bool {
+        guard !value.isEmpty else { return false }
+        let parts = value.split(separator: ".", omittingEmptySubsequences: false)
+        return parts.count <= 4 && parts.allSatisfy { part in
+            !part.isEmpty && part.allSatisfy { $0.isASCII && $0.isNumber }
+        }
     }
 
     /// Rinominare ha senso solo con un profilo che vale per una sola app e che
@@ -296,6 +347,16 @@ struct ResignSheet: View {
                 text = String.ui("\(borrowed.count) embedded extensions signed with their own profile")
             }
             result.append(Check(state: uncovered.isEmpty ? .ok : .failure, text: text))
+        }
+
+        if changeVersion {
+            let valid = isValidVersion(shortVersion) && isValidVersion(buildVersion)
+            result.append(Check(
+                state: valid ? .ok : .failure,
+                text: valid
+                    ? String.ui("The app declares version \(targetVersionLabel)")
+                    : String.ui("The version must be digits separated by dots, like 1.2.3")
+            ))
         }
 
         if let identity {
@@ -386,6 +447,8 @@ struct ResignSheet: View {
         let signature = await IPAInspector.signature(of: package.url, entries: entries)
         fairPlay = signature.isFairPlayProtected
         nestedIdentifiers = await IPAInspector.nestedBundleIdentifiers(of: package.url, entries: entries)
+        shortVersion = package.shortVersion
+        buildVersion = package.buildVersion
 
         preselect()
         isLoading = false
@@ -438,7 +501,9 @@ struct ResignSheet: View {
             profile: profile,
             bundleIdentifier: targetBundleIdentifier,
             destination: destination(),
-            extensionProfiles: extensionProfiles
+            extensionProfiles: extensionProfiles,
+            shortVersion: changeVersion ? shortVersion : nil,
+            buildVersion: changeVersion ? buildVersion : nil
         )
         do {
             let file = try await IPAResigner.resign(request) { text in

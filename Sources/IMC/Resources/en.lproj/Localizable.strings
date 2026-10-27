@@ -82,6 +82,8 @@
 	<string>Cannot start the process: %@</string>
 	<key>Change folder…</key>
 	<string>Change folder…</string>
+	<key>Change the version number</key>
+	<string>Change the version number</string>
 	<key>Checking the account…</key>
 	<string>Checking the account…</string>
 	<key>Choose a file…</key>
@@ -446,6 +448,8 @@
 	<string>Taking install lock</string>
 	<key>The app and all its data will be deleted from the device.</key>
 	<string>The app and all its data will be deleted from the device.</string>
+	<key>The app declares version %@</key>
+	<string>The app declares version %@</string>
 	<key>The app is installed as %@ and does not replace the original one on the device.</key>
 	<string>The app is installed as %@ and does not replace the original one on the device.</string>
 	<key>The app requires entitlements the signing profile does not grant.</key>
@@ -462,6 +466,8 @@
 	<string>The binary is encrypted with FairPlay: it only runs on devices signed in with the Apple ID that downloaded it. Re-signing would change the signature but not the encryption.</string>
 	<key>The command exited with code %lld.</key>
 	<string>The command exited with code %lld.</string>
+	<key>The device shows this number and tells two installs of the same app apart by it.</key>
+	<string>The device shows this number and tells two installs of the same app apart by it.</string>
 	<key>The download uses a private Apple API, the same one iTunes uses: it can change without notice.</key>
 	<string>The download uses a private Apple API, the same one iTunes uses: it can change without notice.</string>
 	<key>The file %@ no longer exists.</key>
@@ -478,6 +484,8 @@
 	<string>The profile does not list this identity: pick another pair</string>
 	<key>The profile “%@” does not cover “%@”.</key>
 	<string>The profile “%@” does not cover “%@”.</string>
+	<key>The version must be digits separated by dots, like 1.2.3</key>
+	<string>The version must be digits separated by dots, like 1.2.3</string>
 	<key>This .ipa cannot be re-signed</key>
 	<string>This .ipa cannot be re-signed</string>
 	<key>This app does not support %@.</key>

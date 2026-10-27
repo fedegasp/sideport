@@ -29,6 +29,10 @@ enum IPAResigner {
         /// identificativo: con i profili espliciti ogni bundle vuole il suo,
         /// come nei target di Xcode.
         var extensionProfiles: [String: ProvisioningProfile] = [:]
+        /// Versione da scrivere al posto di quella dell'archivio, quando serve
+        /// distinguere due rifirme della stessa app; `nil` lascia l'originale.
+        var shortVersion: String?
+        var buildVersion: String?
     }
 
     enum ResignError: LocalizedError {
@@ -77,6 +81,7 @@ enum IPAResigner {
 
         progress(String.ui("Preparing the bundle…"))
         try strip(work: work, app: app)
+        try setVersion(of: app, short: request.shortVersion, build: request.buildVersion)
         // Il profilo di ogni bundle si risolve prima di firmare: meglio
         // fermarsi subito che a meta' dell'albero.
         let plan = try rename(app: app, to: request.bundleIdentifier).map {
@@ -124,6 +129,19 @@ enum IPAResigner {
             }
         }
         for url in doomed { try? fm.removeItem(at: url) }
+    }
+
+    /// Riscrive la versione dichiarata dall'app.
+    ///
+    /// Tocca solo il bundle principale: e' la versione che il dispositivo
+    /// mostra e con cui distingue due installazioni della stessa app, mentre
+    /// quelle di estensioni e framework non arrivano fino all'utente.
+    private static func setVersion(of app: URL, short: String?, build: String?) throws {
+        guard short != nil || build != nil else { return }
+        try updateInfoPlist(of: app) { info in
+            if let short { info["CFBundleShortVersionString"] = short }
+            if let build { info["CFBundleVersion"] = build }
+        }
     }
 
     /// Allinea gli identificativi al profilo e restituisce i bundle da

@@ -15,7 +15,12 @@ struct IPAResignerTests {
         let app = root.appending(path: "build/Payload/Demo.app")
         try fm.createDirectory(at: app.appending(path: "_CodeSignature"), withIntermediateDirectories: true)
 
-        try write(info: ["CFBundleIdentifier": bundleIdentifier, "CFBundleExecutable": "Demo"], to: app)
+        try write(info: [
+            "CFBundleIdentifier": bundleIdentifier,
+            "CFBundleExecutable": "Demo",
+            "CFBundleShortVersionString": "1.0",
+            "CFBundleVersion": "1",
+        ], to: app)
         try fm.copyItem(at: URL(fileURLWithPath: "/bin/echo"), to: app.appending(path: "Demo"))
         try Data("old".utf8).write(to: app.appending(path: "_CodeSignature/CodeResources"))
         try Data("old".utf8).write(to: root.appending(path: "build/iTunesMetadata.plist"))
@@ -23,7 +28,12 @@ struct IPAResignerTests {
         if let extensionIdentifier {
             let appex = app.appending(path: "PlugIns/Ext.appex")
             try fm.createDirectory(at: appex, withIntermediateDirectories: true)
-            try write(info: ["CFBundleIdentifier": extensionIdentifier, "CFBundleExecutable": "Ext"], to: appex)
+            try write(info: [
+                "CFBundleIdentifier": extensionIdentifier,
+                "CFBundleExecutable": "Ext",
+                "CFBundleShortVersionString": "1.0",
+                "CFBundleVersion": "1",
+            ], to: appex)
             try fm.copyItem(at: URL(fileURLWithPath: "/bin/echo"), to: appex.appending(path: "Ext"))
         }
 
@@ -166,6 +176,58 @@ struct IPAResignerTests {
         #expect(embedded == (try Data(contentsOf: extensionProfile.url)))
     }
 
+    @Test func rewritesTheVersionWhenAskedTo() async throws {
+        let (archive, root) = try makeArchive(
+            bundleIdentifier: "com.example.demo",
+            extensionIdentifier: "com.example.demo.notifications"
+        )
+        defer { try? fm.removeItem(at: root) }
+        let profile = try makeProfile(applicationIdentifier: "AB12CD34EF.com.example.*", in: root)
+        let destination = root.appending(path: "signed.ipa")
+
+        try await IPAResigner.resign(.init(
+            archive: archive,
+            identity: adHoc,
+            profile: profile,
+            bundleIdentifier: "com.example.demo",
+            destination: destination,
+            shortVersion: "2.1",
+            buildVersion: "47"
+        ))
+
+        let check = root.appending(path: "check")
+        try unzip(destination, into: check)
+        let app = check.appending(path: "Payload/Demo.app")
+
+        #expect(try string("CFBundleShortVersionString", of: app) == "2.1")
+        #expect(try string("CFBundleVersion", of: app) == "47")
+        // L'estensione non si vede nell'elenco delle app: la sua versione resta
+        // quella dell'archivio.
+        #expect(try string("CFBundleShortVersionString", of: app.appending(path: "PlugIns/Ext.appex")) == "1.0")
+    }
+
+    @Test func keepsTheVersionWhenNoneIsGiven() async throws {
+        let (archive, root) = try makeArchive(bundleIdentifier: "com.example.demo", extensionIdentifier: nil)
+        defer { try? fm.removeItem(at: root) }
+        let profile = try makeProfile(applicationIdentifier: "AB12CD34EF.com.example.*", in: root)
+        let destination = root.appending(path: "signed.ipa")
+
+        try await IPAResigner.resign(.init(
+            archive: archive,
+            identity: adHoc,
+            profile: profile,
+            bundleIdentifier: "com.example.demo",
+            destination: destination
+        ))
+
+        let check = root.appending(path: "check")
+        try unzip(destination, into: check)
+        let app = check.appending(path: "Payload/Demo.app")
+
+        #expect(try string("CFBundleShortVersionString", of: app) == "1.0")
+        #expect(try string("CFBundleVersion", of: app) == "1")
+    }
+
     @Test func refusesABundleTheProfileDoesNotCover() async throws {
         let (archive, root) = try makeArchive(bundleIdentifier: "com.example.demo", extensionIdentifier: nil)
         defer { try? fm.removeItem(at: root) }
@@ -183,7 +245,11 @@ struct IPAResignerTests {
     }
 
     private func identifier(of bundle: URL) throws -> String? {
+        try string("CFBundleIdentifier", of: bundle)
+    }
+
+    private func string(_ key: String, of bundle: URL) throws -> String? {
         let data = try Data(contentsOf: bundle.appending(path: "Info.plist"))
-        return try PlistParsing.dictionary(from: data).string("CFBundleIdentifier")
+        return try PlistParsing.dictionary(from: data).string(key)
     }
 }
