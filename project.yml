@@ -2,7 +2,7 @@
 name: Sideport
 
 options:
-  bundleIdPrefix: com.local
+  bundleIdPrefix: com.fedegasp
   deploymentTarget:
     macOS: "14.0"
   createIntermediateGroups: true
@@ -50,7 +50,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: Sideport
-        PRODUCT_BUNDLE_IDENTIFIER: com.local.sideport
+        PRODUCT_BUNDLE_IDENTIFIER: com.fedegasp.sideport
         INFOPLIST_FILE: Resources/Info.plist
         GENERATE_INFOPLIST_FILE: NO
         COMBINE_HIDPI_IMAGES: YES
@@ -76,7 +76,7 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.local.sideport.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.fedegasp.sideport.tests
 
 schemes:
   Sideport:
