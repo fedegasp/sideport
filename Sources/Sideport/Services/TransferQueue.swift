@@ -26,7 +26,12 @@ final class TransferQueue {
 
     @discardableResult
     func enqueueInstall(_ package: IPAPackage, on device: Device) -> TransferJob {
-        let job = TransferJob(kind: .install(package), deviceUDID: device.udid, deviceName: device.displayName)
+        let job = TransferJob(
+            kind: .install(package),
+            deviceUDID: device.udid,
+            deviceName: device.displayName,
+            deviceTransport: device.transport
+        )
         enqueue(job)
         return job
     }
@@ -36,7 +41,8 @@ final class TransferQueue {
         let job = TransferJob(
             kind: .uninstall(bundleIdentifier: app.bundleIdentifier, appName: app.name),
             deviceUDID: device.udid,
-            deviceName: device.displayName
+            deviceName: device.displayName,
+            deviceTransport: device.transport
         )
         enqueue(job)
         return job
@@ -84,6 +90,7 @@ final class TransferQueue {
             $0.startedAt = Date()
         }
 
+        let lookup = job.deviceTransport.toolArguments
         let arguments: [String]
         switch job.kind {
         case .install(let package):
@@ -91,9 +98,9 @@ final class TransferQueue {
                 finish(jobID, with: .failed(String.ui("The file \(package.url.lastPathComponent) no longer exists.")))
                 return
             }
-            arguments = ["-u", job.deviceUDID, "install", package.url.path]
+            arguments = lookup + ["-u", job.deviceUDID, "install", package.url.path]
         case .uninstall(let bundleIdentifier, _):
-            arguments = ["-u", job.deviceUDID, "uninstall", bundleIdentifier]
+            arguments = lookup + ["-u", job.deviceUDID, "uninstall", bundleIdentifier]
         }
 
         do {
@@ -195,7 +202,7 @@ final class TransferQueue {
             case .missingEntitlements:
                 String.ui("The app requires entitlements the signing profile does not grant.")
             case .unreachableDevice:
-                String.ui("Device unreachable: check the cable and that it is unlocked and trusted.")
+                String.ui("Device unreachable: check the cable or the network, and that it is unlocked and trusted.")
             case .lockedDevice:
                 String.ui("Unlock the device with its passcode and try again.")
             }

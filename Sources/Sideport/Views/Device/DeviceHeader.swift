@@ -13,7 +13,10 @@ struct DeviceHeader: View {
                 .foregroundStyle(.tint)
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(device.displayName).font(.title2.weight(.semibold))
+                HStack(spacing: 8) {
+                    Text(device.displayName).font(.title2.weight(.semibold))
+                    TransportBadge(device: device)
+                }
                 Text(.ui("\(device.marketingName) · \(device.systemVersionLabel)"))
                     .foregroundStyle(.secondary)
                 if let used = device.usedDiskCapacity, let total = device.totalDiskCapacity, total > 0 {

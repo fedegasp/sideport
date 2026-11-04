@@ -26,7 +26,8 @@ final class InstalledAppsService {
     func apps(for udid: String) -> [InstalledApp] { appsByDevice[udid] ?? [] }
     func isLoading(_ udid: String) -> Bool { loadingUDIDs.contains(udid) }
 
-    func load(udid: String, scope: Scope = .user) async {
+    func load(_ device: Device, scope: Scope = .user) async {
+        let udid = device.udid
         guard let tool = ToolLocator.shared.url(for: .ideviceInstaller) else {
             errorsByDevice[udid] = ToolError.missing(.ideviceInstaller).localizedDescription
             return
@@ -37,7 +38,8 @@ final class InstalledAppsService {
 
         do {
             let attributes = InstalledApp.requestedAttributes.flatMap { ["-a", $0] }
-            let result = try await ProcessRunner.run(tool, ["-u", udid, "list", scope.flag, "--xml"] + attributes)
+            let arguments = device.transport.toolArguments + ["-u", udid, "list", scope.flag, "--xml"]
+            let result = try await ProcessRunner.run(tool, arguments + attributes)
             guard result.succeeded else {
                 errorsByDevice[udid] = result.failureMessage
                 return

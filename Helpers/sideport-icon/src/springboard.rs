@@ -25,6 +25,25 @@ const IDEVICE_E_SUCCESS: c_int = 0;
 const SBSERVICES_E_SUCCESS: c_int = 0;
 /// `IDEVICE_LOOKUP_USBMUX`: solo dispositivi collegati via USB, niente rete.
 const IDEVICE_LOOKUP_USBMUX: c_int = 1 << 1;
+/// `IDEVICE_LOOKUP_NETWORK`: solo dispositivi visibili in rete via usbmuxd.
+const IDEVICE_LOOKUP_NETWORK: c_int = 1 << 2;
+
+/// Canale su cui cercare il dispositivo. I due valori si escludono, come nei
+/// tool di libimobiledevice: `-n` sceglie la rete invece del cavo.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Transport {
+    Usb,
+    Network,
+}
+
+impl Transport {
+    const fn lookup_options(self) -> c_int {
+        match self {
+            Self::Usb => IDEVICE_LOOKUP_USBMUX,
+            Self::Network => IDEVICE_LOOKUP_NETWORK,
+        }
+    }
+}
 
 unsafe extern "C" {
     unsafe fn idevice_new_with_options(
@@ -68,19 +87,19 @@ impl fmt::Display for ErrorCode {
 pub struct Device(NonNull<IdevicePrivate>);
 
 impl Device {
-    /// Apre il dispositivo con l'UDID indicato.
+    /// Apre il dispositivo con l'UDID indicato sul canale richiesto.
     ///
     /// # Errors
     ///
     /// Restituisce il codice di libimobiledevice se il dispositivo non e'
-    /// collegato o non risponde.
-    pub fn open(udid: &CStr) -> Result<Self, ErrorCode> {
+    /// raggiungibile su quel canale o non risponde.
+    pub fn open(udid: &CStr, transport: Transport) -> Result<Self, ErrorCode> {
         let mut device = ptr::null_mut();
         // SAFETY: `device` e' un puntatore valido a una variabile locale e
         // `udid` resta vivo per tutta la chiamata; la libreria popola `device`
         // solo in caso di successo.
         let error = unsafe {
-            idevice_new_with_options(&raw mut device, udid.as_ptr(), IDEVICE_LOOKUP_USBMUX)
+            idevice_new_with_options(&raw mut device, udid.as_ptr(), transport.lookup_options())
         };
         match NonNull::new(device) {
             Some(device) if error == IDEVICE_E_SUCCESS => Ok(Self(device)),

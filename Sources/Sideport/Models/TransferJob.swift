@@ -38,6 +38,8 @@ struct TransferJob: Identifiable, Equatable {
     let kind: Kind
     let deviceUDID: String
     let deviceName: String
+    /// Canale con cui raggiungere il dispositivo al momento dell'accodamento.
+    let deviceTransport: Device.Transport
     var status: Status = .queued
     var startedAt: Date?
     var finishedAt: Date?

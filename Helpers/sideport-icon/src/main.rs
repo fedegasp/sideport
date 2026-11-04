@@ -4,7 +4,10 @@
 //! (`sbservices_get_icon_pngdata`) e nessuno dei suoi tool a riga di comando
 //! lo usa: questo helper colma il vuoto con un'unica sessione per tutte le app.
 //!
-//! Uso: sideport-icon -u UDID -o CARTELLA BUNDLEID...
+//! Uso: sideport-icon [-n] -u UDID -o CARTELLA BUNDLEID...
+//!
+//! Con `-n` il dispositivo si cerca tra quelli visibili in rete invece che tra
+//! quelli collegati via cavo, come il flag omonimo dei tool libimobiledevice.
 //!
 //! Scrive CARTELLA/<bundleid>.png e stampa una riga per app su stdout:
 //!   OK <bundleid>
@@ -21,7 +24,7 @@ use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use springboard::{Device, SpringBoard};
+use springboard::{Device, SpringBoard, Transport};
 
 /// Etichetta con cui ci si presenta al servizio SpringBoard.
 const SERVICE_LABEL: &str = "sideport-icon";
@@ -30,23 +33,25 @@ const EXIT_DEVICE: u8 = 1;
 const EXIT_USAGE: u8 = 2;
 
 fn usage() {
-    eprintln!("Uso: sideport-icon -u UDID -o CARTELLA BUNDLEID...");
+    eprintln!("Uso: sideport-icon [-n] -u UDID -o CARTELLA BUNDLEID...");
 }
 
 /// Argomenti della riga di comando, gia' validati.
 struct Options {
     udid: OsString,
     output_dir: PathBuf,
+    transport: Transport,
     bundle_ids: Vec<OsString>,
 }
 
-/// Legge `-u UDID -o CARTELLA BUNDLEID...`, nell'ordine: come il `getopt` di
-/// macOS, le opzioni devono precedere i bundle ID.
+/// Legge `[-n] -u UDID -o CARTELLA BUNDLEID...`, nell'ordine: come il `getopt`
+/// di macOS, le opzioni devono precedere i bundle ID.
 ///
 /// Restituisce `None` per qualsiasi forma non valida, `-h` compreso.
 fn parse_options(args: &[OsString]) -> Option<Options> {
     let mut udid = None;
     let mut output_dir = None;
+    let mut transport = Transport::Usb;
     let mut index = 0;
 
     while let Some(flag) = args
@@ -57,6 +62,11 @@ fn parse_options(args: &[OsString]) -> Option<Options> {
         index += 1;
         if flag == "--" {
             break;
+        }
+        // `-n` non ha valore: va riconosciuto prima di cercarne uno.
+        if flag == "-n" {
+            transport = Transport::Network;
+            continue;
         }
         // `-u UDID` e `-uUDID` sono entrambe forme accettate da getopt.
         let (name, inline) = flag.split_at_checked(2)?;
@@ -81,6 +91,7 @@ fn parse_options(args: &[OsString]) -> Option<Options> {
     Some(Options {
         udid: udid?,
         output_dir: PathBuf::from(output_dir?),
+        transport,
         bundle_ids,
     })
 }
@@ -104,7 +115,7 @@ fn main() -> ExitCode {
     // argv e' fatto di stringhe gia' terminate da NUL: non puo' contenerne una interna.
     let udid =
         CString::new(options.udid.as_encoded_bytes()).expect("l'UDID da argv non contiene NUL");
-    let Ok(device) = Device::open(&udid) else {
+    let Ok(device) = Device::open(&udid, options.transport) else {
         eprintln!(
             "Dispositivo {} non trovato.",
             options.udid.to_string_lossy()
@@ -198,7 +209,18 @@ mod tests {
 
         assert_eq!(parsed.udid, OsString::from("UDID"));
         assert_eq!(parsed.output_dir, PathBuf::from("/tmp/icone"));
+        assert_eq!(parsed.transport, Transport::Usb);
         assert_eq!(parsed.bundle_ids, args(&["com.a", "com.b"]));
+    }
+
+    #[test]
+    fn cerca_in_rete_con_n() {
+        let parsed = parse_options(&args(&["-n", "-u", "UDID", "-o", "/tmp", "com.a"]))
+            .expect("argomenti validi");
+
+        assert_eq!(parsed.transport, Transport::Network);
+        assert_eq!(parsed.udid, OsString::from("UDID"));
+        assert_eq!(parsed.bundle_ids, args(&["com.a"]));
     }
 
     #[test]

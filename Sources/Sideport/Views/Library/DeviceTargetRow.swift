@@ -22,7 +22,10 @@ struct DeviceTargetRow: View {
                     .frame(width: 24)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(device.displayName)
+                    HStack(spacing: 5) {
+                        Text(device.displayName)
+                        TransportBadge(device: device)
+                    }
                     Text(.ui("\(device.marketingName) · \(device.systemVersionLabel) · \(Format.bytes(device.availableDiskCapacity)) free"))
                         .font(.caption)
                         .foregroundStyle(.secondary)

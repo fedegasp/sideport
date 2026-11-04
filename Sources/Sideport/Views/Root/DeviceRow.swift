@@ -6,8 +6,11 @@ struct DeviceRow: View {
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: 1) {
-                Text(device.displayName)
-                    .lineLimit(1)
+                HStack(spacing: 5) {
+                    Text(device.displayName)
+                        .lineLimit(1)
+                    TransportBadge(device: device)
+                }
                 statusText
                     .font(.caption)
                     .foregroundStyle(statusColor)

@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct SideportApp: App {
     @State private var devices = DeviceMonitor()
+    @State private var localNetwork = LocalNetworkAccess()
     @State private var library = LibraryStore()
     @State private var installedApps = InstalledAppsService()
     @State private var appIcons = AppIconStore()
@@ -14,6 +15,7 @@ struct SideportApp: App {
         WindowGroup {
             RootView()
                 .environment(devices)
+                .environment(localNetwork)
                 .environment(library)
                 .environment(installedApps)
                 .environment(appIcons)

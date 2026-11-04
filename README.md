@@ -1,9 +1,9 @@
 # Sideport
 
 App macOS nativa (SwiftUI) per scaricare le app iOS sul Mac e installarle sui dispositivi
-collegati via cavo: download delle `.ipa` dall'App Store con il proprio Apple ID, libreria
-locale, installazione su piu' dispositivi contemporaneamente, elenco e rimozione delle app
-gia' presenti sul dispositivo.
+collegati via cavo o visibili in Wi-Fi: download delle `.ipa` dall'App Store con il proprio
+Apple ID, libreria locale, installazione su piu' dispositivi contemporaneamente, elenco e
+rimozione delle app gia' presenti sul dispositivo.
 
 ## Requisiti
 
@@ -72,6 +72,8 @@ tool incorporati: e' lo stesso che produce ⌘R in Xcode, perche' entrambi passa
 
 1. Collega iPhone o iPad con il cavo, sbloccalo e tocca **Autorizza** quando richiesto
    (se salti il passaggio, l'app mostra un pulsante per riavviare l'abbinamento).
+   Dopo il primo abbinamento il dispositivo si puo' usare anche senza cavo: vedi
+   [Dispositivi in Wi-Fi](#dispositivi-in-wi-fi).
 2. **Libreria** → *Importa* oppure trascina i file `.ipa` nella finestra.
 3. Seleziona una o piu' app → **Installa su…** → spunta i dispositivi di destinazione → *Installa*.
    Il pulsante *Ispeziona* su ogni riga mostra il contenuto dell'archivio (cartelle e file
@@ -87,6 +89,43 @@ rimozione e, quando la libreria contiene una versione piu' recente della stessa 
 pulsante *Aggiorna*. Le icone restano in cache in `~/Library/Caches/Sideport/Icone`, per bundle
 ID e versione. Il pulsante *Informazioni* nell'intestazione apre un foglio con i dati del
 dispositivo (modello, numero di serie, UDID, sistema, spazio) e la rinomina.
+
+### Dispositivi in Wi-Fi
+
+Sideport elenca sia i dispositivi via cavo (`idevice_id -l`) sia quelli raggiungibili in
+rete (`idevice_id -n`), e li marca con una pastiglia **Wi-Fi** nella barra laterale, nella
+scheda e fra i target di installazione. Su un dispositivo di rete ogni tool riceve il flag
+`-n`, incluso l'helper delle icone.
+
+E' lo stesso canale della sincronizzazione Wi-Fi del Finder, non il tunnel che Xcode 15+
+usa per il debug su iOS 17 (CoreDevice/RemoteXPC), che libimobiledevice non parla. Perche'
+un dispositivo compaia servono tre cose:
+
+1. un abbinamento gia' fatto **via cavo**: lockdownd rifiuta il primo abbinamento in rete,
+   e Sideport lo dice invece di far fallire il pulsante (l'abbinamento wireless di
+   `idevicepair -w` esiste solo per le Apple TV e Sideport non lo espone);
+2. le connessioni Wi-Fi abilitate sul dispositivo, cioe' *Mostra questo iPhone quando e' in
+   Wi-Fi* nel Finder o *Connect via Network* in Xcode (la chiave `EnableWifiConnections` del
+   dominio lockdownd `com.apple.mobile.wireless_lockdown`, che Sideport non tocca);
+3. Mac e dispositivo sulla stessa rete, con il dispositivo sveglio e sbloccato;
+4. il permesso **Rete locale** per Sideport (Impostazioni di Sistema > Privacy e sicurezza >
+   Rete locale). Per un dispositivo di rete i tool non passano dal socket di usbmuxd: aprono
+   una connessione TCP diretta verso l'IP del dispositivo sulla porta 62078, e macOS la
+   blocca finche' l'app non e' autorizzata. Senza il permesso la scoperta funziona lo stesso
+   (quella passa da usbmuxd) ma ogni query risponde `Could not connect to lockdownd: Mux
+   error (-8)`, che Sideport traduce in un messaggio esplicito. La richiesta di macOS non puo'
+   comparire da sola, perche' a tentare la connessione e' un processo figlio e non l'app:
+   per questo all'avvio Sideport apre una ricerca Bonjour di `_apple-mobdev2._tcp`
+   ([`LocalNetworkAccess`](Sources/Sideport/Services/LocalNetworkAccess.swift)), che la fa
+   comparire con il testo di `NSLocalNetworkUsageDescription`. Se il permesso risulta negato
+   la scheda del dispositivo lo dice e offre un pulsante che apre il pannello giusto.
+   Siccome la firma e' ad-hoc, l'identita' dell'app cambia a ogni ricompilazione e
+   l'autorizzazione concessa a una build precedente puo' non valere per quella nuova.
+
+Un dispositivo visibile in entrambi i modi viene usato via cavo: e' piu' veloce e non si
+addormenta. In rete le sessioni lockdownd costano molto di piu', quindi i dettagli (spazio,
+batteria) si rileggono ogni 60 secondi invece che ogni 16, e l'installazione di una `.ipa`
+grande e' sensibilmente piu' lenta che via USB.
 
 ### Rifirma
 

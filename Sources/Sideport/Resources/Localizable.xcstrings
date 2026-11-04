@@ -977,6 +977,24 @@
         }
       }
     },
+    "Cannot reach the device over Wi-Fi: check that it is awake and on the same network, and that Sideport is allowed under System Settings > Privacy & Security > Local Network.": {
+      "comment": "Shown when lockdownd cannot be reached on a network device (mux error).",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot reach the device over Wi-Fi: check that it is awake and on the same network, and that Sideport is allowed under System Settings > Privacy & Security > Local Network."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dispositivo non raggiungibile in Wi-Fi: controlla che sia sveglio e sulla stessa rete, e che Sideport sia abilitata in Impostazioni di Sistema > Privacy e sicurezza > Rete locale."
+          }
+        }
+      }
+    },
     "Cannot read the .ipa archive: %@": {
       "extractionState": "manual",
       "localizations": {
@@ -1307,6 +1325,42 @@
         }
       }
     },
+    "Connect the device with a cable": {
+      "comment": "Title shown for a network device that has never been paired.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect the device with a cable"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collega il dispositivo con il cavo"
+          }
+        }
+      }
+    },
+    "Connection": {
+      "comment": "Which channel the device is reached on, in the device info sheet.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connessione"
+          }
+        }
+      }
+    },
     "Connection error": {
       "extractionState": "manual",
       "localizations": {
@@ -1530,19 +1584,19 @@
         }
       }
     },
-    "Device unreachable: check the cable and that it is unlocked and trusted.": {
+    "Device unreachable: check the cable or the network, and that it is unlocked and trusted.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Device unreachable: check the cable and that it is unlocked and trusted."
+            "value": "Device unreachable: check the cable or the network, and that it is unlocked and trusted."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dispositivo non raggiungibile: verifica il cavo e che sia sbloccato e autorizzato."
+            "value": "Dispositivo non raggiungibile: controlla il cavo o la rete, e che sia sbloccato e autorizzato."
           }
         }
       }
@@ -2124,6 +2178,60 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ho installato, verifica di nuovo"
+          }
+        }
+      }
+    },
+    "Local network access blocked": {
+      "comment": "Title shown when macOS denies local network access.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local network access blocked"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accesso alla rete locale bloccato"
+          }
+        }
+      }
+    },
+    "Open System Settings…": {
+      "comment": "Button that opens the Local Network privacy pane.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open System Settings…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri Impostazioni di Sistema…"
+          }
+        }
+      }
+    },
+    "Reachable over Wi-Fi: transfers are slower than over cable.": {
+      "comment": "Tooltip on the Wi-Fi badge of a device.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reachable over Wi-Fi: transfers are slower than over cable."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raggiungibile via Wi-Fi: i trasferimenti sono più lenti che via cavo."
           }
         }
       }
@@ -4540,6 +4648,24 @@
         }
       }
     },
+    "The first pairing only works over cable: connect the device, tap Trust, then you can keep using it over Wi-Fi.": {
+      "comment": "Explains why a network-only device cannot be paired.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The first pairing only works over cable: connect the device, tap Trust, then you can keep using it over Wi-Fi."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il primo abbinamento funziona solo via cavo: collega il dispositivo, tocca Autorizza, poi potrai continuare a usarlo via Wi-Fi."
+          }
+        }
+      }
+    },
     "The password reaches ipatool through a pseudo-terminal, not the command line: it does not appear in `ps` and Sideport never stores it.": {
       "extractionState": "manual",
       "localizations": {
@@ -4881,6 +5007,24 @@
         }
       }
     },
+    "USB": {
+      "comment": "Device reached over the cable.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "USB"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "USB"
+          }
+        }
+      }
+    },
     "Unknown": {
       "comment": "Signature that is neither App Store nor provisioned; agrees with 'firma' in Italian.",
       "extractionState": "manual",
@@ -5159,6 +5303,24 @@
         }
       }
     },
+    "Wi-Fi": {
+      "comment": "Device reached over the network instead of the cable.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi"
+          }
+        }
+      }
+    },
     "You need the Apple ID credentials that own the apps: only free apps, or apps already purchased with that account, can be downloaded.": {
       "extractionState": "manual",
       "localizations": {
@@ -5295,6 +5457,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "meno di 1 s"
+          }
+        }
+      }
+    },
+    "macOS is blocking Sideport's connections to the local network, the only way to reach a device over Wi-Fi. Allow it, then try again.": {
+      "comment": "Explains the consequence of the denied local network permission.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS is blocking Sideport's connections to the local network, the only way to reach a device over Wi-Fi. Allow it, then try again."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS sta bloccando le connessioni di Sideport verso la rete locale, l'unico modo per raggiungere un dispositivo in Wi-Fi. Autorizzale, poi riprova."
           }
         }
       }

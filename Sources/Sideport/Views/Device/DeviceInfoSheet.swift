@@ -62,6 +62,7 @@ struct DeviceInfoSheet: View {
                 InfoRow(label: .ui("Model"), value: String.ui("\(device.marketingName) (\(device.productType))"))
                 InfoRow(label: .ui("Serial number"), value: device.serialNumber)
                 InfoRow(label: .ui("UDID"), value: device.udid)
+                InfoRow(label: .ui("Connection"), value: String(localized: device.transportLabel))
             }
             Section(.ui("System")) {
                 InfoRow(label: .ui("Version"), value: device.systemVersionLabel)

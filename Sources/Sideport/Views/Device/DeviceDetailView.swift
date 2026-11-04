@@ -4,6 +4,7 @@ struct DeviceDetailView: View {
     let device: Device
 
     @Environment(DeviceMonitor.self) private var devices
+    @Environment(LocalNetworkAccess.self) private var localNetwork
     @Environment(InstalledAppsService.self) private var installedApps
     @Environment(AppIconStore.self) private var appIcons
     @Environment(LibraryStore.self) private var library
@@ -44,6 +45,14 @@ struct DeviceDetailView: View {
     @ViewBuilder
     private var content: some View {
         switch device.state {
+        case .untrusted where device.isOnNetwork:
+            // lockdownd rifiuta il primo abbinamento su una connessione di rete.
+            EmptyStateView(
+                symbol: "cable.connector",
+                title: .ui("Connect the device with a cable"),
+                message: .ui("The first pairing only works over cable: connect the device, tap Trust, then you can keep using it over Wi-Fi."),
+                action: (.ui("Try again"), { Task { await devices.refreshNow() } })
+            )
         case .untrusted:
             EmptyStateView(
                 symbol: "lock.shield",
@@ -57,6 +66,13 @@ struct DeviceDetailView: View {
                 title: .ui("Device locked"),
                 message: .ui("Unlock the device with its passcode to allow communication."),
                 action: (.ui("Try again"), { Task { await devices.refreshNow() } })
+            )
+        case .error where device.isOnNetwork && localNetwork.isDenied:
+            EmptyStateView(
+                symbol: "network.slash",
+                title: .ui("Local network access blocked"),
+                message: .ui("macOS is blocking Sideport's connections to the local network, the only way to reach a device over Wi-Fi. Allow it, then try again."),
+                action: (.ui("Open System Settings…"), { localNetwork.openSettings() })
             )
         case .error(let message):
             EmptyStateView(
@@ -141,12 +157,12 @@ struct DeviceDetailView: View {
 
     private func loadIcons() async {
         guard device.isReady else { return }
-        await appIcons.load(installedApps.apps(for: device.udid), udid: device.udid)
+        await appIcons.load(installedApps.apps(for: device.udid), on: device)
     }
 
     private func reloadApps() async {
         guard device.isReady else { return }
-        await installedApps.load(udid: device.udid, scope: ui.appScope)
+        await installedApps.load(device, scope: ui.appScope)
     }
 
     @ToolbarContentBuilder

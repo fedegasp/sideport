@@ -28,6 +28,8 @@
     <string>public.app-category.utilities</string>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Sideport uses the local network to reach iOS devices available over Wi-Fi.</string>
     <key>NSHumanReadableCopyright</key>
     <string>Local utility to manage apps on connected iOS devices.</string>
     <key>CFBundleDocumentTypes</key>

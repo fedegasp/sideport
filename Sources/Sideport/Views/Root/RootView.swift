@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
     @Environment(DeviceMonitor.self) private var devices
+    @Environment(LocalNetworkAccess.self) private var localNetwork
     @Environment(LibraryStore.self) private var library
     @Environment(InstalledAppsService.self) private var installedApps
     @Environment(TransferQueue.self) private var queue
@@ -21,7 +22,10 @@ struct RootView: View {
         }
         .frame(minWidth: 940, idealWidth: 1180, minHeight: 600, idealHeight: 760)
         .task { await start() }
-        .onDisappear { devices.stop() }
+        .onDisappear {
+            devices.stop()
+            localNetwork.stop()
+        }
         .sheet(item: $ui.installSheet) { request in
             InstallSheet(packages: request.packages)
         }
@@ -94,10 +98,16 @@ struct RootView: View {
         // app del dispositivo interessato.
         queue.onJobSucceeded = { [weak installedApps, weak devices, weak ui] udid in
             Task { @MainActor in
-                await installedApps?.load(udid: udid, scope: ui?.appScope ?? .user)
+                if let device = devices?.device(withUDID: udid) {
+                    await installedApps?.load(device, scope: ui?.appScope ?? .user)
+                }
                 await devices?.refreshNow()
             }
         }
+        // Prima dei dispositivi: e' la ricerca Bonjour a far comparire la
+        // richiesta di accesso alla rete locale, senza la quale i dispositivi
+        // in Wi-Fi non rispondono.
+        localNetwork.start()
         devices.start()
         await library.refresh()
     }
@@ -106,6 +116,7 @@ struct RootView: View {
         ToolLocator.shared.invalidateCache()
         missingTools = ToolLocator.shared.missingRequiredTools
         guard missingTools.isEmpty else { return }
+        localNetwork.start()
         devices.start()
         Task { await library.refresh() }
     }

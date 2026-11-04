@@ -18,7 +18,7 @@ final class AppIconStore {
         icons[Self.cacheKey(for: app)]
     }
 
-    func load(_ apps: [InstalledApp], udid: String) async {
+    func load(_ apps: [InstalledApp], on device: Device) async {
         let requests = apps
             .map { IconRequest(key: Self.cacheKey(for: $0), bundleIdentifier: $0.bundleIdentifier) }
             .filter { icons[$0.key] == nil && !inFlight.contains($0.key) }
@@ -28,7 +28,7 @@ final class AppIconStore {
         inFlight.formUnion(keys)
         defer { inFlight.subtract(keys) }
 
-        let found = await Self.fetch(requests, udid: udid)
+        let found = await Self.fetch(requests, udid: device.udid, transport: device.transport)
         if !found.isEmpty {
             icons.merge(found) { _, new in new }
         }
@@ -55,7 +55,11 @@ final class AppIconStore {
 
     /// Prima la cache su disco, poi il dispositivo per le icone mancanti. Gli
     /// errori non si propagano: senza icona la riga mostra il segnaposto.
-    nonisolated private static func fetch(_ requests: [IconRequest], udid: String) async -> [String: Data] {
+    nonisolated private static func fetch(
+        _ requests: [IconRequest],
+        udid: String,
+        transport: Device.Transport
+    ) async -> [String: Data] {
         let fm = FileManager.default
         try? fm.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
 
@@ -75,7 +79,9 @@ final class AppIconStore {
         guard (try? fm.createDirectory(at: staging, withIntermediateDirectories: true)) != nil else { return result }
         defer { try? fm.removeItem(at: staging) }
 
-        let arguments = ["-u", udid, "-o", staging.path] + missing.map(\.bundleIdentifier)
+        let arguments = transport.toolArguments
+            + ["-u", udid, "-o", staging.path]
+            + missing.map(\.bundleIdentifier)
         guard let output = try? await ProcessRunner.run(tool, arguments) else { return result }
 
         // Anche con un'uscita non nulla le icone gia' scritte sono valide.

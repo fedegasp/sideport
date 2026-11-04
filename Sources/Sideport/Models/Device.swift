@@ -1,6 +1,24 @@
 import Foundation
 
 struct Device: Identifiable, Hashable {
+    /// Canale con cui usbmuxd raggiunge il dispositivo. Senza `-n` i tool di
+    /// libimobiledevice vedono solo quelli collegati via cavo.
+    enum Transport: Hashable {
+        case usb
+        /// Visibile via Wi-Fi: richiede un abbinamento gia' fatto via cavo e
+        /// la connessione di rete abilitata sul dispositivo (la spunta di
+        /// Xcode, o "Mostra quando e' in Wi-Fi" nel Finder).
+        case network
+
+        /// Flag da anteporre agli argomenti dei tool esterni.
+        var toolArguments: [String] {
+            switch self {
+            case .usb: []
+            case .network: ["-n"]
+            }
+        }
+    }
+
     enum ConnectionState: Hashable {
         /// Collegato ma non ancora abbinato: serve "Autorizza" sul dispositivo.
         case untrusted
@@ -11,6 +29,7 @@ struct Device: Identifiable, Hashable {
     }
 
     let udid: String
+    var transport: Transport = .usb
     var state: ConnectionState = .untrusted
     var name: String = ""
     var productType: String = ""
@@ -53,6 +72,16 @@ struct Device: Identifiable, Hashable {
     var usedDiskCapacity: Int64? {
         guard let total = totalDiskCapacity, let available = availableDiskCapacity else { return nil }
         return max(0, total - available)
+    }
+
+    var isOnNetwork: Bool { transport == .network }
+
+    var transportSymbolName: String {
+        isOnNetwork ? "wifi" : "cable.connector"
+    }
+
+    var transportLabel: LocalizedStringResource {
+        isOnNetwork ? .ui("Wi-Fi") : .ui("USB")
     }
 
     var isReady: Bool {

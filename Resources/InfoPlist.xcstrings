@@ -43,6 +43,24 @@
         }
       }
     },
+    "NSLocalNetworkUsageDescription" : {
+      "comment" : "Shown in the macOS prompt that asks to allow access to the local network.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sideport uses the local network to reach iOS devices available over Wi-Fi."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sideport usa la rete locale per raggiungere i dispositivi iOS disponibili in Wi-Fi."
+          }
+        }
+      }
+    },
     "NSHumanReadableCopyright" : {
       "comment" : "Shown in the About panel.",
       "extractionState" : "manual",
